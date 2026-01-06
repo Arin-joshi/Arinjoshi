@@ -14,7 +14,7 @@ const Hero: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col-reverse lg:flex-row items-center gap-12">
         <div className="flex-1 text-center lg:text-left">
           <div className="inline-block px-4 py-1.5 mb-6 rounded-full border border-violet-500/30 bg-violet-500/10 text-violet-300 text-sm font-medium">
-            Available for new opportunities
+            Available for new opportunities ✅
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-white tracking-tight mb-6">
             Hi, I'm <br className="hidden lg:block" />
