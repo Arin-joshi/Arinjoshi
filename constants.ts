@@ -2,7 +2,7 @@ import { Experience, Project, Education, Certification, Skill } from './types';
 
 export const PERSONAL_INFO = {
   name: "Arin Joshi",
-  role: "React.js & MERN Developer",
+  role: "Software Engineer",
   email: "thakararinjoshi@gmail.com",
   phone: "+91 8290279001",
   location: "Ahmedabad, Gujarat",

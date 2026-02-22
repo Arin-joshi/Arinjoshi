@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PERSONAL_INFO } from '../constants';
 import {
   Mail,
@@ -7,13 +7,32 @@ import {
   Linkedin,
   Youtube,
   Instagram,
-  ArrowUp
+  ArrowUp,
+  Send,
+  CheckCircle,
+  Sparkles,
+  MessageSquare,
+  Github,
+  Twitter,
+  Coffee,
+  Heart
 } from 'lucide-react';
 
 const Contact: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [hoveredSocial, setHoveredSocial] = useState<string | null>(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // Show scroll-to-top button after scrolling
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 500);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,7 +50,6 @@ const Contact: React.FC = () => {
 
       if (data.success) {
         setSuccess(true);
-
         setTimeout(() => {
           setIsOpen(false);
           setSuccess(false);
@@ -44,185 +62,337 @@ const Contact: React.FC = () => {
     }
   };
 
+  const socialLinks = [
+    {
+      name: 'YouTube',
+      url: 'https://www.youtube.com/@ArinJoshi',
+      icon: <Youtube size={20} />,
+      color: 'from-red-500 to-rose-600',
+      hoverColor: 'hover:bg-red-600',
+      bgColor: 'bg-red-500/10',
+      textColor: 'text-red-400'
+    },
+    {
+      name: 'LinkedIn',
+      url: 'https://www.linkedin.com/in/arinjoshi/',
+      icon: <Linkedin size={20} />,
+      color: 'from-blue-500 to-cyan-600',
+      hoverColor: 'hover:bg-blue-600',
+      bgColor: 'bg-blue-500/10',
+      textColor: 'text-blue-400'
+    },
+    {
+      name: 'Instagram',
+      url: 'https://www.instagram.com/click_by_arin/',
+      icon: <Instagram size={20} />,
+      color: 'from-pink-500 to-rose-600',
+      hoverColor: 'hover:bg-pink-600',
+      bgColor: 'bg-pink-500/10',
+      textColor: 'text-pink-400'
+    },
+    {
+      name: 'GitHub',
+      url: 'https://github.com/arinjoshi',
+      icon: <Github size={20} />,
+      color: 'from-gray-500 to-slate-600',
+      hoverColor: 'hover:bg-gray-600',
+      bgColor: 'bg-gray-500/10',
+      textColor: 'text-gray-400'
+    }
+  ];
+
   return (
     <>
-      {/* ================= FOOTER ================= */}
       <footer
         id="contact"
-        className="bg-slate-950 border-t border-slate-800 pt-16 pb-8"
+        className="relative bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 border-t border-slate-800/50 pt-20 pb-8 overflow-hidden"
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
+        
+        {/* Gradient orbs */}
+        <div className="absolute -top-40 -left-40 w-80 h-80 bg-violet-600/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-fuchsia-600/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-
-            {/* LEFT */}
-            <div className="lg:col-span-2">
-              <h2 className="text-3xl font-bold text-white mb-6">
-                Let's work together.
-              </h2>
-
-              <p className="text-slate-400 text-lg max-w-md mb-8">
-                I'm currently available for freelance work or full-time positions.
-                If you have a project that needs some React magic, I’d love to hear from you.
-              </p>
-
-              <button
-                onClick={() => setIsOpen(true)}
-                className="px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white rounded-lg font-medium transition-colors"
-              >
-                Send Email
-              </button>
-            </div>
-
-            {/* RIGHT */}
-            <div className="lg:col-span-2 grid sm:grid-cols-2 gap-8">
-
-              {/* CONTACT INFO */}
-              <div>
-                <h3 className="text-white font-semibold mb-4 text-lg">
-                  Contact Info
-                </h3>
-
-                <ul className="space-y-4">
-                  <li className="flex items-center gap-3 text-slate-400">
-                    <Mail size={18} className="text-violet-500" />
-                    {PERSONAL_INFO.email}
-                  </li>
-
-                  <li className="flex items-center gap-3 text-slate-400">
-                    <Phone size={18} className="text-violet-500" />
-                    {PERSONAL_INFO.phone}
-                  </li>
-
-                  <li className="flex items-center gap-3 text-slate-400">
-                    <MapPin size={18} className="text-violet-500" />
-                    {PERSONAL_INFO.location}
-                  </li>
-                </ul>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Main content */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-16">
+            
+            {/* Left side - CTA */}
+            <div className="space-y-6">
+              {/* Section badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-violet-500/10 to-fuchsia-500/10 border border-violet-500/20 backdrop-blur-sm">
+                <Sparkles size={16} className="text-violet-400" />
+                <span className="text-sm font-medium text-violet-300">Get In Touch</span>
               </div>
 
-              {/* SOCIALS */}
-              <div>
-                <h3 className="text-white font-semibold mb-4 text-lg">
-                  Socials
+              <h2 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
+                Let's create something
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400">
+                  amazing together
+                </span>
+              </h2>
+
+              <p className="text-slate-400 text-lg max-w-md leading-relaxed">
+                I'm currently available for freelance work and full-time opportunities. 
+                Let's bring your ideas to life with clean code and creative solutions.
+              </p>
+
+              {/* Availability indicator */}
+              <div className="flex items-center gap-3 bg-slate-900/50 backdrop-blur-sm p-4 rounded-xl border border-slate-800 max-w-md">
+                <div className="relative">
+                  <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+                  <div className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-75"></div>
+                </div>
+                <div>
+                  <p className="text-white font-medium">Available for opportunities</p>
+                  <p className="text-sm text-slate-500">Reply within 24 hours</p>
+                </div>
+              </div>
+
+              {/* CTA Button with animation */}
+              <button
+                onClick={() => setIsOpen(true)}
+                className="group relative px-8 py-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-xl font-semibold transition-all hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] overflow-hidden"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  Send a Message
+                  <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </span>
+                <span className="absolute inset-0 bg-gradient-to-r from-violet-700 to-fuchsia-700 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+              </button>
+
+              {/* Contact info cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
+                <div className="flex items-center gap-3 p-4 bg-slate-900/50 backdrop-blur-sm rounded-xl border border-slate-800 hover:border-violet-500/50 transition-all group">
+                  <div className="p-2 rounded-lg bg-violet-500/10 text-violet-400 group-hover:scale-110 transition-transform">
+                    <Mail size={18} />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500">Email</p>
+                    <a href={`mailto:${PERSONAL_INFO.email}`} className="text-sm text-white hover:text-violet-400 transition-colors">
+                      {PERSONAL_INFO.email}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-4 bg-slate-900/50 backdrop-blur-sm rounded-xl border border-slate-800 hover:border-violet-500/50 transition-all group">
+                  <div className="p-2 rounded-lg bg-violet-500/10 text-violet-400 group-hover:scale-110 transition-transform">
+                    <Phone size={18} />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500">Phone</p>
+                    <a href={`tel:${PERSONAL_INFO.phone}`} className="text-sm text-white hover:text-violet-400 transition-colors">
+                      {PERSONAL_INFO.phone}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="sm:col-span-2 flex items-center gap-3 p-4 bg-slate-900/50 backdrop-blur-sm rounded-xl border border-slate-800 hover:border-violet-500/50 transition-all group">
+                  <div className="p-2 rounded-lg bg-violet-500/10 text-violet-400 group-hover:scale-110 transition-transform">
+                    <MapPin size={18} />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500">Location</p>
+                    <p className="text-sm text-white">{PERSONAL_INFO.location}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right side - Social links */}
+            <div className="space-y-6">
+              <div className="bg-slate-900/50 backdrop-blur-sm p-8 rounded-2xl border border-slate-800">
+                <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                  <span className="p-2 rounded-lg bg-violet-500/10">
+                    <Coffee size={20} className="text-violet-400" />
+                  </span>
+                  Connect with me
                 </h3>
 
-                <div className="flex flex-col gap-3">
-                  <a
-                    href="https://www.youtube.com/@ArinJoshi"
-                    target="_blank"
-                    className="flex items-center gap-3 text-slate-400 hover:text-white group"
-                  >
-                    <div className="p-2 bg-slate-800 rounded-lg group-hover:bg-red-600 transition-colors">
-                      <Youtube size={20} />
-                    </div>
-                    YouTube
-                  </a>
+                <div className="grid grid-cols-2 gap-4">
+                  {socialLinks.map((social) => (
+                    <a
+                      key={social.name}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onMouseEnter={() => setHoveredSocial(social.name)}
+                      onMouseLeave={() => setHoveredSocial(null)}
+                      className="group relative p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-transparent transition-all duration-300 overflow-hidden"
+                    >
+                      {/* Animated background gradient */}
+                      <div className={`absolute inset-0 bg-gradient-to-r ${social.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
+                      
+                      {/* Content */}
+                      <div className="relative z-10 flex flex-col items-center gap-2">
+                        <div className={`p-3 rounded-lg ${social.bgColor} group-hover:bg-white/20 transition-colors`}>
+                          <div className={`${social.textColor} group-hover:text-white transition-colors`}>
+                            {social.icon}
+                          </div>
+                        </div>
+                        <span className="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">
+                          {social.name}
+                        </span>
+                      </div>
 
-                  <a
-                    href="https://www.linkedin.com/in/arinjoshi/"
-                    target="_blank"
-                    className="flex items-center gap-3 text-slate-400 hover:text-white group"
-                  >
-                    <div className="p-2 bg-slate-800 rounded-lg group-hover:bg-blue-600 transition-colors">
-                      <Linkedin size={20} />
-                    </div>
-                    LinkedIn
-                  </a>
+                      {/* Hover effect dot */}
+                      {hoveredSocial === social.name && (
+                        <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                      )}
+                    </a>
+                  ))}
+                </div>
 
-                  <a
-                    href="https://www.instagram.com/click_by_arin/"
-                    target="_blank"
-                    className="flex items-center gap-3 text-slate-400 hover:text-white group"
-                  >
-                    <div className="p-2 bg-slate-800 rounded-lg group-hover:bg-pink-600 transition-colors">
-                      <Instagram size={20} />
-                    </div>
-                    Instagram
-                  </a>
+                {/* Additional links */}
+                <div className="mt-6 pt-6 border-t border-slate-800">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-slate-500">Check out my work</span>
+                    <a href="#projects" className="text-sm text-violet-400 hover:text-violet-300 flex items-center gap-1">
+                      View Projects
+                      <ArrowUp size={14} className="rotate-45" />
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* FOOTER BOTTOM */}
-          <div className="border-t border-slate-900 pt-8 flex items-center justify-between">
-            <p className="text-slate-500 text-sm">
-              © {new Date().getFullYear()} {PERSONAL_INFO.name}. All rights reserved.
-            </p>
+          {/* Footer bottom */}
+          <div className="relative pt-8 border-t border-slate-800/50">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p className="text-sm text-slate-500 flex items-center gap-2">
+                © {new Date().getFullYear()} {PERSONAL_INFO.name}. 
+                <span className="hidden sm:inline">All rights reserved.</span>
+                <span className="flex items-center gap-1 text-xs">
+                  Made with <Heart size={12} className="text-red-500 fill-red-500 animate-pulse" /> using React
+                </span>
+              </p>
 
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="p-3 bg-slate-900 border border-slate-800 rounded-full text-violet-500"
-            >
-              <ArrowUp size={20} />
-            </button>
+              <div className="flex items-center gap-3">
+                <a href="#privacy" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">
+                  Privacy
+                </a>
+                <span className="text-slate-700">•</span>
+                <a href="#terms" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">
+                  Terms
+                </a>
+              </div>
+            </div>
           </div>
         </div>
+
+        {/* Scroll to top button */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className={`fixed bottom-8 right-8 z-40 p-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-full shadow-lg hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] transition-all duration-300 group ${
+            showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
+          }`}
+          aria-label="Scroll to top"
+        >
+          <ArrowUp size={20} className="group-hover:-translate-y-1 transition-transform" />
+        </button>
       </footer>
 
-      {/* ================= MODAL ================= */}
+      {/* Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-xl w-full max-w-md p-6 relative animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+          <div className="relative bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 rounded-2xl w-full max-w-md p-8 shadow-2xl">
+            {/* Decorative elements */}
+            <div className="absolute -top-20 -right-20 w-40 h-40 bg-violet-600/20 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-fuchsia-600/20 rounded-full blur-3xl"></div>
 
+            {/* Close button */}
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white"
+              className="absolute top-4 right-4 text-slate-400 hover:text-white bg-slate-800/50 hover:bg-slate-800 p-2 rounded-lg transition-all"
             >
-              ✕
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
 
-            <h3 className="text-2xl font-semibold text-white mb-4">
-              Send me a message
-            </h3>
+            {/* Modal header */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-3 rounded-xl bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 border border-violet-500/30">
+                <MessageSquare size={24} className="text-violet-400" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-white">Send a message</h3>
+                <p className="text-sm text-slate-500">I'll get back to you within 24 hours</p>
+              </div>
+            </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <input type="hidden" name="access_key" value="bd82c972-b151-4beb-9247-261d9ef155a7" />
               <input type="hidden" name="subject" value="New Portfolio Contact" />
 
               {!success ? (
                 <>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Your Name"
-                    required
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white"
-                  />
+                  <div>
+                    <label className="block text-sm font-medium text-slate-400 mb-2">Your Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="John Doe"
+                      required
+                      className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-all"
+                    />
+                  </div>
 
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Your Email"
-                    required
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white"
-                  />
+                  <div>
+                    <label className="block text-sm font-medium text-slate-400 mb-2">Your Email</label>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="john@example.com"
+                      required
+                      className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-all"
+                    />
+                  </div>
 
-                  <textarea
-                    name="message"
-                    rows={4}
-                    placeholder="Your Message"
-                    required
-                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white"
-                  />
+                  <div>
+                    <label className="block text-sm font-medium text-slate-400 mb-2">Your Message</label>
+                    <textarea
+                      name="message"
+                      rows={4}
+                      placeholder="Tell me about your project..."
+                      required
+                      className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-all resize-none"
+                    />
+                  </div>
 
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-violet-600 hover:bg-violet-700 text-white py-3 rounded-lg font-medium disabled:opacity-50"
+                    className="w-full relative py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-xl font-medium transition-all hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] disabled:opacity-50 overflow-hidden group"
                   >
-                    {loading ? 'Sending...' : 'Send Message'}
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      {loading ? (
+                        <>
+                          <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          <span>Sending...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send size={18} />
+                          <span>Send Message</span>
+                        </>
+                      )}
+                    </span>
                   </button>
                 </>
               ) : (
-                <div className="text-center py-10">
-                  <h4 className="text-green-500 text-xl font-semibold">
-                    ✅ Message Sent!
-                  </h4>
-                  <p className="text-slate-400 mt-2">
-                    I’ll get back to you soon.
-                  </p>
+                <div className="text-center py-8">
+                  <div className="inline-flex p-4 rounded-full bg-green-500/20 border border-green-500/30 mb-4">
+                    <CheckCircle size={48} className="text-green-500" />
+                  </div>
+                  <h4 className="text-2xl font-bold text-white mb-2">Message Sent!</h4>
+                  <p className="text-slate-400">Thanks for reaching out. I'll get back to you soon.</p>
                 </div>
               )}
             </form>

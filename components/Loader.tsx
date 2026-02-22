@@ -1,33 +1,213 @@
+import React, { useEffect, useState } from 'react';
+import { Code2, Cpu, Sparkles, Zap, Brackets, Github, Coffee } from 'lucide-react';
+
 const Loader = () => {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0b0b12] overflow-hidden">
+  const [progress, setProgress] = useState(0);
+  const [loadingText, setLoadingText] = useState('Initializing');
+
+  // Simulate loading progress
+  useEffect(() => {
+    const texts = [
+      'Initializing',
+      'Loading modules',
+      'Compiling components',
+      'Fetching data',
+      'Almost ready',
+      'Welcome!'
+    ];
+
+    let currentIndex = 0;
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          return 100;
+        }
+        return prev + 1;
+      });
+
+      // Update loading text based on progress
+      if (progress > 0 && progress < 20) setLoadingText(texts[0]);
+      else if (progress >= 20 && progress < 40) setLoadingText(texts[1]);
+      else if (progress >= 40 && progress < 60) setLoadingText(texts[2]);
+      else if (progress >= 60 && progress < 80) setLoadingText(texts[3]);
+      else if (progress >= 80 && progress < 100) setLoadingText(texts[4]);
+      else if (progress === 100) setLoadingText(texts[5]);
       
-      {/* background glow */}
-      <div className="absolute w-[600px] h-[600px] bg-violet-600/20 rounded-full blur-[160px] -top-40 -left-40"></div>
-      <div className="absolute w-[500px] h-[500px] bg-cyan-500/20 rounded-full blur-[160px] bottom-[-200px] right-[-200px]"></div>
+    }, 30);
 
-      {/* grid texture */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:60px_60px]"></div>
+    return () => clearInterval(interval);
+  }, [progress]);
 
-      {/* main card */}
-      <div className="relative z-10 flex flex-col items-center gap-6 px-10 py-8 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 shadow-2xl">
-        
-        {/* animated rings */}
-        <div className="relative w-20 h-20">
-          <span className="absolute inset-0 rounded-full border-2 border-violet-500/40 animate-ping"></span>
-          <span className="absolute inset-0 rounded-full border-2 border-violet-400 animate-spin"></span>
-        </div>
+  // Floating tech icons
+  const techIcons = [
+    { Icon: Code2, color: 'from-cyan-400 to-blue-500', delay: 0 },
+    { Icon: Cpu, color: 'from-purple-400 to-pink-500', delay: 1 },
+    { Icon: Zap, color: 'from-yellow-400 to-amber-500', delay: 2 },
+    { Icon: Brackets, color: 'from-green-400 to-emerald-500', delay: 1.5 },
+    { Icon: Github, color: 'from-gray-400 to-slate-500', delay: 2.5 },
+  ];
 
-        {/* text */}
-        <div className="text-center">
-          <h1 className="text-lg font-semibold tracking-wide text-white">
-            Loading Portfolio
-          </h1>
-          <p className="text-sm text-white/60 tracking-widest mt-1">
-            Building experience...
-          </p>
-        </div>
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
+      
+      {/* Animated background grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
+      
+      {/* Gradient orbs */}
+      <div className="absolute w-[600px] h-[600px] bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 rounded-full blur-[160px] -top-40 -left-40 animate-pulse"></div>
+      <div className="absolute w-[500px] h-[500px] bg-gradient-to-r from-cyan-600/20 to-blue-600/20 rounded-full blur-[160px] bottom-[-200px] right-[-200px] animate-pulse delay-1000"></div>
+      
+      {/* Floating tech icons */}
+      <div className="absolute inset-0 overflow-hidden">
+        {techIcons.map(({ Icon, color, delay }, index) => (
+          <div
+            key={index}
+            className="absolute animate-float"
+            style={{
+              top: `${20 + index * 15}%`,
+              left: `${10 + index * 20}%`,
+              animationDelay: `${delay}s`,
+              animationDuration: `${15 + index * 2}s`
+            }}
+          >
+            <div className={`
+              p-4 rounded-2xl bg-slate-900/50 backdrop-blur-sm border border-slate-800/50
+              bg-gradient-to-br ${color} bg-opacity-10
+            `}>
+              <Icon size={24} className={`text-transparent bg-clip-text bg-gradient-to-r ${color}`} />
+            </div>
+          </div>
+        ))}
       </div>
+
+      {/* Main loader card */}
+      <div className="relative z-10 w-full max-w-md mx-4">
+        {/* Animated rings */}
+        <div className="relative flex justify-center mb-8">
+          {/* Outer ring */}
+          <div className="absolute w-32 h-32 rounded-full border-2 border-violet-500/30 animate-ping"></div>
+          
+          {/* Spinning ring */}
+          <div className="absolute w-32 h-32 rounded-full border-t-2 border-r-2 border-violet-500 animate-spin"></div>
+          
+          {/* Inner ring */}
+          <div className="absolute w-24 h-24 rounded-full border-2 border-fuchsia-500/20 animate-pulse"></div>
+          
+          {/* Center icon */}
+          <div className="relative w-20 h-20 flex items-center justify-center">
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-full blur-xl opacity-50 animate-pulse"></div>
+            <div className="relative bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-full p-4">
+              <Sparkles size={32} className="text-white animate-spin-slow" />
+            </div>
+          </div>
+        </div>
+
+        {/* Loading card */}
+        <div className="relative group">
+          {/* Animated border */}
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-2xl opacity-75 blur transition duration-500 group-hover:opacity-100 animate-pulse"></div>
+          
+          {/* Main card */}
+          <div className="relative bg-slate-900/90 backdrop-blur-xl rounded-2xl border border-slate-800 p-8">
+            
+            {/* Loading text */}
+            <div className="text-center mb-6">
+              <h1 className="text-2xl font-bold text-white mb-2">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">
+                  {loadingText}
+                </span>
+              </h1>
+              <p className="text-sm text-slate-500 tracking-wider flex items-center justify-center gap-2">
+                <span className="w-1 h-1 rounded-full bg-violet-500 animate-pulse"></span>
+                Building digital experiences
+                <span className="w-1 h-1 rounded-full bg-fuchsia-500 animate-pulse"></span>
+              </p>
+            </div>
+
+            {/* Progress bar */}
+            <div className="space-y-3">
+              <div className="flex justify-between text-sm">
+                <span className="text-slate-400">Loading resources</span>
+                <span className="text-violet-400 font-mono">{progress}%</span>
+              </div>
+              
+              {/* Progress bar with gradient */}
+              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-full transition-all duration-300 relative"
+                  style={{ width: `${progress}%` }}
+                >
+                  {/* Shine effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-shine"></div>
+                </div>
+              </div>
+
+              {/* Loading dots */}
+              <div className="flex justify-center gap-1 pt-4">
+                {[0, 1, 2].map((i) => (
+                  <div
+                    key={i}
+                    className="w-2 h-2 rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-600 animate-bounce"
+                    style={{ animationDelay: `${i * 0.1}s` }}
+                  ></div>
+                ))}
+              </div>
+            </div>
+
+            {/* Tech stack badges */}
+            <div className="flex flex-wrap justify-center gap-2 mt-6 pt-6 border-t border-slate-800">
+              {['React', 'TypeScript', 'Node.js', 'MongoDB'].map((tech, i) => (
+                <span
+                  key={tech}
+                  className="px-3 py-1 text-xs rounded-full bg-slate-800/80 text-slate-400 border border-slate-700"
+                  style={{
+                    animation: `fadeIn 0.5s ease-out ${i * 0.1}s forwards`,
+                    opacity: 0
+                  }}
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom message */}
+        <p className="text-center text-xs text-slate-600 mt-6 tracking-wider">
+          © {new Date().getFullYear()} Arin Joshi • Software Engineer
+        </p>
+      </div>
+
+      <style>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0) translateX(0); }
+          25% { transform: translateY(-20px) translateX(10px); }
+          50% { transform: translateY(-30px) translateX(-10px); }
+          75% { transform: translateY(-15px) translateX(15px); }
+        }
+        .animate-float {
+          animation: float 15s ease-in-out infinite;
+        }
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+          animation: spin-slow 8s linear infinite;
+        }
+        @keyframes shine {
+          from { transform: translateX(-100%) skewX(-12deg); }
+          to { transform: translateX(200%) skewX(-12deg); }
+        }
+        .animate-shine {
+          animation: shine 2s linear infinite;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </div>
   );
 };
