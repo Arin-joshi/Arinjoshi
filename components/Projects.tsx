@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { PROJECTS } from '../constants';
-import { ExternalLink, Gamepad2, Globe, Github, Sparkles, Code2, Zap, Award } from 'lucide-react';
+import { ExternalLink, Gamepad2, Globe, Github, Sparkles, Code2, Zap } from 'lucide-react';
 
 const Projects: React.FC = () => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -20,7 +20,7 @@ const Projects: React.FC = () => {
           }
         });
       },
-      { threshold: 0.2, rootMargin: '50px' }
+      { threshold: 0.1, rootMargin: '50px' }
     );
 
     cardRefs.current.forEach((ref) => {
@@ -29,29 +29,6 @@ const Projects: React.FC = () => {
 
     return () => observer.disconnect();
   }, [visibleProjects]);
-
-  // Parallax effect on mouse move
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, id: string) => {
-    if (hoveredId !== id) return;
-    
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    
-    const rotateX = (y - centerY) / 25;
-    const rotateY = (centerX - x) / 25;
-    
-    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-  };
-
-  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-    setHoveredId(null);
-  };
 
   // Helper function to get gradient based on category
   const getCategoryGradient = (category: string) => {
@@ -71,13 +48,30 @@ const Projects: React.FC = () => {
   const getCategoryIcon = (category: string) => {
     switch(category) {
       case 'Game':
-        return <Gamepad2 className="text-fuchsia-400" size={20} />;
+        return <Gamepad2 className="text-fuchsia-400" size={16} />;
       case 'Web':
-        return <Globe className="text-emerald-400" size={20} />;
+        return <Globe className="text-emerald-400" size={16} />;
       case 'App':
-        return <Zap className="text-blue-400" size={20} />;
+        return <Zap className="text-blue-400" size={16} />;
       default:
-        return <Code2 className="text-slate-400" size={20} />;
+        return <Code2 className="text-slate-400" size={16} />;
+    }
+  };
+
+  // Handle button clicks
+  const handleLiveClick = (e: React.MouseEvent, url?: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleGithubClick = (e: React.MouseEvent, url?: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -85,39 +79,37 @@ const Projects: React.FC = () => {
     <section 
       id="projects" 
       ref={sectionRef}
-      className="relative py-24 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden"
+      className="relative py-20 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden"
     >
       {/* Animated background elements */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
       
-      {/* Floating orbs with category-based colors */}
+      {/* Floating orbs */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-fuchsia-600/10 rounded-full blur-3xl animate-pulse"></div>
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      <div className="absolute top-40 right-40 w-60 h-60 bg-blue-600/10 rounded-full blur-3xl animate-pulse delay-700"></div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section header with animated gradient */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6 backdrop-blur-sm">
-            <Sparkles size={16} className="text-violet-400 animate-pulse" />
-            <span className="text-sm font-medium text-violet-300">Featured Portfolio</span>
+        {/* Section header */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 backdrop-blur-sm">
+            <Sparkles size={14} className="text-violet-400 animate-pulse" />
+            <span className="text-xs sm:text-sm font-medium text-violet-300">Featured Work</span>
           </div>
           
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">
             Crafting{' '}
-            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-emerald-400 bg-clip-text text-transparent animate-gradient">
+            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-emerald-400 bg-clip-text text-transparent">
               Interactive Experiences
             </span>
           </h2>
           
-          <p className="text-slate-400 max-w-2xl mx-auto text-lg">
-            Real-time gaming applications and web solutions built with the{' '}
-            <span className="text-white font-semibold">MERN stack</span>, 
-            featuring WebSocket integration and responsive design.
+          <p className="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">
+            Real-time gaming applications and web solutions built with the MERN stack
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Responsive Grid: 2 on mobile, 3 on tablet, 4 on desktop */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5">
           {PROJECTS.map((project) => (
             <div
               key={project.id}
@@ -125,44 +117,48 @@ const Projects: React.FC = () => {
                 if (el) cardRefs.current.set(project.id, el);
               }}
               data-project-id={project.id}
-              onMouseMove={(e) => handleMouseMove(e, project.id)}
-              onMouseLeave={handleMouseLeave}
-              onMouseEnter={() => setHoveredId(project.id)}
               className={`
                 group relative transform transition-all duration-700 ease-out
                 ${visibleProjects.includes(project.id) 
                   ? 'translate-y-0 opacity-100' 
-                  : 'translate-y-20 opacity-0'}
+                  : 'translate-y-10 opacity-0'}
               `}
-              style={{ transitionDelay: `${parseInt(project.id.split('-')[1]) * 150}ms` }}
+              style={{ transitionDelay: `${parseInt(project.id.split('-')[1]) * 100}ms` }}
             >
-              {/* Animated border gradient */}
-              <div className={`
-                absolute -inset-0.5 bg-gradient-to-r ${getCategoryGradient(project.category)} 
-                rounded-2xl opacity-0 group-hover:opacity-100 blur transition duration-500 
-                group-hover:duration-200
-              `}></div>
-              
-              <div className="relative bg-slate-900/90 backdrop-blur-sm rounded-2xl border border-slate-800 hover:border-transparent transition-all duration-500 overflow-hidden">
-                {/* Project image */}
-                <div className="relative h-56 overflow-hidden">
+              {/* Card Container */}
+              <div className="relative bg-slate-900/90 backdrop-blur-sm rounded-xl border border-slate-800 hover:border-violet-500/50 transition-all duration-300 overflow-hidden">
+                
+                {/* Image Section - Make image clickable */}
+                <a 
+                  href={project.liveUrl || '#'}
+                  onClick={(e) => handleLiveClick(e, project.liveUrl)}
+                  className="block relative h-28 sm:h-32 lg:h-36 overflow-hidden group/image"
+                  target={project.liveUrl ? "_blank" : undefined}
+                  rel={project.liveUrl ? "noopener noreferrer" : undefined}
+                >
                   <img
                     src={project.imageUrl}
                     alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     onError={(e) => {
-                      // Fallback image if the main one fails to load
-                      e.currentTarget.src = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80';
+                      e.currentTarget.src = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80';
                     }}
                   />
                   
-                  {/* Gradient overlay */}
+                  {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
                   
-                  {/* Category badge */}
-                  <div className="absolute top-4 left-4 flex gap-2">
+                  {/* Hover overlay with play icon */}
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div className="p-2 rounded-full bg-violet-600/90 backdrop-blur-sm">
+                      <ExternalLink size={16} className="text-white" />
+                    </div>
+                  </div>
+                  
+                  {/* Category Badge */}
+                  <div className="absolute top-2 left-2">
                     <span className={`
-                      px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-md border
+                      px-2 py-0.5 rounded-full text-[10px] font-medium backdrop-blur-md border
                       ${project.category === 'Game' 
                         ? 'bg-fuchsia-500/20 border-fuchsia-500/30 text-fuchsia-300' 
                         : project.category === 'Web'
@@ -172,128 +168,99 @@ const Projects: React.FC = () => {
                     `}>
                       {project.category}
                     </span>
-                    
-                    {/* Live/Play badge */}
-                    <span className={`
-                      px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-md border
-                      ${project.category === 'Game'
-                        ? 'bg-fuchsia-500/20 border-fuchsia-500/30 text-fuchsia-300'
-                        : 'bg-emerald-500/20 border-emerald-500/30 text-emerald-300'
-                      }
-                    `}>
-                      {project.category === 'Game' ? 'Play Now' : 'Live Demo'}
-                    </span>
                   </div>
 
-                  {/* Tech stack chips - if available */}
+                  {/* Tech Stack Chips */}
                   {project.tech && project.tech.length > 0 && (
-                    <div className="absolute bottom-4 left-4 flex flex-wrap gap-2 max-w-[80%]">
-                      {project.tech.slice(0, 3).map((tech, i) => (
-                        <div
+                    <div className="absolute bottom-2 left-2 flex gap-1 max-w-[70%]">
+                      {project.tech.slice(0, 2).map((tech, i) => (
+                        <span
                           key={i}
-                          className="px-2 py-1 rounded-md bg-slate-900/80 backdrop-blur-sm border border-slate-700"
+                          className="px-1.5 py-0.5 rounded-md bg-slate-900/80 backdrop-blur-sm border border-slate-700 text-[8px] sm:text-[10px] text-slate-300 truncate"
                         >
-                          <span className="text-xs text-slate-300">{tech}</span>
-                        </div>
+                          {tech}
+                        </span>
                       ))}
-                      {project.tech.length > 3 && (
-                        <div className="px-2 py-1 rounded-md bg-slate-900/80 backdrop-blur-sm border border-slate-700">
-                          <span className="text-xs text-slate-300">+{project.tech.length - 3}</span>
-                        </div>
+                      {project.tech.length > 2 && (
+                        <span className="px-1.5 py-0.5 rounded-md bg-slate-900/80 backdrop-blur-sm border border-slate-700 text-[8px] sm:text-[10px] text-slate-300">
+                          +{project.tech.length - 2}
+                        </span>
                       )}
                     </div>
                   )}
-                </div>
+                </a>
 
-                {/* Content */}
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-violet-400 transition-colors">
+                {/* Content Section */}
+                <div className="p-3 sm:p-4">
+                  {/* Title */}
+                  <a 
+                    href={project.liveUrl || '#'}
+                    onClick={(e) => handleLiveClick(e, project.liveUrl)}
+                    target={project.liveUrl ? "_blank" : undefined}
+                    rel={project.liveUrl ? "noopener noreferrer" : undefined}
+                    className="block mb-2"
+                  >
+                    <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-violet-400 transition-colors line-clamp-1">
                       {project.title}
                     </h3>
-                    
-                    <div className="p-2 rounded-lg bg-slate-800/50 border border-slate-700">
-                      {getCategoryIcon(project.category)}
-                    </div>
-                  </div>
+                  </a>
 
-                  {/* Description with bullet points */}
-                  <div className="space-y-3 mb-6">
-                    {project.description.map((desc, i) => (
-                      <div key={i} className="flex items-start gap-3">
-                        <div className={`
-                          mt-1.5 w-1.5 h-1.5 rounded-full bg-gradient-to-r 
-                          ${getCategoryGradient(project.category)} flex-shrink-0
-                        `}></div>
-                        <p className="text-slate-400 text-sm leading-relaxed">{desc}</p>
-                      </div>
-                    ))}
-                  </div>
+                  {/* Description */}
+                  <p className="text-[10px] sm:text-xs text-slate-400 mb-3 line-clamp-2">
+                    {project.description[0]}
+                  </p>
 
-                  {/* Tech stack section */}
-                  {project.tech && project.tech.length > 0 && (
-                    <div className="mb-6">
-                      <div className="flex flex-wrap gap-2">
-                        {project.tech.map((tech, i) => (
-                          <span
-                            key={i}
-                            className="text-xs px-3 py-1.5 rounded-full bg-slate-800/80 text-slate-300 border border-slate-700 hover:border-violet-500/50 transition-colors"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Project highlights based on category */}
-                  <div className="mb-6 grid grid-cols-2 gap-3">
-                    {project.category === 'Game' && (
+                  {/* Highlights */}
+                  <div className="flex gap-2 mb-3">
+                    {project.category === 'Game' ? (
                       <>
-                        <div className="flex items-center gap-2 text-xs text-slate-400 bg-slate-800/30 p-2 rounded-lg">
-                          <Zap size={14} className="text-fuchsia-400" />
-                          <span>Real-time</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-slate-400 bg-slate-800/30 p-2 rounded-lg">
-                          <Gamepad2 size={14} className="text-fuchsia-400" />
-                          <span>Multiplayer</span>
-                        </div>
+                        <span className="flex items-center gap-1 text-[8px] sm:text-[10px] text-slate-500 bg-slate-800/30 px-1.5 py-0.5 rounded">
+                          <Zap size={10} className="text-fuchsia-400" />
+                          Real-time
+                        </span>
+                        <span className="flex items-center gap-1 text-[8px] sm:text-[10px] text-slate-500 bg-slate-800/30 px-1.5 py-0.5 rounded">
+                          <Gamepad2 size={10} className="text-fuchsia-400" />
+                          Game
+                        </span>
                       </>
-                    )}
-                    {project.category === 'Web' && (
+                    ) : (
                       <>
-                        <div className="flex items-center gap-2 text-xs text-slate-400 bg-slate-800/30 p-2 rounded-lg">
-                          <Globe size={14} className="text-emerald-400" />
-                          <span>Responsive</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-xs text-slate-400 bg-slate-800/30 p-2 rounded-lg">
-                          <Code2 size={14} className="text-emerald-400" />
-                          <span>MERN Stack</span>
-                        </div>
+                        <span className="flex items-center gap-1 text-[8px] sm:text-[10px] text-slate-500 bg-slate-800/30 px-1.5 py-0.5 rounded">
+                          <Globe size={10} className="text-emerald-400" />
+                          Responsive
+                        </span>
+                        <span className="flex items-center gap-1 text-[8px] sm:text-[10px] text-slate-500 bg-slate-800/30 px-1.5 py-0.5 rounded">
+                          <Code2 size={10} className="text-emerald-400" />
+                          MERN
+                        </span>
                       </>
                     )}
                   </div>
 
-                  {/* Action buttons */}
-                  <div className="flex gap-3">
-                    <button className={`
-                      flex-1 py-3 rounded-xl bg-gradient-to-r ${getCategoryGradient(project.category)} 
-                      text-white font-medium transition-all hover:shadow-[0_0_20px_rgba(139,92,246,0.5)] 
-                      hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2
-                    `}>
-                      {project.category === 'Game' ? 'Play Game' : 'View Live'}
-                      <ExternalLink size={16} />
-                    </button>
-                    <button className="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-medium transition-all border border-slate-700 hover:border-slate-600">
-                      <Github size={18} />
+                  {/* Action Buttons */}
+                  <div className="flex gap-2">
+                    {/* Live Demo Button */}
+                    <button 
+                      onClick={(e) => handleLiveClick(e, project.liveUrl)}
+                      disabled={!project.liveUrl}
+                      className={`
+                        flex-1 py-1.5 rounded-lg bg-gradient-to-r ${getCategoryGradient(project.category)} 
+                        text-white text-[10px] sm:text-xs font-medium transition-all 
+                        hover:shadow-[0_0_15px_rgba(139,92,246,0.3)] 
+                        flex items-center justify-center gap-1
+                        ${!project.liveUrl ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                      `}
+                    >
+                      <ExternalLink size={12} />
+                      <span className="hidden xs:inline">Live</span>
                     </button>
                   </div>
                 </div>
 
-                {/* Animated progress indicator */}
+                {/* Hover Progress Indicator */}
                 <div className={`
                   absolute bottom-0 left-0 h-0.5 bg-gradient-to-r ${getCategoryGradient(project.category)} 
-                  w-0 group-hover:w-full transition-all duration-700
+                  w-0 group-hover:w-full transition-all duration-500
                 `}></div>
               </div>
             </div>

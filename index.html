@@ -1,57 +1,86 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Arin Kumar Joshi | React Developer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-            },
-            colors: {
-              primary: '#8b5cf6', // Violet-500
-              secondary: '#10b981', // Emerald-500
-              dark: '#0f172a', // Slate-900
-              card: '#1e293b', // Slate-800
-            }
+ <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary SEO -->
+  <title>Arin Joshi | React Developer | Frontend Engineer</title>
+  <meta name="description" content="Arin Kumar Joshi is a React Developer specializing in TypeScript, JavaScript and scalable frontend applications. Explore portfolio, projects, and contact details." />
+  <meta name="keywords" content="Arin Kumar Joshi, Arin Joshi, React Developer, Frontend Developer, TypeScript Developer, MERN Developer" />
+  <meta name="author" content="Arin Kumar Joshi" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph (Social Sharing) -->
+  <meta property="og:title" content="Arin Kumar Joshi | React Developer" />
+  <meta property="og:description" content="Frontend Developer specializing in React, TypeScript and high-performance web applications." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://arinjoshi.netlify.app/" />
+
+  <!-- Structured Data for Google -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Arin Kumar Joshi",
+    "alternateName": "Arin Joshi",
+    "url": "https://arinjoshi.netlify.app/",
+    "jobTitle": "React Developer",
+    "sameAs": [
+      "https://www.linkedin.com/in/arinjoshi/"
+    ]
+  }
+  </script>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            primary: '#8b5cf6',
+            secondary: '#10b981',
+            dark: '#0f172a',
+            card: '#1e293b',
           }
         }
       }
-    </script>
-    <style>
-      /* Custom scrollbar for Webkit */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #0f172a; 
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #334155; 
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #475569; 
-      }
-    </style>
+    }
+  </script>
+
+  <style>
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+
   <script type="importmap">
-{
-  "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "lucide-react": "https://esm.sh/lucide-react@^0.561.0"
+  {
+    "imports": {
+      "react/": "https://esm.sh/react@^19.2.3/",
+      "react": "https://esm.sh/react@^19.2.3",
+      "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+      "lucide-react": "https://esm.sh/lucide-react@^0.561.0"
+    }
   }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
+  </script>
+
+  <link rel="stylesheet" href="/index.css">
 </head>
   <body class="bg-dark text-slate-300">
     <div id="root"></div>

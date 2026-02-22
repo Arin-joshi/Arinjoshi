@@ -14,6 +14,7 @@ export interface Project {
   tech?: string[]; // Inferred from context if not explicit
   category: 'Game' | 'Web' | 'App';
   imageUrl: string;
+  liveUrl?: string;
 }
 
 export interface Education {

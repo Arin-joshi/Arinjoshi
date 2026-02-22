@@ -60,9 +60,9 @@ export const PROJECTS: Project[] = [
     category: "Game",
     imageUrl: "/Coinflip.webp",
     description: [
-      "Real-time multiplayer game using React.js, WebSockets, and APIs.",
-      "Two play modes: Multiply & Instant.",
-      "Betting system with cashout and win/loss tracking."
+      "Real-time multiplayer coin betting game built with React.js and WebSockets.",
+      "Two play modes: Multiply Mode & Instant Mode.",
+      "Dynamic betting system with cashout feature and real-time win/loss tracking."
     ]
   },
   {
@@ -71,9 +71,9 @@ export const PROJECTS: Project[] = [
     category: "Game",
     imageUrl: "/MORE-OR-LESS.png",
     description: [
-      "Number prediction game with difficulty levels.",
-      "Interactive UI with instant updates.",
-      "Animations and sound effects for engagement."
+      "Interactive number prediction game with multiple difficulty levels.",
+      "Real-time result calculation with instant UI updates.",
+      "Engaging animations and sound effects for enhanced user experience."
     ]
   },
   {
@@ -82,9 +82,9 @@ export const PROJECTS: Project[] = [
     category: "Game",
     imageUrl: "/1755781092430_Triple 1.webp",
     description: [
-      "Tile-matching game with real-time updates.",
-      "Multiplier and scoring logic.",
-      "Smooth transitions and optimized performance."
+      "Fast-paced tile matching game with real-time scoring logic.",
+      "Multiplier-based reward system for higher engagement.",
+      "Optimized performance with smooth animations and transitions."
     ]
   },
   {
@@ -92,10 +92,71 @@ export const PROJECTS: Project[] = [
     title: "Company Website",
     category: "Web",
     imageUrl: "https://picsum.photos/id/3/800/600",
+    liveUrl: "https://kotiboxglobaltech.com/",
     description: [
-      "Fully responsive MERN stack website.",
-      "Frontend routing and API integration.",
-      "Cloud deployment with high uptime."
+      "Fully responsive corporate website built using the MERN stack.",
+      "SEO-friendly architecture with dynamic routing and API integration.",
+      "Deployed on cloud infrastructure ensuring high performance and uptime."
+    ]
+  },
+  {
+    id: "proj-5",
+    title: "QR Generator App",
+    category: "Web",
+    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRga_81_yes26w0xhPbMdioLGZBOe7indIx8g&s",
+    liveUrl: "https://arin-qr.netlify.app/",
+    description: [
+      "Web-based QR code generator built with React.js.",
+      "Generate QR codes instantly for URLs, text, and custom inputs.",
+      "Downloadable QR images with responsive and clean UI design."
+    ]
+  },
+  {
+    id: "proj-6",
+    title: "Astrology App",
+    category: "Web",
+    imageUrl: "https://i.ibb.co/M5pr8RVT/Screenshot-2026-02-22-182356.png",
+    liveUrl: "https://nkjoshi.netlify.app/",
+    description: [
+      "Modern astrology web application with dynamic horoscope features.",
+      "User-friendly interface with categorized zodiac insights.",
+      "API-based data rendering with responsive and optimized design."
+    ]
+  },
+  {
+    id: "proj-7",
+    title: "Resume Maker",
+    category: "Web",
+    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStBLRtAcfURzwJzkeWUt-oPHhKJ29h-Dc88w&s",
+    liveUrl: "https://arinresumemaker.netlify.app/",
+    description: [
+      "Interactive resume builder with customizable templates.",
+      "Real-time preview and dynamic form-based input system.",
+      "Download resumes in structured and professional formats."
+    ]
+  },
+  {
+    id: "proj-8",
+    title: "JSX & TSX Converter",
+    category: "Web",
+    imageUrl: "https://miro.medium.com/1*A-rgbVaUSwF8xrwJfUSBEQ.png",
+    liveUrl: "https://arinjsxconverter.netlify.app/",
+    description: [
+      "Developer utility tool to convert JSX code to TSX format.",
+      "Automatic type-safe transformation for React components.",
+      "Clean UI with instant code conversion and copy functionality."
+    ]
+  },
+  {
+    id: "proj-9",
+    title: "Spine Animation Viewer",
+    category: "Web",
+    imageUrl: "https://esotericsoftware.com/img/skeleton-viewer.jpg",
+    liveUrl: "https://spine-viewer-arin.netlify.app/",
+    description: [
+      "Web-based Spine animation preview tool.",
+      "Upload and render Spine JSON and atlas files in real-time.",
+      "Smooth animation playback controls with optimized rendering."
     ]
   }
 ];
