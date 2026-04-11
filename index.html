@@ -4,6 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- Apply saved theme before paint (pairs with Tailwind darkMode: 'class') -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('portfolio-theme');
+        if (t === 'light') document.documentElement.classList.remove('dark');
+        else document.documentElement.classList.add('dark');
+      } catch (e) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+
   <!-- Primary SEO -->
   <title>Arin Joshi | React Developer | Frontend Engineer</title>
   <meta name="description" content="Arin Kumar Joshi is a React Developer specializing in TypeScript, JavaScript and scalable frontend applications. Explore portfolio, projects, and contact details." />
@@ -41,6 +54,7 @@
 
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
@@ -58,6 +72,17 @@
   </script>
 
   <style>
+    /* Light default; .dark matches portfolio dark theme (Tailwind dark: variants) */
+    html, body, #root {
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+    html.dark, html.dark body, html.dark #root {
+      background-color: #0f172a;
+      color: #cbd5e1;
+    }
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #0f172a; }
     ::-webkit-scrollbar-thumb {
@@ -82,7 +107,7 @@
 
   <link rel="stylesheet" href="/index.css">
 </head>
-  <body class="bg-dark text-slate-300">
+  <body class="bg-slate-50 text-slate-900 dark:bg-dark dark:text-slate-300">
     <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>

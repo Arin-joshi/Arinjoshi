@@ -57,15 +57,15 @@ const Skills: React.FC = () => {
     <section 
       id="skills" 
       ref={sectionRef}
-      className="relative py-32 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden"
+      className="relative py-32 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden dark:from-slate-950 dark:via-slate-900 dark:to-slate-950"
     >
       {/* Animated background grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.07)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] dark:bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)]"></div>
       
       {/* Floating orbs */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-violet-600/10 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      <div className="absolute top-40 right-40 w-60 h-60 bg-emerald-600/10 rounded-full blur-3xl animate-pulse delay-700"></div>
+      <div className="absolute top-20 left-10 w-72 h-72 bg-violet-500/10 rounded-full blur-3xl animate-pulse dark:bg-violet-600/10"></div>
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-1000 dark:bg-cyan-600/10"></div>
+      <div className="absolute top-40 right-40 w-60 h-60 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-700 dark:bg-emerald-600/10"></div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
@@ -73,19 +73,19 @@ const Skills: React.FC = () => {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6 backdrop-blur-sm">
             <Sparkles size={16} className="text-violet-400 animate-pulse" />
-            <span className="text-sm font-medium text-violet-300">Technical Expertise</span>
+            <span className="text-sm font-medium text-violet-700 dark:text-violet-300">Technical Expertise</span>
           </div>
           
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+          <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6 dark:text-white">
             Engineering{' '}
             <span className="bg-gradient-to-r from-violet-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent animate-gradient">
               Excellence
             </span>
           </h2>
           
-          <p className="text-slate-400 max-w-2xl mx-auto text-lg">
+          <p className="text-slate-600 max-w-2xl mx-auto text-lg dark:text-slate-400">
             Full-stack development expertise with a focus on 
-            <span className="text-white font-semibold"> React.js </span> 
+            <span className="text-slate-900 font-semibold dark:text-white"> React.js </span> 
             and modern web technologies
           </p>
         </div>
@@ -102,7 +102,7 @@ const Skills: React.FC = () => {
                   px-4 py-2 rounded-full text-sm font-medium transition-all duration-300
                   ${activeCategory === category 
                     ? 'bg-violet-600 text-white shadow-[0_0_20px_rgba(139,92,246,0.5)]' 
-                    : 'bg-slate-800/50 text-slate-400 hover:text-white border border-slate-700 hover:border-violet-500/50'
+                    : 'bg-slate-100/90 text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-violet-400 dark:bg-slate-800/50 dark:text-slate-400 dark:hover:text-white dark:border-slate-700 dark:hover:border-violet-500/50'
                   }
                 `}
               >
@@ -136,20 +136,20 @@ const Skills: React.FC = () => {
                   {/* Animated border gradient */}
                   <div className={`absolute -inset-0.5 bg-gradient-to-r ${config.color} rounded-xl opacity-0 group-hover:opacity-100 blur transition duration-500`}></div>
                   
-                  <div className="relative bg-slate-900/90 backdrop-blur-sm rounded-xl border border-slate-800 hover:border-transparent p-5 transition-all duration-300">
+                  <div className="relative bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 hover:border-transparent p-5 transition-all duration-300 shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none">
                     {/* Skill icon and name */}
                     <div className="flex items-center gap-3 mb-2">
                       <div className={`p-2 rounded-lg ${config.bg} ${config.text}`}>
                         {config.icon}
                       </div>
-                      <span className="text-white font-semibold group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-slate-300 transition-all">
+                      <span className="text-slate-900 font-semibold group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-violet-700 group-hover:to-slate-800 transition-all dark:text-white dark:group-hover:from-white dark:group-hover:to-slate-300">
                         {skill.name}
                       </span>
                     </div>
                     
                     {/* Skill level indicator */}
                     <div className="mt-3 flex items-center gap-2">
-                      <div className="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                      <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden dark:bg-slate-800">
                         <div className={`h-full bg-gradient-to-r ${config.color} w-[85%] group-hover:w-full transition-all duration-700`}></div>
                       </div>
                       <span className={`text-xs ${config.text}`}>Expert</span>
@@ -175,7 +175,7 @@ const Skills: React.FC = () => {
                 <Trophy size={24} className="text-purple-400" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-white">Certifications</h3>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Certifications</h3>
                 <p className="text-slate-500 text-sm">Professional achievements</p>
               </div>
             </div>
@@ -199,7 +199,7 @@ const Skills: React.FC = () => {
                   {/* Animated background */}
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-xl opacity-0 group-hover:opacity-100 blur-xl transition-opacity"></div>
                   
-                  <div className="relative bg-slate-900/50 backdrop-blur-sm p-6 rounded-xl border border-slate-800 hover:border-purple-500/50 transition-all group">
+                  <div className="relative bg-white/95 backdrop-blur-sm p-6 rounded-xl border border-slate-200 hover:border-purple-400/60 transition-all group shadow-sm dark:bg-slate-900/50 dark:border-slate-800 dark:hover:border-purple-500/50 dark:shadow-none">
                     <div className="flex items-start gap-4">
                       {/* Icon with animation */}
                       <div className={`
@@ -212,10 +212,10 @@ const Skills: React.FC = () => {
                       <div className="flex-1">
                         <div className="flex items-start justify-between">
                           <div>
-                            <h4 className="text-white font-semibold text-lg mb-1 group-hover:text-purple-400 transition-colors">
+                            <h4 className="text-slate-900 font-semibold text-lg mb-1 group-hover:text-purple-600 transition-colors dark:text-white dark:group-hover:text-purple-400">
                               {cert.name}
                             </h4>
-                            <p className="text-slate-400 text-sm flex items-center gap-2">
+                            <p className="text-slate-600 text-sm flex items-center gap-2 dark:text-slate-400">
                               <span>by {cert.issuer}</span>
                               <span className="w-1 h-1 rounded-full bg-slate-600"></span>
                               <span className="text-emerald-400">Verified</span>
@@ -223,7 +223,7 @@ const Skills: React.FC = () => {
                           </div>
                           
                           {/* Certificate ID (mock) */}
-                          <span className="text-xs text-slate-600 bg-slate-800/50 px-2 py-1 rounded">
+                          <span className="text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded dark:text-slate-600 dark:bg-slate-800/50">
                             #{cert.id.split('-')[1]}
                           </span>
                         </div>
@@ -231,7 +231,7 @@ const Skills: React.FC = () => {
                         {/* Skills tags */}
                         <div className="flex flex-wrap gap-2 mt-3">
                           {['React', 'Web Dev', 'Professional'].map((tag, i) => (
-                            <span key={i} className="text-xs px-2 py-1 rounded-full bg-slate-800/80 text-slate-400 border border-slate-700">
+                            <span key={i} className="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800/80 dark:text-slate-400 dark:border-slate-700">
                               {tag}
                             </span>
                           ))}
@@ -260,7 +260,7 @@ const Skills: React.FC = () => {
                 <GraduationCap size={24} className="text-emerald-400" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-white">Education</h3>
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Education</h3>
                 <p className="text-slate-500 text-sm">Academic background</p>
               </div>
             </div>
@@ -297,9 +297,9 @@ const Skills: React.FC = () => {
                     </div>
                     
                     {/* Content card */}
-                    <div className="flex-1 bg-slate-900/50 backdrop-blur-sm p-6 rounded-xl border border-slate-800 hover:border-emerald-500/50 transition-all group-hover:translate-x-2">
+                    <div className="flex-1 bg-white/95 backdrop-blur-sm p-6 rounded-xl border border-slate-200 hover:border-emerald-500/60 transition-all group-hover:translate-x-2 shadow-sm dark:bg-slate-900/50 dark:border-slate-800 dark:hover:border-emerald-500/50 dark:shadow-none">
                       <div className="flex items-start justify-between mb-2">
-                        <h4 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+                        <h4 className="text-xl font-bold text-slate-900 group-hover:text-emerald-600 transition-colors dark:text-white dark:group-hover:text-emerald-400">
                           {edu.degree}
                         </h4>
                         {edu.score && (
@@ -356,14 +356,14 @@ const Skills: React.FC = () => {
               className="relative group"
             >
               <div className={`absolute -inset-0.5 bg-gradient-to-r ${stat.color} rounded-xl opacity-0 group-hover:opacity-100 blur transition duration-500`}></div>
-              <div className="relative bg-slate-900/90 backdrop-blur-sm rounded-xl border border-slate-800 p-6 text-center">
+              <div className="relative bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 p-6 text-center shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none">
                 <div className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${stat.color}/20 mb-3`}>
                   <div className={`text-transparent bg-clip-text bg-gradient-to-r ${stat.color}`}>
                     {stat.icon}
                   </div>
                 </div>
-                <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
-                <div className="text-sm text-slate-400">{stat.label}</div>
+                <div className="text-3xl font-bold text-slate-900 mb-1 dark:text-white">{stat.value}</div>
+                <div className="text-sm text-slate-600 dark:text-slate-400">{stat.label}</div>
               </div>
             </div>
           ))}

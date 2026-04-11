@@ -75,14 +75,14 @@ const Experience: React.FC = () => {
     <section 
       id="experience" 
       ref={sectionRef}
-      className="relative py-32 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden"
+      className="relative py-32 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden dark:from-slate-950 dark:via-slate-900 dark:to-slate-950"
     >
       {/* Animated background */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.07)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] dark:bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)]"></div>
       
       {/* Floating elements */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-violet-600/10 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-fuchsia-600/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      <div className="absolute top-20 left-10 w-72 h-72 bg-violet-500/10 rounded-full blur-3xl animate-pulse dark:bg-violet-600/10"></div>
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-fuchsia-500/10 rounded-full blur-3xl animate-pulse delay-1000 dark:bg-fuchsia-600/10"></div>
       
       {/* Animated particles */}
       <div className="absolute inset-0 overflow-hidden">
@@ -105,17 +105,17 @@ const Experience: React.FC = () => {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6 backdrop-blur-sm">
             <Rocket size={16} className="text-violet-400 animate-pulse" />
-            <span className="text-sm font-medium text-violet-300">Professional Journey</span>
+            <span className="text-sm font-medium text-violet-700 dark:text-violet-300">Professional Journey</span>
           </div>
           
-          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+          <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6 dark:text-white">
             Work{' '}
             <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400 bg-clip-text text-transparent animate-gradient">
               Experience
             </span>
           </h2>
           
-          <p className="text-slate-400 max-w-2xl mx-auto text-lg">
+          <p className="text-slate-600 max-w-2xl mx-auto text-lg dark:text-slate-400">
             Over 2 years of hands-on experience building scalable applications
             and leading development initiatives
           </p>
@@ -134,12 +134,12 @@ const Experience: React.FC = () => {
               className="relative group"
             >
               <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-xl opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
-              <div className="relative bg-slate-900/90 backdrop-blur-sm rounded-xl border border-slate-800 p-6 text-center">
-                <div className="inline-flex p-3 rounded-lg bg-violet-500/10 text-violet-400 mb-3 group-hover:scale-110 transition-transform">
+              <div className="relative bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 p-6 text-center shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none">
+                <div className="inline-flex p-3 rounded-lg bg-violet-500/10 text-violet-600 mb-3 group-hover:scale-110 transition-transform dark:text-violet-400">
                   {stat.icon}
                 </div>
-                <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
-                <div className="text-sm text-slate-400">{stat.label}</div>
+                <div className="text-3xl font-bold text-slate-900 mb-1 dark:text-white">{stat.value}</div>
+                <div className="text-sm text-slate-600 dark:text-slate-400">{stat.label}</div>
               </div>
             </div>
           ))}
@@ -175,11 +175,11 @@ const Experience: React.FC = () => {
                   {/* Timeline dot with glow */}
                   <div className={`
                     absolute left-4 sm:left-1/2 transform sm:-translate-x-1/2 
-                    w-8 h-8 rounded-full bg-slate-900 border-4 
-                    transition-all duration-500 z-10
+                    w-8 h-8 rounded-full bg-white border-4 
+                    transition-all duration-500 z-10 dark:bg-slate-900
                     ${activeExp === exp.id 
                       ? 'border-violet-500 scale-125 shadow-[0_0_30px_rgba(139,92,246,0.8)]' 
-                      : 'border-slate-700'}
+                      : 'border-slate-300 dark:border-slate-700'}
                   `}>
                     <div className={`
                       absolute inset-0 rounded-full animate-ping opacity-20
@@ -205,11 +205,11 @@ const Experience: React.FC = () => {
                       `}></div>
 
                       {/* Main card */}
-                      <div className="relative bg-slate-900/90 backdrop-blur-sm rounded-2xl border border-slate-800 overflow-hidden">
+                      <div className="relative bg-white/95 backdrop-blur-sm rounded-2xl border border-slate-200 overflow-hidden shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none">
                         {/* Company header with gradient */}
                         <div className={`
                           p-6 bg-gradient-to-r ${config.color} bg-opacity-10 
-                          border-b border-slate-800
+                          border-b border-slate-200 dark:border-slate-800
                         `}>
                           <div className="flex items-start justify-between">
                             <div>
@@ -226,17 +226,17 @@ const Experience: React.FC = () => {
                                   </span>
                                 )}
                               </div>
-                              <h3 className="text-2xl font-bold text-white group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-slate-300 transition-all">
+                              <h3 className="text-2xl font-bold text-slate-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-violet-700 group-hover:to-slate-700 dark:text-white dark:group-hover:from-white dark:group-hover:to-slate-300 transition-all">
                                 {exp.role}
                               </h3>
                               <div className="flex items-center gap-2 mt-2">
                                 <Briefcase size={14} className="text-violet-400" />
-                                <span className="text-violet-300 font-medium">{exp.company}</span>
+                                <span className="text-violet-700 font-medium dark:text-violet-300">{exp.company}</span>
                               </div>
                             </div>
                             
                             {/* Company icon */}
-                            <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700">
+                            <div className="p-3 rounded-xl bg-slate-100/90 border border-slate-200 dark:bg-slate-800/80 dark:border-slate-700">
                               {config.icon}
                             </div>
                           </div>
@@ -247,12 +247,12 @@ const Experience: React.FC = () => {
                           {/* Period */}
                           <div className="flex items-center gap-2 mb-4 text-sm">
                             <Calendar size={14} className="text-slate-500" />
-                            <span className="text-slate-400">{exp.period}</span>
+                            <span className="text-slate-600 dark:text-slate-400">{exp.period}</span>
                             {exp.location && (
                               <>
                                 <span className="w-1 h-1 rounded-full bg-slate-600"></span>
                                 <MapPin size={14} className="text-slate-500" />
-                                <span className="text-slate-400">{exp.location}</span>
+                                <span className="text-slate-600 dark:text-slate-400">{exp.location}</span>
                               </>
                             )}
                           </div>
@@ -262,7 +262,7 @@ const Experience: React.FC = () => {
                             {exp.description.map((item, i) => (
                               <li 
                                 key={i} 
-                                className="flex items-start gap-3 text-slate-300 text-sm group/item"
+                                className="flex items-start gap-3 text-slate-700 text-sm group/item dark:text-slate-300"
                                 style={{ transitionDelay: `${i * 50}ms` }}
                               >
                                 <span className={`
@@ -275,7 +275,7 @@ const Experience: React.FC = () => {
                           </ul>
 
                           {/* Tech stack used */}
-                          <div className="mt-4 pt-4 border-t border-slate-800">
+                          <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
                             <p className="text-xs font-semibold text-slate-500 mb-2 flex items-center gap-1">
                               <Layers size={12} />
                               TECH STACK
@@ -291,7 +291,7 @@ const Experience: React.FC = () => {
                                     transition-all duration-300 cursor-default
                                     ${hoveredTech === tech 
                                       ? `bg-gradient-to-r ${config.color} text-white scale-105` 
-                                      : 'bg-slate-800/80 text-slate-300 border border-slate-700'}
+                                      : 'bg-slate-100/90 text-slate-700 border border-slate-200 dark:bg-slate-800/80 dark:text-slate-300 dark:border-slate-700'}
                                   `}
                                 >
                                   {tech}

@@ -14,7 +14,7 @@ export const EXPERIENCE: Experience[] = [
     id: "exp-3",
     role: "Jr. React Developer",
     company: "NKB PlayTech Pvt. Ltd.",
-    period: "March 2025 - Present",
+    period: "March 2025 - March 2026",
     description: [
       "Developing real-time game applications using WebSockets and REST APIs.",
       "Handling complex game logic including multiplayer state syncing and instant updates.",
@@ -28,7 +28,7 @@ export const EXPERIENCE: Experience[] = [
     id: "exp-2",
     role: "Mern Developer",
     company: "Kotibox Global Technologies",
-    period: "Sept. 2024 - Feb. 2025",
+    period: "Sept. 2023 - Feb. 2025",
     description: [
       "Designed and deployed the company's first complete website using the MERN stack (React.js, html/css).",
       "Implemented frontend routing with React Router for seamless navigation.",
@@ -157,6 +157,18 @@ export const PROJECTS: Project[] = [
       "Web-based Spine animation preview tool.",
       "Upload and render Spine JSON and atlas files in real-time.",
       "Smooth animation playback controls with optimized rendering."
+    ]
+  },
+  {
+    id: "proj-10",
+    title: "Legiit Course Service Provider App",
+    category: "App",
+    imageUrl: "/legiit-course.webp",
+    liveUrl: "https://legiit.com/sign-in",
+    description: [
+      "Authentication and account flows for the Legiit marketplace platform.",
+      "Course and service discovery with a focus on seller–buyer engagement.",
+      "Responsive UI patterns for dashboards, listings, and secure sign-in experiences."
     ]
   }
 ];

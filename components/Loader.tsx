@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Code2, Cpu, Sparkles, Zap, Brackets, Github, Coffee } from 'lucide-react';
+import { Code2, Cpu, Sparkles, Zap, Brackets, Github } from 'lucide-react';
 
 const Loader = () => {
   const [progress, setProgress] = useState(0);
   const [loadingText, setLoadingText] = useState('Initializing');
 
-  // Simulate loading progress
+  // Simulate loading progress (single interval; avoids resetting on each tick)
   useEffect(() => {
     const texts = [
       'Initializing',
@@ -13,31 +13,33 @@ const Loader = () => {
       'Compiling components',
       'Fetching data',
       'Almost ready',
-      'Welcome!'
+      'Welcome!',
     ];
 
-    let currentIndex = 0;
     const interval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          return 100;
-        }
-        return prev + 1;
+      setProgress((prev) => {
+        if (prev >= 100) return 100;
+        const next = prev + 1;
+        const textIdx =
+          next >= 100
+            ? 5
+            : next >= 80
+              ? 4
+              : next >= 60
+                ? 3
+                : next >= 40
+                  ? 2
+                  : next >= 20
+                    ? 1
+                    : 0;
+        setLoadingText(texts[textIdx]);
+        if (next >= 100) clearInterval(interval);
+        return next;
       });
-
-      // Update loading text based on progress
-      if (progress > 0 && progress < 20) setLoadingText(texts[0]);
-      else if (progress >= 20 && progress < 40) setLoadingText(texts[1]);
-      else if (progress >= 40 && progress < 60) setLoadingText(texts[2]);
-      else if (progress >= 60 && progress < 80) setLoadingText(texts[3]);
-      else if (progress >= 80 && progress < 100) setLoadingText(texts[4]);
-      else if (progress === 100) setLoadingText(texts[5]);
-      
     }, 30);
 
     return () => clearInterval(interval);
-  }, [progress]);
+  }, []);
 
   // Floating tech icons
   const techIcons = [
@@ -48,8 +50,26 @@ const Loader = () => {
     { Icon: Github, color: 'from-gray-400 to-slate-500', delay: 2.5 },
   ];
 
+  /* Inline shell so loading UI stays correct if Tailwind CDN is late */
+  const loaderShell: React.CSSProperties = {
+    position: 'fixed',
+    inset: 0,
+    zIndex: 9999,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '100vh',
+    boxSizing: 'border-box',
+    background: 'linear-gradient(to bottom, #020617 0%, #0f172a 50%, #020617 100%)',
+    color: '#e2e8f0',
+    overflow: 'hidden',
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden"
+      style={loaderShell}
+    >
       
       {/* Animated background grid */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>

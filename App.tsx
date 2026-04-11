@@ -11,12 +11,27 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // simple startup loader (perfect for portfolios)
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000); // adjust duration if you want
+    const start = performance.now();
+    // Matches Loader progress (~100 steps × 30ms ≈ 3s) so the site does not appear mid-animation
+    const minLoaderMs = 3100;
+    let timeoutId: ReturnType<typeof setTimeout>;
 
-    return () => clearTimeout(timer);
+    const finish = () => {
+      const elapsed = performance.now() - start;
+      const remaining = Math.max(0, minLoaderMs - elapsed);
+      timeoutId = setTimeout(() => setLoading(false), remaining);
+    };
+
+    if (document.readyState === 'complete') {
+      finish();
+    } else {
+      window.addEventListener('load', finish, { once: true });
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('load', finish);
+    };
   }, []);
 
   if (loading) {
@@ -24,7 +39,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-dark selection:bg-violet-500/30 selection:text-violet-200">
+    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-violet-500/20 selection:text-violet-900 dark:bg-dark dark:text-slate-300 dark:selection:bg-violet-500/30 dark:selection:text-violet-200">
       <Navbar />
       <main>
         <Hero />

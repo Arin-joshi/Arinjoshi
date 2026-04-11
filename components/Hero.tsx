@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { PERSONAL_INFO } from "../constants";
 import {
   ArrowRight,
@@ -24,10 +24,8 @@ import {
 const Hero: React.FC = () => {
   const [typedText, setTypedText] = useState("");
   const [cursorVisible, setCursorVisible] = useState(true);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isTyping, setIsTyping] = useState(true);
   const heroRef = useRef<HTMLElement>(null);
-  const profileRef = useRef<HTMLDivElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
 
   // Typing animation for roles - Optimized to prevent flickering
@@ -92,32 +90,6 @@ const Hero: React.FC = () => {
     };
   }, []);
 
-  // Parallax effect on mouse move - throttled for performance
-  useEffect(() => {
-    let ticking = false;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!ticking && heroRef.current && window.innerWidth > 1024) {
-        window.requestAnimationFrame(() => {
-          const { clientX, clientY } = e;
-          const { width, height, left, top } =
-            heroRef.current!.getBoundingClientRect();
-
-          const x = ((clientX - left) / width - 0.5) * 15; // Reduced intensity
-          const y = ((clientY - top) / height - 0.5) * 15;
-
-          setMousePosition({ x, y });
-          ticking = false;
-        });
-
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
-
   // Tech stack for floating icons
   const techStack = [
     {
@@ -166,14 +138,14 @@ const Hero: React.FC = () => {
     <section
       id="about"
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950"
+      className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-gradient-to-b from-slate-100 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950"
     >
-      {/* Animated background grid - with reduced opacity for better performance */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f1a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f1a_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
+      {/* Animated background grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.07)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] dark:bg-[linear-gradient(to_right,#4f4f4f1a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f1a_1px,transparent_1px)]"></div>
 
-      {/* Gradient orbs - with will-change for performance */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-violet-600/20 rounded-full blur-3xl animate-pulse will-change-transform"></div>
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-fuchsia-600/20 rounded-full blur-3xl animate-pulse delay-1000 will-change-transform"></div>
+      {/* Gradient orbs */}
+      <div className="absolute top-20 left-10 w-72 h-72 bg-violet-500/15 rounded-full blur-3xl animate-pulse will-change-transform dark:bg-violet-600/20"></div>
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-fuchsia-500/15 rounded-full blur-3xl animate-pulse delay-1000 will-change-transform dark:bg-fuchsia-600/20"></div>
 
       {/* Floating tech icons - reduced count for performance */}
       <div className="hidden lg:block absolute inset-0 overflow-hidden pointer-events-none">
@@ -188,7 +160,7 @@ const Hero: React.FC = () => {
               animationDuration: `${20 + i * 2}s`,
             }}
           >
-            <div className="p-2.5 rounded-xl bg-slate-900/80 backdrop-blur-sm border border-slate-700/50">
+            <div className="p-2.5 rounded-xl bg-white/90 backdrop-blur-sm border border-slate-200/80 shadow-sm dark:bg-slate-900/80 dark:border-slate-700/50 dark:shadow-none">
               <div
                 className={`text-transparent bg-clip-text bg-gradient-to-r ${tech.color}`}
               >
@@ -223,7 +195,7 @@ const Hero: React.FC = () => {
 
             {/* Name with gradient */}
             <div className="mb-3 sm:mb-4">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white tracking-tight">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-slate-900 tracking-tight dark:text-white">
                 Hi, I'm{" "}
                 <span className="relative inline-block">
                   <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400">
@@ -240,8 +212,8 @@ const Hero: React.FC = () => {
                 <div className="hidden sm:block p-1.5 rounded-lg bg-violet-500/10 border border-violet-500/30">
                   <Code2 size={16} className="text-violet-400" />
                 </div>
-                <h2 className="text-xl sm:text-2xl lg:text-3xl text-slate-400 font-medium">
-                  <span className="text-white">{typedText}</span>
+                <h2 className="text-xl sm:text-2xl lg:text-3xl text-slate-600 font-medium dark:text-slate-400">
+                  <span className="text-slate-900 dark:text-white">{typedText}</span>
                   <span
                     className={`ml-1 inline-block w-0.5 h-5 sm:h-6 lg:h-8 bg-gradient-to-b from-violet-400 to-fuchsia-400 ${cursorVisible ? "opacity-100" : "opacity-0"}`}
                   ></span>
@@ -252,8 +224,8 @@ const Hero: React.FC = () => {
             {/* Description with animated border */}
             <div className="relative group mb-6 sm:mb-8">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-xl opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
-              <div className="relative bg-slate-900/90 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-xl border border-slate-800">
-                <p className="text-sm sm:text-base md:text-lg text-slate-300 leading-relaxed">
+              <div className="relative bg-white/95 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-xl border border-slate-200 shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none">
+                <p className="text-sm sm:text-base md:text-lg text-slate-700 leading-relaxed dark:text-slate-300">
                   {PERSONAL_INFO.summary}
                 </p>
               </div>
@@ -280,12 +252,12 @@ const Hero: React.FC = () => {
               ].map((stat, index) => (
                 <div
                   key={index}
-                  className="text-center p-2 sm:p-3 rounded-xl bg-slate-900/50 border border-slate-800 hover:border-violet-500/50 transition-all group"
+                  className="text-center p-2 sm:p-3 rounded-xl bg-white/80 border border-slate-200 hover:border-violet-400/60 transition-all group dark:bg-slate-900/50 dark:border-slate-800 dark:hover:border-violet-500/50"
                 >
-                  <div className="text-violet-400 mb-1 group-hover:scale-110 transition-transform">
+                  <div className="text-violet-600 mb-1 group-hover:scale-110 transition-transform dark:text-violet-400">
                     {stat.icon}
                   </div>
-                  <div className="text-white font-bold text-xs sm:text-sm md:text-base lg:text-lg">
+                  <div className="text-slate-900 font-bold text-xs sm:text-sm md:text-base lg:text-lg dark:text-white">
                     {stat.value}
                   </div>
                   <div className="text-[10px] sm:text-xs text-slate-500">
@@ -313,7 +285,7 @@ const Hero: React.FC = () => {
               <a
                 href="/ArinJoshi.pdf"
                 download="ArinJoshi.pdf"
-                className="w-full sm:w-auto group px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-slate-800/50 backdrop-blur-sm hover:bg-slate-700 text-white font-semibold transition-all border border-slate-700 hover:border-violet-500/50 flex items-center justify-center gap-2 text-sm sm:text-base"
+                className="w-full sm:w-auto group px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-slate-100/90 backdrop-blur-sm hover:bg-slate-200/90 text-slate-900 font-semibold transition-all border border-slate-300 hover:border-violet-400 flex items-center justify-center gap-2 text-sm sm:text-base dark:bg-slate-800/50 dark:hover:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-violet-500/50"
               >
                 <Download
                   size={16}
@@ -327,7 +299,7 @@ const Hero: React.FC = () => {
             <div className="flex items-center justify-center lg:justify-start gap-3 sm:gap-4">
               <a
                 href={`mailto:${PERSONAL_INFO.email}`}
-                className="p-2.5 sm:p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-violet-400 hover:border-violet-500/50 hover:scale-110 transition-all group"
+                className="p-2.5 sm:p-3 rounded-xl bg-white/90 border border-slate-200 text-slate-600 hover:text-violet-600 hover:border-violet-400 hover:scale-110 transition-all group dark:bg-slate-900/80 dark:border-slate-800 dark:text-slate-400 dark:hover:text-violet-400 dark:hover:border-violet-500/50"
               >
                 <Mail
                   size={18}
@@ -338,7 +310,7 @@ const Hero: React.FC = () => {
                 href="https://www.linkedin.com/in/arinjoshi/"
                 target="_blank"
                 rel="noreferrer"
-                className="p-2.5 sm:p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-violet-400 hover:border-violet-500/50 hover:scale-110 transition-all group"
+                className="p-2.5 sm:p-3 rounded-xl bg-white/90 border border-slate-200 text-slate-600 hover:text-violet-600 hover:border-violet-400 hover:scale-110 transition-all group dark:bg-slate-900/80 dark:border-slate-800 dark:text-slate-400 dark:hover:text-violet-400 dark:hover:border-violet-500/50"
               >
                 <Linkedin
                   size={18}
@@ -349,7 +321,7 @@ const Hero: React.FC = () => {
                 href="https://github.com/arinjoshi"
                 target="_blank"
                 rel="noreferrer"
-                className="p-2.5 sm:p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-slate-400 hover:text-violet-400 hover:border-violet-500/50 hover:scale-110 transition-all group"
+                className="p-2.5 sm:p-3 rounded-xl bg-white/90 border border-slate-200 text-slate-600 hover:text-violet-600 hover:border-violet-400 hover:scale-110 transition-all group dark:bg-slate-900/80 dark:border-slate-800 dark:text-slate-400 dark:hover:text-violet-400 dark:hover:border-violet-500/50"
               >
                 <Github
                   size={18}
@@ -360,10 +332,7 @@ const Hero: React.FC = () => {
           </div>
 
           {/* Right Content - Profile Card */}
-          <div
-            className="relative order-1 lg:order-2 mb-6 lg:mb-0"
-            ref={profileRef}
-          >
+          <div className="relative order-1 lg:order-2 mb-6 lg:mb-0">
             {/* Animated background rings - simplified for performance */}
             <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 mx-auto">
               <div className="absolute inset-0">
@@ -373,15 +342,7 @@ const Hero: React.FC = () => {
 
               {/* Main profile card */}
               <div className="relative group perspective w-full h-full">
-                <div
-                  className="relative transform transition-transform duration-300 ease-out w-full h-full"
-                  style={{
-                    transform:
-                      window.innerWidth > 1024
-                        ? `perspective(1000px) rotateY(${mousePosition.x}deg) rotateX(${-mousePosition.y}deg)`
-                        : "none",
-                  }}
-                >
+                <div className="relative w-full h-full">
                   {/* Profile image container */}
                   <div className="relative w-full h-full">
                     {/* Glow effect behind image */}
@@ -404,7 +365,7 @@ const Hero: React.FC = () => {
 
                       {/* Location badge */}
                       <div className="absolute bottom-3 sm:bottom-4 lg:bottom-6 left-3 sm:left-4 lg:left-6 right-3 sm:right-4 lg:right-6">
-                        <div className="bg-slate-900/90 backdrop-blur-sm p-2 sm:p-3 lg:p-4 rounded-lg sm:rounded-xl border border-slate-700 transform transition-all group-hover:translate-y-[-5px]">
+                        <div className="bg-white/95 backdrop-blur-sm p-2 sm:p-3 lg:p-4 rounded-lg sm:rounded-xl border border-slate-200 shadow-md transform transition-all group-hover:translate-y-[-5px] dark:bg-slate-900/90 dark:border-slate-700 dark:shadow-none">
                           <div className="flex items-center gap-2 sm:gap-3">
                             <div className="relative">
                               <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 lg:w-3 lg:h-3 rounded-full bg-green-500"></div>
@@ -415,7 +376,7 @@ const Hero: React.FC = () => {
                                 size={12}
                                 className="sm:w-3 sm:h-3 lg:w-3.5 lg:h-3.5 text-slate-500"
                               />
-                              <span className="text-white font-medium truncate">
+                              <span className="text-slate-900 font-medium truncate dark:text-white">
                                 {PERSONAL_INFO.location}
                               </span>
                             </div>
@@ -428,19 +389,19 @@ const Hero: React.FC = () => {
               </div>
 
               {/* Floating badges - hidden on mobile */}
-              <div className="hidden sm:block absolute -bottom-5 lg:-bottom-10 -left-5 lg:-left-10 bg-slate-900/90 backdrop-blur-sm p-2 lg:p-4 rounded-lg lg:rounded-xl border border-slate-700 animate-float">
+              <div className="hidden sm:block absolute -bottom-5 lg:-bottom-10 -left-5 lg:-left-10 bg-white/95 backdrop-blur-sm p-2 lg:p-4 rounded-lg lg:rounded-xl border border-slate-200 shadow-lg animate-float dark:bg-slate-900/90 dark:border-slate-700 dark:shadow-none">
                 <div className="flex items-center gap-1.5 lg:gap-2">
                   <Star size={12} className="lg:w-4 lg:h-4 text-yellow-500" />
-                  <span className="text-xs lg:text-base text-white font-semibold">
+                  <span className="text-xs lg:text-base text-slate-900 font-semibold dark:text-white">
                     Top Rated
                   </span>
                 </div>
               </div>
 
-              <div className="hidden sm:block absolute -top-5 lg:-top-10 -right-5 lg:-right-10 bg-slate-900/90 backdrop-blur-sm p-2 lg:p-4 rounded-lg lg:rounded-xl border border-slate-700 animate-float animation-delay-2000">
+              <div className="hidden sm:block absolute -top-5 lg:-top-10 -right-5 lg:-right-10 bg-white/95 backdrop-blur-sm p-2 lg:p-4 rounded-lg lg:rounded-xl border border-slate-200 shadow-lg animate-float animation-delay-2000 dark:bg-slate-900/90 dark:border-slate-700 dark:shadow-none">
                 <div className="flex items-center gap-1.5 lg:gap-2">
                   <Zap size={12} className="lg:w-4 lg:h-4 text-violet-500" />
-                  <span className="text-xs lg:text-base text-white font-semibold">
+                  <span className="text-xs lg:text-base text-slate-900 font-semibold dark:text-white">
                     MERN Expert
                   </span>
                 </div>
@@ -451,10 +412,10 @@ const Hero: React.FC = () => {
 
         {/* Scroll indicator */}
         <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 sm:gap-2 animate-bounce hidden xs:flex">
-          <span className="text-[10px] sm:text-xs text-slate-500 uppercase tracking-wider">
+          <span className="text-[10px] sm:text-xs text-slate-600 uppercase tracking-wider dark:text-slate-500">
             Scroll
           </span>
-          <ChevronDown size={16} className="sm:w-5 sm:h-5 text-slate-500" />
+          <ChevronDown size={16} className="sm:w-5 sm:h-5 text-slate-600 dark:text-slate-500" />
         </div>
       </div>
 

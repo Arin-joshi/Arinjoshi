@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X, Code2, ChevronDown, Home, Briefcase, FolderGit2, Cpu, GraduationCap, Mail } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -82,7 +83,7 @@ const Navbar: React.FC = () => {
       <nav
         className={`fixed w-full z-50 transition-all duration-500 ${
           scrolled
-            ? "bg-slate-950/95 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] border-b border-slate-800/50 py-2"
+            ? "bg-white/90 backdrop-blur-xl shadow-[0_8px_32px_rgba(15,23,42,0.08)] border-b border-slate-200/80 dark:bg-slate-950/95 dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)] dark:border-slate-800/50 py-2"
             : "bg-transparent py-4 md:py-6"
         }`}
       >
@@ -113,9 +114,9 @@ const Navbar: React.FC = () => {
 
               {/* Logo text with gradient */}
               <div className="relative overflow-hidden">
-                <span className="font-bold text-lg sm:text-xl tracking-tight text-white">
+                <span className="font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white">
                   Arin
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600 dark:from-violet-400 dark:to-fuchsia-400">
                     Joshi
                   </span>
                 </span>
@@ -124,8 +125,8 @@ const Navbar: React.FC = () => {
               </div>
             </a>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:block">
+            {/* Desktop: nav + theme */}
+            <div className="hidden md:flex items-center gap-3">
               <div className="flex items-center gap-1 lg:gap-2">
                 {navLinks.map((link) => (
                   <a
@@ -138,15 +139,15 @@ const Navbar: React.FC = () => {
                       ${link.highlight 
                         ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40' 
                         : activeLink === link.href.substring(1)
-                          ? 'text-white bg-white/10'
-                          : 'text-slate-300 hover:text-white hover:bg-white/5'
+                          ? 'text-slate-900 bg-slate-900/5 dark:text-white dark:bg-white/10'
+                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-900/5 dark:text-slate-300 dark:hover:text-white dark:hover:bg-white/5'
                       }
                     `}
                   >
                     {/* Icon with animation */}
                     <span className={`
                       transition-transform duration-300 group-hover:scale-110
-                      ${link.highlight ? 'text-white/90' : 'text-slate-400 group-hover:text-violet-400'}
+                      ${link.highlight ? 'text-white/90' : 'text-slate-500 group-hover:text-violet-600 dark:text-slate-400 dark:group-hover:text-violet-400'}
                     `}>
                       {link.icon}
                     </span>
@@ -163,26 +164,27 @@ const Navbar: React.FC = () => {
                   </a>
                 ))}
               </div>
+              <ThemeToggle />
             </div>
 
-            {/* Mobile menu button with animation */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden relative w-10 h-10 rounded-lg bg-slate-800/80 border border-slate-700 hover:border-violet-500/50 hover:bg-slate-800 transition-all duration-300 flex items-center justify-center group"
-              aria-label="Toggle menu"
-            >
-              {/* Glow effect */}
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 opacity-0 group-hover:opacity-100 blur transition-opacity"></div>
-              
-              {/* Animated icons */}
-              <div className="relative transition-transform duration-300 group-hover:scale-110">
-                {isOpen ? (
-                  <X size={20} className="text-white" />
-                ) : (
-                  <Menu size={20} className="text-white" />
-                )}
-              </div>
-            </button>
+            {/* Mobile: theme + menu */}
+            <div className="flex items-center gap-2 md:hidden">
+              <ThemeToggle />
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="relative w-10 h-10 rounded-lg border border-slate-200 bg-white/90 text-slate-800 hover:border-violet-400 transition-all duration-300 flex items-center justify-center group dark:bg-slate-800/80 dark:border-slate-700 dark:text-white dark:hover:border-violet-500/50"
+                aria-label="Toggle menu"
+              >
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 opacity-0 group-hover:opacity-100 blur transition-opacity"></div>
+                <div className="relative transition-transform duration-300 group-hover:scale-110">
+                  {isOpen ? (
+                    <X size={20} />
+                  ) : (
+                    <Menu size={20} />
+                  )}
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -190,7 +192,7 @@ const Navbar: React.FC = () => {
       {/* Mobile Menu Overlay */}
       <div
         className={`
-          fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-40 transition-all duration-500 md:hidden
+          fixed inset-0 bg-white/95 backdrop-blur-xl z-40 transition-all duration-500 md:hidden dark:bg-slate-950/95
           ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
         `}
         style={{ top: '64px' }}
@@ -215,7 +217,7 @@ const Navbar: React.FC = () => {
                   transform hover:scale-[1.02] active:scale-[0.98]
                   ${link.highlight 
                     ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-violet-500/25' 
-                    : 'bg-slate-900/50 border border-slate-800 text-slate-300 hover:text-white hover:border-violet-500/50 hover:bg-slate-900'
+                    : 'bg-slate-100/80 border border-slate-200 text-slate-700 hover:text-slate-900 hover:border-violet-400 hover:bg-white dark:bg-slate-900/50 dark:border-slate-800 dark:text-slate-300 dark:hover:text-white dark:hover:border-violet-500/50 dark:hover:bg-slate-900'
                   }
                 `}
                 style={{

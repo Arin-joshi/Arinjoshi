@@ -79,31 +79,31 @@ const Projects: React.FC = () => {
     <section 
       id="projects" 
       ref={sectionRef}
-      className="relative py-20 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 overflow-hidden"
+      className="relative py-20 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden dark:from-slate-950 dark:via-slate-900 dark:to-slate-950"
     >
       {/* Animated background elements */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.07)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] dark:bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)]"></div>
       
       {/* Floating orbs */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-fuchsia-600/10 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      <div className="absolute top-20 left-10 w-72 h-72 bg-fuchsia-500/10 rounded-full blur-3xl animate-pulse dark:bg-fuchsia-600/10"></div>
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-1000 dark:bg-emerald-600/10"></div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 backdrop-blur-sm">
             <Sparkles size={14} className="text-violet-400 animate-pulse" />
-            <span className="text-xs sm:text-sm font-medium text-violet-300">Featured Work</span>
+            <span className="text-xs sm:text-sm font-medium text-violet-700 dark:text-violet-300">Featured Work</span>
           </div>
           
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-3 dark:text-white">
             Crafting{' '}
             <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-emerald-400 bg-clip-text text-transparent">
               Interactive Experiences
             </span>
           </h2>
           
-          <p className="text-slate-400 max-w-2xl mx-auto text-sm sm:text-base">
+          <p className="text-slate-600 max-w-2xl mx-auto text-sm sm:text-base dark:text-slate-400">
             Real-time gaming applications and web solutions built with the MERN stack
           </p>
         </div>
@@ -126,7 +126,7 @@ const Projects: React.FC = () => {
               style={{ transitionDelay: `${parseInt(project.id.split('-')[1]) * 100}ms` }}
             >
               {/* Card Container */}
-              <div className="relative bg-slate-900/90 backdrop-blur-sm rounded-xl border border-slate-800 hover:border-violet-500/50 transition-all duration-300 overflow-hidden">
+              <div className="relative bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 shadow-sm hover:border-violet-400/70 transition-all duration-300 overflow-hidden dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none dark:hover:border-violet-500/50">
                 
                 {/* Image Section - Make image clickable */}
                 <a 
@@ -146,7 +146,7 @@ const Projects: React.FC = () => {
                   />
                   
                   {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-100 via-slate-100/50 to-transparent dark:from-slate-900 dark:via-slate-900/50"></div>
                   
                   {/* Hover overlay with play icon */}
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -176,13 +176,13 @@ const Projects: React.FC = () => {
                       {project.tech.slice(0, 2).map((tech, i) => (
                         <span
                           key={i}
-                          className="px-1.5 py-0.5 rounded-md bg-slate-900/80 backdrop-blur-sm border border-slate-700 text-[8px] sm:text-[10px] text-slate-300 truncate"
+                          className="px-1.5 py-0.5 rounded-md bg-white/90 backdrop-blur-sm border border-slate-200 text-[8px] sm:text-[10px] text-slate-700 truncate dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-300"
                         >
                           {tech}
                         </span>
                       ))}
                       {project.tech.length > 2 && (
-                        <span className="px-1.5 py-0.5 rounded-md bg-slate-900/80 backdrop-blur-sm border border-slate-700 text-[8px] sm:text-[10px] text-slate-300">
+                        <span className="px-1.5 py-0.5 rounded-md bg-white/90 backdrop-blur-sm border border-slate-200 text-[8px] sm:text-[10px] text-slate-700 dark:bg-slate-900/80 dark:border-slate-700 dark:text-slate-300">
                           +{project.tech.length - 2}
                         </span>
                       )}
@@ -200,13 +200,13 @@ const Projects: React.FC = () => {
                     rel={project.liveUrl ? "noopener noreferrer" : undefined}
                     className="block mb-2"
                   >
-                    <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-violet-400 transition-colors line-clamp-1">
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-violet-600 transition-colors line-clamp-1 dark:text-white dark:group-hover:text-violet-400">
                       {project.title}
                     </h3>
                   </a>
 
                   {/* Description */}
-                  <p className="text-[10px] sm:text-xs text-slate-400 mb-3 line-clamp-2">
+                  <p className="text-[10px] sm:text-xs text-slate-600 mb-3 line-clamp-2 dark:text-slate-400">
                     {project.description[0]}
                   </p>
 
@@ -214,22 +214,22 @@ const Projects: React.FC = () => {
                   <div className="flex gap-2 mb-3">
                     {project.category === 'Game' ? (
                       <>
-                        <span className="flex items-center gap-1 text-[8px] sm:text-[10px] text-slate-500 bg-slate-800/30 px-1.5 py-0.5 rounded">
+                        <span className="flex items-center gap-1 text-[8px] sm:text-[10px] text-slate-600 bg-slate-200/60 px-1.5 py-0.5 rounded dark:text-slate-500 dark:bg-slate-800/30">
                           <Zap size={10} className="text-fuchsia-400" />
                           Real-time
                         </span>
-                        <span className="flex items-center gap-1 text-[8px] sm:text-[10px] text-slate-500 bg-slate-800/30 px-1.5 py-0.5 rounded">
+                        <span className="flex items-center gap-1 text-[8px] sm:text-[10px] text-slate-600 bg-slate-200/60 px-1.5 py-0.5 rounded dark:text-slate-500 dark:bg-slate-800/30">
                           <Gamepad2 size={10} className="text-fuchsia-400" />
                           Game
                         </span>
                       </>
                     ) : (
                       <>
-                        <span className="flex items-center gap-1 text-[8px] sm:text-[10px] text-slate-500 bg-slate-800/30 px-1.5 py-0.5 rounded">
+                        <span className="flex items-center gap-1 text-[8px] sm:text-[10px] text-slate-600 bg-slate-200/60 px-1.5 py-0.5 rounded dark:text-slate-500 dark:bg-slate-800/30">
                           <Globe size={10} className="text-emerald-400" />
                           Responsive
                         </span>
-                        <span className="flex items-center gap-1 text-[8px] sm:text-[10px] text-slate-500 bg-slate-800/30 px-1.5 py-0.5 rounded">
+                        <span className="flex items-center gap-1 text-[8px] sm:text-[10px] text-slate-600 bg-slate-200/60 px-1.5 py-0.5 rounded dark:text-slate-500 dark:bg-slate-800/30">
                           <Code2 size={10} className="text-emerald-400" />
                           MERN
                         </span>
