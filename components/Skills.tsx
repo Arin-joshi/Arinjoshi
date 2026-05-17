@@ -346,7 +346,7 @@ const Skills: React.FC = () => {
         {/* Skills Summary Stats */}
         <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: 'Years Experience', value: '2+', icon: <TrendingUp size={20} />, color: 'from-blue-500 to-cyan-500' },
+            { label: 'Years Experience', value: '3+', icon: <TrendingUp size={20} />, color: 'from-blue-500 to-cyan-500' },
             { label: 'Projects Completed', value: '15+', icon: <Code2 size={20} />, color: 'from-red-500 to-red-600' },
             { label: 'Certifications', value: CERTIFICATIONS.length.toString(), icon: <Award size={20} />, color: 'from-emerald-500 to-teal-500' },
             { label: 'Technologies', value: SKILLS.length.toString(), icon: <Cpu size={20} />, color: 'from-orange-500 to-red-500' },

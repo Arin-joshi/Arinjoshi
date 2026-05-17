@@ -125,7 +125,7 @@ const Experience: React.FC = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
           {[
             { icon: <Briefcase size={20} />, label: 'Companies', value: EXPERIENCE.length },
-            { icon: <Clock size={20} />, label: 'Years Active', value: '2+' },
+            { icon: <Clock size={20} />, label: 'Years Active', value: '3+' },
             { icon: <Code2 size={20} />, label: 'Projects', value: '10+' },
             { icon: <Users size={20} />, label: 'Teams', value: '3' },
           ].map((stat, index) => (

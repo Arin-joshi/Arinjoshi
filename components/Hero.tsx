@@ -218,7 +218,7 @@ const Hero: React.FC = () => {
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left Content */}
-          <div className="text-center lg:text-left order-2 lg:order-1">
+          <div className="text-center lg:text-left order-2 lg:order-1 -translate-y-16 sm:-translate-y-20 lg:translate-y-0">
             {/* Title Icons */}
             <TitleIcons />
 
@@ -251,7 +251,7 @@ const Hero: React.FC = () => {
             </div>
 
             {/* Typing animation with role icons */}
-            <div className="h-16 sm:h-20 mb-4 sm:mb-6">
+            <div className="min-h-[32px] sm:min-h-[40px] mb-3 sm:mb-4">
               <div className="flex items-center justify-center lg:justify-start gap-2">
                 <div className="hidden sm:block p-1.5 rounded-lg bg-red-500/10 border border-red-500/30">
                   <Code2 size={16} className="text-red-400" />
@@ -281,7 +281,7 @@ const Hero: React.FC = () => {
                 {
                   icon: <Award size={14} className="sm:w-4 sm:h-4" />,
                   label: "Experience",
-                  value: "2+ Years",
+                  value: "3+ Years",
                 },
                 {
                   icon: <Code2 size={14} className="sm:w-4 sm:h-4" />,
@@ -339,91 +339,77 @@ const Hero: React.FC = () => {
               </a>
             </div>
 
-            {/* Social links */}
-            <div className="flex items-center justify-center lg:justify-start gap-3 sm:gap-4">
-              <a
-                href={`mailto:${PERSONAL_INFO.email}`}
-                className="p-2.5 sm:p-3 rounded-xl bg-white/90 border border-slate-200 text-slate-600 hover:text-red-600 hover:border-red-400 hover:scale-110 transition-all group dark:bg-slate-900/80 dark:border-slate-800 dark:text-slate-400 dark:hover:text-red-400 dark:hover:border-red-500/50"
-              >
-                <Mail
-                  size={18}
-                  className="sm:w-5 sm:h-5 group-hover:rotate-12 transition-transform"
-                />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/arinjoshi/"
-                target="_blank"
-                rel="noreferrer"
-                className="p-2.5 sm:p-3 rounded-xl bg-white/90 border border-slate-200 text-slate-600 hover:text-red-600 hover:border-red-400 hover:scale-110 transition-all group dark:bg-slate-900/80 dark:border-slate-800 dark:text-slate-400 dark:hover:text-red-400 dark:hover:border-red-500/50"
-              >
-                <Linkedin
-                  size={18}
-                  className="sm:w-5 sm:h-5 group-hover:rotate-12 transition-transform"
-                />
-              </a>
-              <a
-                href="https://github.com/Arin-joshi"
-                target="_blank"
-                rel="noreferrer"
-                className="p-2.5 sm:p-3 rounded-xl bg-white/90 border border-slate-200 text-slate-600 hover:text-red-600 hover:border-red-400 hover:scale-110 transition-all group dark:bg-slate-900/80 dark:border-slate-800 dark:text-slate-400 dark:hover:text-red-400 dark:hover:border-red-500/50"
-              >
-                <Github
-                  size={18}
-                  className="sm:w-5 sm:h-5 group-hover:rotate-12 transition-transform"
-                />
-              </a>
-            </div>
+            {/* Social links have been moved to float around the image */}
           </div>
 
           {/* Right Content - Profile Card */}
           <div className="relative order-1 lg:order-2 mb-6 lg:mb-0">
             {/* Animated background rings - simplified for performance */}
-            <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 mx-auto">
-              <div className="absolute inset-0">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[180px] h-[180px] sm:w-[240px] sm:h-[240px] md:w-[300px] md:h-[300px] lg:w-[350px] lg:h-[350px] border border-red-500/30 rounded-full animate-spin-slow"></div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[210px] h-[210px] sm:w-[280px] sm:h-[280px] md:w-[340px] md:h-[340px] lg:w-[400px] lg:h-[400px] border border-red-600/20 rounded-full animate-spin-slow animation-delay-2000"></div>
+            <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 mx-auto -translate-y-10 lg:-translate-y-20">
+              {/* Floating Badges */}
+              <div className="absolute top-[10%] -left-6 sm:-left-12 lg:-left-16 z-20 animate-float" style={{ animationDelay: '0s', animationDuration: '4s' }}>
+                <a href="https://www.linkedin.com/in/arinjoshi/" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-blue-500 text-blue-600 shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-110 transition-transform dark:bg-slate-900/90 dark:border-blue-500/80 dark:text-blue-400">
+                  <Linkedin size={18} className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:block text-xs sm:text-sm font-bold">LinkedIn</span>
+                </a>
               </div>
 
-              {/* Main profile card */}
-              <div className="relative group perspective w-full h-full">
-                <div className="relative w-full h-full">
-                  {/* Profile image container */}
-                  <div className="relative w-full h-full">
-                    {/* Glow effect behind image */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-700/20 rounded-full blur-3xl"></div>
+              <div className="absolute top-[60%] -right-6 sm:-right-12 lg:-right-16 z-20 animate-float" style={{ animationDelay: '1.5s', animationDuration: '5s' }}>
+                <a href="https://github.com/Arin-joshi" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-purple-500 text-purple-600 shadow-[0_0_20px_rgba(168,85,247,0.5)] hover:scale-110 transition-transform dark:bg-slate-900/90 dark:border-purple-500/80 dark:text-purple-400">
+                  <Github size={18} className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:block text-xs sm:text-sm font-bold">GitHub</span>
+                </a>
+              </div>
 
-                    {/* Animated gradient border */}
-                    <div className={`absolute inset-0 bg-gradient-to-r ${cardColorGradients[cardColorIndex]} rounded-2xl sm:rounded-3xl lg:rounded-[2rem] animate-spin-slow transition-all duration-1000`}></div>
+              <div className="absolute -bottom-6 left-[10%] sm:left-[20%] z-20 animate-float" style={{ animationDelay: '3s', animationDuration: '6s' }}>
+                <a href={`mailto:${PERSONAL_INFO.email}`} className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-pink-500 text-pink-600 shadow-[0_0_20px_rgba(236,72,153,0.5)] hover:scale-110 transition-transform dark:bg-slate-900/90 dark:border-pink-500/80 dark:text-pink-400">
+                  <Mail size={18} className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:block text-xs sm:text-sm font-bold">Email</span>
+                </a>
+              </div>
+              
 
-                    {/* Transparent image container */}
-                    <div className="absolute inset-1 sm:inset-1.5 lg:inset-2 bg-transparent rounded-2xl sm:rounded-3xl lg:rounded-[1.9rem] overflow-hidden">
-                      <img
-                        src="/profile.png"
-                        alt={PERSONAL_INFO.name}
-                        className="w-full h-full object-contain opacity-100 transition-transform duration-700"
-                        onError={(e) => {
-                          e.currentTarget.src =
-                            "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80";
-                        }}
-                      />
 
-                      {/* Location badge */}
-                      <div className="absolute bottom-3 sm:bottom-4 lg:bottom-6 left-3 sm:left-4 lg:left-6 right-3 sm:right-4 lg:right-6">
-                        <div className="bg-white/95 backdrop-blur-sm p-2 sm:p-3 lg:p-4 rounded-lg sm:rounded-xl border border-slate-200 shadow-md transform transition-all group-hover:translate-y-[-5px] dark:bg-slate-900/90 dark:border-slate-700 dark:shadow-none">
-                          <div className="flex items-center gap-2 sm:gap-3">
-                            <div className="relative">
-                              <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 lg:w-3 lg:h-3 rounded-full bg-green-500"></div>
-                              <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75"></div>
-                            </div>
-                            <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-                              <MapPin
-                                size={12}
-                                className="sm:w-3 sm:h-3 lg:w-3.5 lg:h-3.5 text-slate-500"
-                              />
-                              <span className="text-slate-900 font-medium truncate dark:text-white">
-                                {PERSONAL_INFO.location}
-                              </span>
-                            </div>
+              {/* Premium Background Glow Orbs */}
+              <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-0 right-0 w-[150px] h-[150px] sm:w-[200px] sm:h-[200px] lg:w-[250px] lg:h-[250px] bg-red-500/30 dark:bg-red-600/30 rounded-full blur-[40px] animate-pulse mix-blend-multiply dark:mix-blend-lighten"></div>
+                <div className="absolute bottom-0 left-0 w-[150px] h-[150px] sm:w-[200px] sm:h-[200px] lg:w-[250px] lg:h-[250px] bg-orange-500/30 dark:bg-orange-600/30 rounded-full blur-[40px] animate-pulse delay-1000 mix-blend-multiply dark:mix-blend-lighten"></div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150px] h-[150px] sm:w-[200px] sm:h-[200px] lg:w-[250px] lg:h-[250px] bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-[40px] animate-pulse delay-700 mix-blend-multiply dark:mix-blend-lighten"></div>
+              </div>
+
+              {/* Main profile card with Glassmorphism and Animated Border */}
+              <div className="relative group perspective w-full h-full z-10 transition-transform duration-700 sm:hover:rotate-y-3 sm:hover:rotate-x-3 sm:hover:scale-[1.02]">
+                {/* Outer Wrapper for masking the rotating border */}
+                <div className="absolute inset-0 rounded-2xl sm:rounded-3xl lg:rounded-[2rem] overflow-hidden shadow-[0_0_40px_rgba(239,68,68,0.1)] dark:shadow-[0_0_40px_rgba(239,68,68,0.2)] bg-white/10 dark:bg-slate-900/40 backdrop-blur-md border border-white/40 dark:border-slate-700/50 group-hover:shadow-[0_0_60px_rgba(239,68,68,0.3)] transition-all duration-700">
+                  
+                  {/* Rotating Conic Gradient Borders */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250%] h-[250%] opacity-60 dark:opacity-80 group-hover:opacity-100 animate-[spin_4s_linear_infinite] transition-opacity duration-700 pointer-events-none" style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0%, transparent 60%, rgba(239, 68, 68, 0.8) 90%, rgba(249, 115, 22, 1) 100%)' }}></div>
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250%] h-[250%] opacity-40 dark:opacity-60 group-hover:opacity-100 animate-[spin_3s_linear_infinite_reverse] transition-opacity duration-700 pointer-events-none" style={{ backgroundImage: 'conic-gradient(from 180deg, transparent 0%, transparent 60%, rgba(168, 85, 247, 0.8) 90%, rgba(236, 72, 153, 1) 100%)' }}></div>
+                  
+                  {/* Inner Content Container (slightly smaller to reveal the border) */}
+                  <div className="absolute inset-1 sm:inset-1.5 lg:inset-2 bg-slate-50 dark:bg-slate-950 rounded-xl sm:rounded-[1.3rem] lg:rounded-[1.7rem] overflow-hidden z-10 transition-transform duration-700">
+                    <img
+                      src="/profile.PNG"
+                      alt={PERSONAL_INFO.name}
+                      className="w-full h-full object-cover object-top scale-[1.15] opacity-100 transition-transform duration-700 group-hover:scale-[1.2]"
+                    />
+
+                    {/* Location badge inside the glass card */}
+                    <div className="absolute bottom-3 sm:bottom-4 lg:bottom-6 left-3 sm:left-4 lg:left-6 right-3 sm:right-4 lg:right-6">
+                      <div className="bg-white/95 backdrop-blur-xl p-2 sm:p-3 lg:p-4 rounded-lg sm:rounded-xl border border-white/50 shadow-lg transform transition-all group-hover:-translate-y-1 group-hover:shadow-xl dark:bg-slate-900/90 dark:border-slate-700/80">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <div className="relative">
+                            <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 lg:w-3 lg:h-3 rounded-full bg-green-500"></div>
+                            <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75"></div>
+                          </div>
+                          <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+                            <MapPin
+                              size={12}
+                              className="sm:w-3 sm:h-3 lg:w-3.5 lg:h-3.5 text-slate-500 dark:text-slate-400"
+                            />
+                            <span className="text-slate-900 font-bold truncate dark:text-white tracking-wide">
+                              {PERSONAL_INFO.location}
+                            </span>
                           </div>
                         </div>
                       </div>

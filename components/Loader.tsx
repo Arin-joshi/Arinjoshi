@@ -102,23 +102,23 @@ const Loader = () => {
       </div>
 
       {/* Main loader card */}
-      <div className="relative z-10 w-full max-w-md mx-4">
+      <div className="relative z-10 w-full max-w-xs sm:max-w-md mx-4">
         {/* Animated rings */}
-        <div className="relative flex justify-center mb-8">
+        <div className="relative flex justify-center mb-6 sm:mb-8">
           {/* Outer ring */}
-          <div className="absolute w-32 h-32 rounded-full border-2 border-red-500/30 animate-ping"></div>
+          <div className="absolute w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-red-500/30 animate-ping"></div>
           
           {/* Spinning ring */}
-          <div className="absolute w-32 h-32 rounded-full border-t-2 border-r-2 border-red-500 animate-spin"></div>
+          <div className="absolute w-24 h-24 sm:w-32 sm:h-32 rounded-full border-t-2 border-r-2 border-red-500 animate-spin"></div>
           
           {/* Inner ring */}
-          <div className="absolute w-24 h-24 rounded-full border-2 border-red-600/20 animate-pulse"></div>
+          <div className="absolute w-16 h-16 sm:w-24 sm:h-24 rounded-full border-2 border-red-600/20 animate-pulse"></div>
           
           {/* Center icon */}
-          <div className="relative w-20 h-20 flex items-center justify-center">
+          <div className="relative w-14 h-14 sm:w-20 sm:h-20 flex items-center justify-center">
             <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 rounded-full blur-xl opacity-50 animate-pulse"></div>
-            <div className="relative bg-gradient-to-r from-red-600 to-red-700 rounded-full p-4">
-              <Sparkles size={32} className="text-white animate-spin-slow" />
+            <div className="relative bg-gradient-to-r from-red-600 to-red-700 rounded-full p-3 sm:p-4">
+              <Sparkles className="w-5 h-5 sm:w-8 sm:h-8 text-white animate-spin-slow" />
             </div>
           </div>
         </div>
@@ -129,16 +129,16 @@ const Loader = () => {
           <div className="absolute -inset-0.5 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl opacity-75 blur transition duration-500 group-hover:opacity-100 animate-pulse"></div>
           
           {/* Main card */}
-          <div className="relative bg-slate-900/90 backdrop-blur-xl rounded-2xl border border-slate-800 p-8">
+          <div className="relative bg-slate-900/90 backdrop-blur-xl rounded-2xl border border-slate-800 p-5 sm:p-8">
             
             {/* Loading text */}
-            <div className="text-center mb-6">
-              <h1 className="text-2xl font-bold text-white mb-2">
+            <div className="text-center mb-4 sm:mb-6">
+              <h1 className="text-xl sm:text-2xl font-bold text-white mb-1.5 sm:mb-2">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">
                   {loadingText}
                 </span>
               </h1>
-              <p className="text-sm text-slate-500 tracking-wider flex items-center justify-center gap-2">
+              <p className="text-xs sm:text-sm text-slate-500 tracking-wider flex items-center justify-center gap-1.5 sm:gap-2">
                 <span className="w-1 h-1 rounded-full bg-red-500 animate-pulse"></span>
                 Building digital experiences
                 <span className="w-1 h-1 rounded-full bg-red-600 animate-pulse"></span>
@@ -146,14 +146,14 @@ const Loader = () => {
             </div>
 
             {/* Progress bar */}
-            <div className="space-y-3">
-              <div className="flex justify-between text-sm">
+            <div className="space-y-2.5 sm:space-y-3">
+              <div className="flex justify-between text-xs sm:text-sm">
                 <span className="text-slate-400">Loading resources</span>
                 <span className="text-red-400 font-mono">{progress}%</span>
               </div>
               
               {/* Progress bar with gradient */}
-              <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div className="h-1.5 sm:h-2 bg-slate-800 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-gradient-to-r from-red-600 to-red-700 rounded-full transition-all duration-300 relative"
                   style={{ width: `${progress}%` }}
@@ -164,11 +164,11 @@ const Loader = () => {
               </div>
 
               {/* Loading dots */}
-              <div className="flex justify-center gap-1 pt-4">
+              <div className="flex justify-center gap-1 pt-3 sm:pt-4">
                 {[0, 1, 2].map((i) => (
                   <div
                     key={i}
-                    className="w-2 h-2 rounded-full bg-gradient-to-r from-red-600 to-red-700 animate-bounce"
+                    className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gradient-to-r from-red-600 to-red-700 animate-bounce"
                     style={{ animationDelay: `${i * 0.1}s` }}
                   ></div>
                 ))}
@@ -176,11 +176,11 @@ const Loader = () => {
             </div>
 
             {/* Tech stack badges */}
-            <div className="flex flex-wrap justify-center gap-2 mt-6 pt-6 border-t border-slate-800">
+            <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2 mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-slate-800">
               {['React', 'TypeScript', 'Node.js', 'MongoDB'].map((tech, i) => (
                 <span
                   key={tech}
-                  className="px-3 py-1 text-xs rounded-full bg-slate-800/80 text-slate-400 border border-slate-700"
+                  className="px-2.5 py-1 text-[10px] sm:text-xs rounded-full bg-slate-800/80 text-slate-400 border border-slate-700"
                   style={{
                     animation: `fadeIn 0.5s ease-out ${i * 0.1}s forwards`,
                     opacity: 0
@@ -194,7 +194,7 @@ const Loader = () => {
         </div>
 
         {/* Bottom message */}
-        <p className="text-center text-xs text-slate-600 mt-6 tracking-wider">
+        <p className="text-center text-[10px] sm:text-xs text-slate-600 mt-5 sm:mt-6 tracking-wider">
           © {new Date().getFullYear()} Arin Joshi • Software Engineer
         </p>
       </div>
