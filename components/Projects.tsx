@@ -34,13 +34,13 @@ const Projects: React.FC = () => {
   const getCategoryGradient = (category: string) => {
     switch(category) {
       case 'Game':
-        return 'from-fuchsia-600 to-purple-600';
+        return 'from-red-600 to-red-700';
       case 'Web':
         return 'from-emerald-600 to-cyan-600';
       case 'App':
         return 'from-blue-600 to-indigo-600';
       default:
-        return 'from-violet-600 to-fuchsia-600';
+        return 'from-red-600 to-red-700';
     }
   };
 
@@ -48,7 +48,7 @@ const Projects: React.FC = () => {
   const getCategoryIcon = (category: string) => {
     switch(category) {
       case 'Game':
-        return <Gamepad2 className="text-fuchsia-400" size={16} />;
+        return <Gamepad2 className="text-red-400" size={16} />;
       case 'Web':
         return <Globe className="text-emerald-400" size={16} />;
       case 'App':
@@ -85,20 +85,20 @@ const Projects: React.FC = () => {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.07)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] dark:bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)]"></div>
       
       {/* Floating orbs */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-fuchsia-500/10 rounded-full blur-3xl animate-pulse dark:bg-fuchsia-600/10"></div>
+      <div className="absolute top-20 left-10 w-72 h-72 bg-red-500/10 rounded-full blur-3xl animate-pulse dark:bg-red-600/10"></div>
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-1000 dark:bg-emerald-600/10"></div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-4 backdrop-blur-sm">
-            <Sparkles size={14} className="text-violet-400 animate-pulse" />
-            <span className="text-xs sm:text-sm font-medium text-violet-700 dark:text-violet-300">Featured Work</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 mb-4 backdrop-blur-sm">
+            <Sparkles size={14} className="text-red-400 animate-pulse" />
+            <span className="text-xs sm:text-sm font-medium text-red-700 dark:text-red-300">Featured Work</span>
           </div>
           
           <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-3 dark:text-white">
             Crafting{' '}
-            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-emerald-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent">
               Interactive Experiences
             </span>
           </h2>
@@ -126,7 +126,7 @@ const Projects: React.FC = () => {
               style={{ transitionDelay: `${parseInt(project.id.split('-')[1]) * 100}ms` }}
             >
               {/* Card Container */}
-              <div className="relative bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 shadow-sm hover:border-violet-400/70 transition-all duration-300 overflow-hidden dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none dark:hover:border-violet-500/50">
+              <div className="relative bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 shadow-sm hover:border-red-400/70 transition-all duration-300 overflow-hidden dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none dark:hover:border-red-500/50">
                 
                 {/* Image Section - Make image clickable */}
                 <a 
@@ -150,7 +150,7 @@ const Projects: React.FC = () => {
                   
                   {/* Hover overlay with play icon */}
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div className="p-2 rounded-full bg-violet-600/90 backdrop-blur-sm">
+                    <div className="p-2 rounded-full bg-red-600/90 backdrop-blur-sm">
                       <ExternalLink size={16} className="text-white" />
                     </div>
                   </div>
@@ -160,7 +160,7 @@ const Projects: React.FC = () => {
                     <span className={`
                       px-2 py-0.5 rounded-full text-[10px] font-medium backdrop-blur-md border
                       ${project.category === 'Game' 
-                        ? 'bg-fuchsia-500/20 border-fuchsia-500/30 text-fuchsia-300' 
+                        ? 'bg-red-500/20 border-red-500/30 text-red-300' 
                         : project.category === 'Web'
                         ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-300'
                         : 'bg-blue-500/20 border-blue-500/30 text-blue-300'
@@ -200,7 +200,7 @@ const Projects: React.FC = () => {
                     rel={project.liveUrl ? "noopener noreferrer" : undefined}
                     className="block mb-2"
                   >
-                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-violet-600 transition-colors line-clamp-1 dark:text-white dark:group-hover:text-violet-400">
+                    <h3 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-red-600 transition-colors line-clamp-1 dark:text-white dark:group-hover:text-red-400">
                       {project.title}
                     </h3>
                   </a>
@@ -215,11 +215,11 @@ const Projects: React.FC = () => {
                     {project.category === 'Game' ? (
                       <>
                         <span className="flex items-center gap-1 text-[8px] sm:text-[10px] text-slate-600 bg-slate-200/60 px-1.5 py-0.5 rounded dark:text-slate-500 dark:bg-slate-800/30">
-                          <Zap size={10} className="text-fuchsia-400" />
+                          <Zap size={10} className="text-red-400" />
                           Real-time
                         </span>
                         <span className="flex items-center gap-1 text-[8px] sm:text-[10px] text-slate-600 bg-slate-200/60 px-1.5 py-0.5 rounded dark:text-slate-500 dark:bg-slate-800/30">
-                          <Gamepad2 size={10} className="text-fuchsia-400" />
+                          <Gamepad2 size={10} className="text-red-400" />
                           Game
                         </span>
                       </>
@@ -246,7 +246,7 @@ const Projects: React.FC = () => {
                       className={`
                         flex-1 py-1.5 rounded-lg bg-gradient-to-r ${getCategoryGradient(project.category)} 
                         text-white text-[10px] sm:text-xs font-medium transition-all 
-                        hover:shadow-[0_0_15px_rgba(139,92,246,0.3)] 
+                        hover:shadow-[0_0_15px_rgba(220,38,38,0.3)] 
                         flex items-center justify-center gap-1
                         ${!project.liveUrl ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
                       `}

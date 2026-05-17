@@ -88,7 +88,7 @@ const Navbar: React.FC = () => {
         }`}
       >
         {/* Animated gradient line at bottom */}
-        <div className={`absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-violet-500/50 to-transparent transition-opacity duration-500 ${scrolled ? 'opacity-100' : 'opacity-0'}`}></div>
+        <div className={`absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-red-500/50 to-transparent transition-opacity duration-500 ${scrolled ? 'opacity-100' : 'opacity-0'}`}></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
@@ -99,10 +99,10 @@ const Navbar: React.FC = () => {
               className="flex-shrink-0 flex items-center gap-2 sm:gap-3 group cursor-pointer relative"
             >
               {/* Glow effect on hover */}
-              <div className="absolute -inset-2 bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="absolute -inset-2 bg-gradient-to-r from-red-600/20 to-red-700/20 rounded-lg blur opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               
               {/* Logo image with animation */}
-              <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-violet-600 to-indigo-600 flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-violet-500/25">
+              <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-red-500/25">
                 <img
                   src="/ArinJoshi.png"
                   alt="Arin Joshi Logo"
@@ -116,12 +116,12 @@ const Navbar: React.FC = () => {
               <div className="relative overflow-hidden">
                 <span className="font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white">
                   Arin
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600 dark:from-violet-400 dark:to-fuchsia-400">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-700 dark:from-red-400 dark:to-red-500">
                     Joshi
                   </span>
                 </span>
                 {/* Underline animation */}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-violet-400 to-fuchsia-400 group-hover:w-full transition-all duration-300"></span>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-red-400 to-red-600 group-hover:w-full transition-all duration-300"></span>
               </div>
             </a>
 
@@ -137,7 +137,7 @@ const Navbar: React.FC = () => {
                       relative px-3 lg:px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300
                       flex items-center gap-1.5 lg:gap-2 group overflow-hidden
                       ${link.highlight 
-                        ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-violet-500/25 hover:shadow-violet-500/40' 
+                        ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/25 hover:shadow-red-500/40' 
                         : activeLink === link.href.substring(1)
                           ? 'text-slate-900 bg-slate-900/5 dark:text-white dark:bg-white/10'
                           : 'text-slate-600 hover:text-slate-900 hover:bg-slate-900/5 dark:text-slate-300 dark:hover:text-white dark:hover:bg-white/5'
@@ -147,7 +147,7 @@ const Navbar: React.FC = () => {
                     {/* Icon with animation */}
                     <span className={`
                       transition-transform duration-300 group-hover:scale-110
-                      ${link.highlight ? 'text-white/90' : 'text-slate-500 group-hover:text-violet-600 dark:text-slate-400 dark:group-hover:text-violet-400'}
+                      ${link.highlight ? 'text-white/90' : 'text-slate-500 group-hover:text-red-600 dark:text-slate-400 dark:group-hover:text-red-400'}
                     `}>
                       {link.icon}
                     </span>
@@ -156,11 +156,11 @@ const Navbar: React.FC = () => {
                     
                     {/* Active indicator */}
                     {activeLink === link.href.substring(1) && !link.highlight && (
-                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-violet-400 to-fuchsia-400"></span>
+                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-red-400 to-red-600"></span>
                     )}
                     
                     {/* Hover effect background */}
-                    <span className="absolute inset-0 bg-gradient-to-r from-violet-600/10 to-fuchsia-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                    <span className="absolute inset-0 bg-gradient-to-r from-red-600/10 to-red-700/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                   </a>
                 ))}
               </div>
@@ -172,10 +172,10 @@ const Navbar: React.FC = () => {
               <ThemeToggle />
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="relative w-10 h-10 rounded-lg border border-slate-200 bg-white/90 text-slate-800 hover:border-violet-400 transition-all duration-300 flex items-center justify-center group dark:bg-slate-800/80 dark:border-slate-700 dark:text-white dark:hover:border-violet-500/50"
+                className="relative w-10 h-10 rounded-lg border border-slate-200 bg-white/90 text-slate-800 hover:border-red-400 transition-all duration-300 flex items-center justify-center group dark:bg-slate-800/80 dark:border-slate-700 dark:text-white dark:hover:border-red-500/50"
                 aria-label="Toggle menu"
               >
-                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 opacity-0 group-hover:opacity-100 blur transition-opacity"></div>
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-red-600/20 to-red-700/20 opacity-0 group-hover:opacity-100 blur transition-opacity"></div>
                 <div className="relative transition-transform duration-300 group-hover:scale-110">
                   {isOpen ? (
                     <X size={20} />
@@ -199,8 +199,8 @@ const Navbar: React.FC = () => {
       >
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-20 -right-20 w-40 h-40 bg-violet-600/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-fuchsia-600/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-red-600/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-red-700/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
         </div>
 
         {/* Menu content */}
@@ -216,8 +216,8 @@ const Navbar: React.FC = () => {
                   group relative px-4 py-4 rounded-xl text-lg font-medium transition-all duration-300
                   transform hover:scale-[1.02] active:scale-[0.98]
                   ${link.highlight 
-                    ? 'bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white shadow-lg shadow-violet-500/25' 
-                    : 'bg-slate-100/80 border border-slate-200 text-slate-700 hover:text-slate-900 hover:border-violet-400 hover:bg-white dark:bg-slate-900/50 dark:border-slate-800 dark:text-slate-300 dark:hover:text-white dark:hover:border-violet-500/50 dark:hover:bg-slate-900'
+                    ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/25' 
+                    : 'bg-slate-100/80 border border-slate-200 text-slate-700 hover:text-slate-900 hover:border-red-400 hover:bg-white dark:bg-slate-900/50 dark:border-slate-800 dark:text-slate-300 dark:hover:text-white dark:hover:border-red-500/50 dark:hover:bg-slate-900'
                   }
                 `}
                 style={{
@@ -227,7 +227,7 @@ const Navbar: React.FC = () => {
                 }}
               >
                 <div className="flex items-center gap-3">
-                  <span className={link.highlight ? 'text-white' : 'text-violet-400'}>
+                  <span className={link.highlight ? 'text-white' : 'text-red-400'}>
                     {link.icon}
                   </span>
                   <span className="flex-1">{link.name}</span>
@@ -240,7 +240,7 @@ const Navbar: React.FC = () => {
                 </div>
 
                 {/* Hover effect */}
-                <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-violet-600/10 to-fuchsia-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <span className="absolute inset-0 rounded-xl bg-gradient-to-r from-red-600/10 to-red-700/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               </a>
             ))}
           </div>

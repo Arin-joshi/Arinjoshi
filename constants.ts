@@ -6,7 +6,7 @@ export const PERSONAL_INFO = {
   email: "thakararinjoshi@gmail.com",
   phone: "+91 8290279001",
   location: "Ahmedabad, Gujarat",
-  summary: "To secure a challenging position in a reputable organization to expand my learnings, knowledge, and skills. Secure a responsible career opportunity to fully utilize my training and skills, while making a significant contribution to the success of the company."
+  summary: "Software Engineer with 3+ years of experience building scalable web applications using React.js, TypeScript, JavaScript, and the MERN stack. Skilled in real-time systems, high-performance frontend architecture, REST APIs, and accessible UI development. Strong in DSA, System Design, and modern Agile workflows, with a focus on delivering fast, production-grade applications for startups and MNCs."
 };
 
 export const EXPERIENCE: Experience[] = [
@@ -14,7 +14,7 @@ export const EXPERIENCE: Experience[] = [
     id: "exp-3",
     role: "Jr. React Developer",
     company: "NKB PlayTech Pvt. Ltd.",
-    period: "March 2025 - March 2026",
+    period: "May 2025 - March 2026",
     description: [
       "Developing real-time game applications using WebSockets and REST APIs.",
       "Handling complex game logic including multiplayer state syncing and instant updates.",

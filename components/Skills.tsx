@@ -49,7 +49,7 @@ const Skills: React.FC = () => {
   const categoryConfig = {
     Frontend: { color: 'from-cyan-500 to-blue-500', icon: <Code2 size={14} />, bg: 'bg-cyan-500/10', text: 'text-cyan-400' },
     Backend: { color: 'from-green-500 to-emerald-500', icon: <Cpu size={14} />, bg: 'bg-green-500/10', text: 'text-green-400' },
-    Database: { color: 'from-purple-500 to-pink-500', icon: <Brain size={14} />, bg: 'bg-purple-500/10', text: 'text-purple-400' },
+    Database: { color: 'from-red-500 to-red-600', icon: <Brain size={14} />, bg: 'bg-red-500/10', text: 'text-red-400' },
     Core: { color: 'from-orange-500 to-red-500', icon: <Zap size={14} />, bg: 'bg-orange-500/10', text: 'text-orange-400' },
   };
 
@@ -63,7 +63,7 @@ const Skills: React.FC = () => {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.07)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] dark:bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)]"></div>
       
       {/* Floating orbs */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-violet-500/10 rounded-full blur-3xl animate-pulse dark:bg-violet-600/10"></div>
+      <div className="absolute top-20 left-10 w-72 h-72 bg-red-500/10 rounded-full blur-3xl animate-pulse dark:bg-red-600/10"></div>
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-1000 dark:bg-cyan-600/10"></div>
       <div className="absolute top-40 right-40 w-60 h-60 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-700 dark:bg-emerald-600/10"></div>
 
@@ -71,14 +71,14 @@ const Skills: React.FC = () => {
         
         {/* Section Header with animated gradient */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6 backdrop-blur-sm">
-            <Sparkles size={16} className="text-violet-400 animate-pulse" />
-            <span className="text-sm font-medium text-violet-700 dark:text-violet-300">Technical Expertise</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 mb-6 backdrop-blur-sm">
+            <Sparkles size={16} className="text-red-400 animate-pulse" />
+            <span className="text-sm font-medium text-red-700 dark:text-red-300">Technical Expertise</span>
           </div>
           
           <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6 dark:text-white">
             Engineering{' '}
-            <span className="bg-gradient-to-r from-violet-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent animate-gradient">
+            <span className="bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent animate-gradient">
               Excellence
             </span>
           </h2>
@@ -101,8 +101,8 @@ const Skills: React.FC = () => {
                 className={`
                   px-4 py-2 rounded-full text-sm font-medium transition-all duration-300
                   ${activeCategory === category 
-                    ? 'bg-violet-600 text-white shadow-[0_0_20px_rgba(139,92,246,0.5)]' 
-                    : 'bg-slate-100/90 text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-violet-400 dark:bg-slate-800/50 dark:text-slate-400 dark:hover:text-white dark:border-slate-700 dark:hover:border-violet-500/50'
+                    ? 'bg-red-600 text-white shadow-[0_0_20px_rgba(220,38,38,0.5)]' 
+                    : 'bg-slate-100/90 text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-red-400 dark:bg-slate-800/50 dark:text-slate-400 dark:hover:text-white dark:border-slate-700 dark:hover:border-red-500/50'
                   }
                 `}
               >
@@ -142,7 +142,7 @@ const Skills: React.FC = () => {
                       <div className={`p-2 rounded-lg ${config.bg} ${config.text}`}>
                         {config.icon}
                       </div>
-                      <span className="text-slate-900 font-semibold group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-violet-700 group-hover:to-slate-800 transition-all dark:text-white dark:group-hover:from-white dark:group-hover:to-slate-300">
+                      <span className="text-slate-900 font-semibold group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-red-700 group-hover:to-slate-800 transition-all dark:text-white dark:group-hover:from-white dark:group-hover:to-slate-300">
                         {skill.name}
                       </span>
                     </div>
@@ -171,8 +171,8 @@ const Skills: React.FC = () => {
           {/* Certifications Section */}
           <div>
             <div className="flex items-center gap-3 mb-8">
-              <div className="p-3 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl border border-purple-500/30">
-                <Trophy size={24} className="text-purple-400" />
+              <div className="p-3 bg-gradient-to-br from-red-500/20 to-red-600/20 rounded-xl border border-red-500/30">
+                <Trophy size={24} className="text-red-400" />
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Certifications</h3>
@@ -197,13 +197,13 @@ const Skills: React.FC = () => {
                   style={{ transitionDelay: `${index * 100}ms` }}
                 >
                   {/* Animated background */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-xl opacity-0 group-hover:opacity-100 blur-xl transition-opacity"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-700/20 rounded-xl opacity-0 group-hover:opacity-100 blur-xl transition-opacity"></div>
                   
-                  <div className="relative bg-white/95 backdrop-blur-sm p-6 rounded-xl border border-slate-200 hover:border-purple-400/60 transition-all group shadow-sm dark:bg-slate-900/50 dark:border-slate-800 dark:hover:border-purple-500/50 dark:shadow-none">
+                  <div className="relative bg-white/95 backdrop-blur-sm p-6 rounded-xl border border-slate-200 hover:border-red-400/60 transition-all group shadow-sm dark:bg-slate-900/50 dark:border-slate-800 dark:hover:border-red-500/50 dark:shadow-none">
                     <div className="flex items-start gap-4">
                       {/* Icon with animation */}
                       <div className={`
-                        p-3 rounded-xl bg-purple-500/10 text-purple-400 transition-all duration-300
+                        p-3 rounded-xl bg-red-500/10 text-red-400 transition-all duration-300
                         ${hoveredCert === cert.id ? 'scale-110 rotate-12' : ''}
                       `}>
                         <Award size={20} />
@@ -212,7 +212,7 @@ const Skills: React.FC = () => {
                       <div className="flex-1">
                         <div className="flex items-start justify-between">
                           <div>
-                            <h4 className="text-slate-900 font-semibold text-lg mb-1 group-hover:text-purple-600 transition-colors dark:text-white dark:group-hover:text-purple-400">
+                            <h4 className="text-slate-900 font-semibold text-lg mb-1 group-hover:text-red-600 transition-colors dark:text-white dark:group-hover:text-red-400">
                               {cert.name}
                             </h4>
                             <p className="text-slate-600 text-sm flex items-center gap-2 dark:text-slate-400">
@@ -238,7 +238,7 @@ const Skills: React.FC = () => {
                         </div>
                         
                         {/* View certificate link */}
-                        <button className="mt-4 text-sm text-purple-400 hover:text-purple-300 flex items-center gap-1 group/btn">
+                        <button className="mt-4 text-sm text-red-400 hover:text-red-300 flex items-center gap-1 group/btn">
                           View Certificate
                           <ExternalLink size={12} className="group-hover/btn:translate-x-1 transition-transform" />
                         </button>
@@ -246,7 +246,7 @@ const Skills: React.FC = () => {
                     </div>
                     
                     {/* Animated progress indicator */}
-                    <div className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 w-0 group-hover:w-full transition-all duration-700"></div>
+                    <div className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-red-600 to-red-700 w-0 group-hover:w-full transition-all duration-700"></div>
                   </div>
                 </div>
               ))}
@@ -330,7 +330,7 @@ const Skills: React.FC = () => {
                           <span className="text-xs px-2 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
                             Computer Science
                           </span>
-                          <span className="text-xs px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/30">
+                          <span className="text-xs px-2 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/30">
                             B.Tech
                           </span>
                         </div>
@@ -347,7 +347,7 @@ const Skills: React.FC = () => {
         <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { label: 'Years Experience', value: '2+', icon: <TrendingUp size={20} />, color: 'from-blue-500 to-cyan-500' },
-            { label: 'Projects Completed', value: '15+', icon: <Code2 size={20} />, color: 'from-purple-500 to-pink-500' },
+            { label: 'Projects Completed', value: '15+', icon: <Code2 size={20} />, color: 'from-red-500 to-red-600' },
             { label: 'Certifications', value: CERTIFICATIONS.length.toString(), icon: <Award size={20} />, color: 'from-emerald-500 to-teal-500' },
             { label: 'Technologies', value: SKILLS.length.toString(), icon: <Cpu size={20} />, color: 'from-orange-500 to-red-500' },
           ].map((stat, index) => (

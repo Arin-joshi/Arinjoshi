@@ -39,7 +39,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-violet-500/20 selection:text-violet-900 dark:bg-dark dark:text-slate-300 dark:selection:bg-violet-500/30 dark:selection:text-violet-200">
+    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-red-500/20 selection:text-red-900 dark:bg-dark dark:text-slate-300 dark:selection:bg-red-500/30 dark:selection:text-red-200">
       <Navbar />
       <main>
         <Hero />

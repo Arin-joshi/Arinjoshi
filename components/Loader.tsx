@@ -44,8 +44,8 @@ const Loader = () => {
   // Floating tech icons
   const techIcons = [
     { Icon: Code2, color: 'from-cyan-400 to-blue-500', delay: 0 },
-    { Icon: Cpu, color: 'from-purple-400 to-pink-500', delay: 1 },
-    { Icon: Zap, color: 'from-yellow-400 to-amber-500', delay: 2 },
+    { Icon: Cpu, color: 'from-red-400 to-red-500', delay: 1 },
+    { Icon: Zap, color: 'from-red-400 to-red-500', delay: 2 },
     { Icon: Brackets, color: 'from-green-400 to-emerald-500', delay: 1.5 },
     { Icon: Github, color: 'from-gray-400 to-slate-500', delay: 2.5 },
   ];
@@ -75,7 +75,7 @@ const Loader = () => {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
       
       {/* Gradient orbs */}
-      <div className="absolute w-[600px] h-[600px] bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 rounded-full blur-[160px] -top-40 -left-40 animate-pulse"></div>
+      <div className="absolute w-[600px] h-[600px] bg-gradient-to-r from-red-600/20 to-red-700/20 rounded-full blur-[160px] -top-40 -left-40 animate-pulse"></div>
       <div className="absolute w-[500px] h-[500px] bg-gradient-to-r from-cyan-600/20 to-blue-600/20 rounded-full blur-[160px] bottom-[-200px] right-[-200px] animate-pulse delay-1000"></div>
       
       {/* Floating tech icons */}
@@ -106,18 +106,18 @@ const Loader = () => {
         {/* Animated rings */}
         <div className="relative flex justify-center mb-8">
           {/* Outer ring */}
-          <div className="absolute w-32 h-32 rounded-full border-2 border-violet-500/30 animate-ping"></div>
+          <div className="absolute w-32 h-32 rounded-full border-2 border-red-500/30 animate-ping"></div>
           
           {/* Spinning ring */}
-          <div className="absolute w-32 h-32 rounded-full border-t-2 border-r-2 border-violet-500 animate-spin"></div>
+          <div className="absolute w-32 h-32 rounded-full border-t-2 border-r-2 border-red-500 animate-spin"></div>
           
           {/* Inner ring */}
-          <div className="absolute w-24 h-24 rounded-full border-2 border-fuchsia-500/20 animate-pulse"></div>
+          <div className="absolute w-24 h-24 rounded-full border-2 border-red-600/20 animate-pulse"></div>
           
           {/* Center icon */}
           <div className="relative w-20 h-20 flex items-center justify-center">
-            <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-full blur-xl opacity-50 animate-pulse"></div>
-            <div className="relative bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-full p-4">
+            <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-700 rounded-full blur-xl opacity-50 animate-pulse"></div>
+            <div className="relative bg-gradient-to-r from-red-600 to-red-700 rounded-full p-4">
               <Sparkles size={32} className="text-white animate-spin-slow" />
             </div>
           </div>
@@ -126,7 +126,7 @@ const Loader = () => {
         {/* Loading card */}
         <div className="relative group">
           {/* Animated border */}
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-2xl opacity-75 blur transition duration-500 group-hover:opacity-100 animate-pulse"></div>
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl opacity-75 blur transition duration-500 group-hover:opacity-100 animate-pulse"></div>
           
           {/* Main card */}
           <div className="relative bg-slate-900/90 backdrop-blur-xl rounded-2xl border border-slate-800 p-8">
@@ -134,14 +134,14 @@ const Loader = () => {
             {/* Loading text */}
             <div className="text-center mb-6">
               <h1 className="text-2xl font-bold text-white mb-2">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600">
                   {loadingText}
                 </span>
               </h1>
               <p className="text-sm text-slate-500 tracking-wider flex items-center justify-center gap-2">
-                <span className="w-1 h-1 rounded-full bg-violet-500 animate-pulse"></span>
+                <span className="w-1 h-1 rounded-full bg-red-500 animate-pulse"></span>
                 Building digital experiences
-                <span className="w-1 h-1 rounded-full bg-fuchsia-500 animate-pulse"></span>
+                <span className="w-1 h-1 rounded-full bg-red-600 animate-pulse"></span>
               </p>
             </div>
 
@@ -149,13 +149,13 @@ const Loader = () => {
             <div className="space-y-3">
               <div className="flex justify-between text-sm">
                 <span className="text-slate-400">Loading resources</span>
-                <span className="text-violet-400 font-mono">{progress}%</span>
+                <span className="text-red-400 font-mono">{progress}%</span>
               </div>
               
               {/* Progress bar with gradient */}
               <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-full transition-all duration-300 relative"
+                  className="h-full bg-gradient-to-r from-red-600 to-red-700 rounded-full transition-all duration-300 relative"
                   style={{ width: `${progress}%` }}
                 >
                   {/* Shine effect */}
@@ -168,7 +168,7 @@ const Loader = () => {
                 {[0, 1, 2].map((i) => (
                   <div
                     key={i}
-                    className="w-2 h-2 rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-600 animate-bounce"
+                    className="w-2 h-2 rounded-full bg-gradient-to-r from-red-600 to-red-700 animate-bounce"
                     style={{ animationDelay: `${i * 0.1}s` }}
                   ></div>
                 ))}

@@ -111,8 +111,8 @@ const Contact: React.FC = () => {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.07)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] dark:bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)]"></div>
         
         {/* Gradient orbs */}
-        <div className="absolute -top-40 -left-40 w-80 h-80 bg-violet-500/15 rounded-full blur-3xl animate-pulse dark:bg-violet-600/20"></div>
-        <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-fuchsia-500/15 rounded-full blur-3xl animate-pulse delay-1000 dark:bg-fuchsia-600/20"></div>
+        <div className="absolute -top-40 -left-40 w-80 h-80 bg-red-500/15 rounded-full blur-3xl animate-pulse dark:bg-red-600/20"></div>
+        <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-red-600/15 rounded-full blur-3xl animate-pulse delay-1000 dark:bg-red-700/20"></div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -122,14 +122,14 @@ const Contact: React.FC = () => {
             {/* Left side - CTA */}
             <div className="space-y-6">
               {/* Section badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-violet-500/10 to-fuchsia-500/10 border border-violet-500/20 backdrop-blur-sm">
-                <Sparkles size={16} className="text-violet-400" />
-                <span className="text-sm font-medium text-violet-700 dark:text-violet-300">Get In Touch</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-red-500/10 to-red-600/10 border border-red-500/20 backdrop-blur-sm">
+                <Sparkles size={16} className="text-red-400" />
+                <span className="text-sm font-medium text-red-700 dark:text-red-300">Get In Touch</span>
               </div>
 
               <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 leading-tight dark:text-white">
                 Let's create something
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400">
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-red-500 to-red-600">
                   amazing together
                 </span>
               </h2>
@@ -154,36 +154,36 @@ const Contact: React.FC = () => {
               {/* CTA Button with animation */}
               <button
                 onClick={() => setIsOpen(true)}
-                className="group relative px-8 py-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-xl font-semibold transition-all hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] overflow-hidden"
+                className="group relative px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl font-semibold transition-all hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] overflow-hidden"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   Send a Message
                   <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </span>
-                <span className="absolute inset-0 bg-gradient-to-r from-violet-700 to-fuchsia-700 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                <span className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 opacity-0 group-hover:opacity-100 transition-opacity"></span>
               </button>
 
               {/* Contact info cards */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6">
-                <div className="flex items-center gap-3 p-4 bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 hover:border-violet-400/70 transition-all group shadow-sm dark:bg-slate-900/50 dark:border-slate-800 dark:hover:border-violet-500/50 dark:shadow-none">
-                  <div className="p-2 rounded-lg bg-violet-500/10 text-violet-600 group-hover:scale-110 transition-transform dark:text-violet-400">
+                <div className="flex items-center gap-3 p-4 bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 hover:border-red-400/70 transition-all group shadow-sm dark:bg-slate-900/50 dark:border-slate-800 dark:hover:border-red-500/50 dark:shadow-none">
+                  <div className="p-2 rounded-lg bg-red-500/10 text-red-600 group-hover:scale-110 transition-transform dark:text-red-400">
                     <Mail size={18} />
                   </div>
                   <div>
                     <p className="text-xs text-slate-500">Email</p>
-                    <a href={`mailto:${PERSONAL_INFO.email}`} className="text-sm text-slate-900 hover:text-violet-600 transition-colors dark:text-white dark:hover:text-violet-400">
+                    <a href={`mailto:${PERSONAL_INFO.email}`} className="text-sm text-slate-900 hover:text-red-600 transition-colors dark:text-white dark:hover:text-red-400">
                       {PERSONAL_INFO.email}
                     </a>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 p-4 bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 hover:border-violet-400/70 transition-all group shadow-sm dark:bg-slate-900/50 dark:border-slate-800 dark:hover:border-violet-500/50 dark:shadow-none">
-                  <div className="p-2 rounded-lg bg-violet-500/10 text-violet-600 group-hover:scale-110 transition-transform dark:text-violet-400">
+                <div className="flex items-center gap-3 p-4 bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 hover:border-red-400/70 transition-all group shadow-sm dark:bg-slate-900/50 dark:border-slate-800 dark:hover:border-red-500/50 dark:shadow-none">
+                  <div className="p-2 rounded-lg bg-red-500/10 text-red-600 group-hover:scale-110 transition-transform dark:text-red-400">
                     <Phone size={18} />
                   </div>
                   <div>
                     <p className="text-xs text-slate-500">Phone</p>
-                    <a href={`tel:${PERSONAL_INFO.phone}`} className="text-sm text-slate-900 hover:text-violet-600 transition-colors dark:text-white dark:hover:text-violet-400">
+                    <a href={`tel:${PERSONAL_INFO.phone}`} className="text-sm text-slate-900 hover:text-red-600 transition-colors dark:text-white dark:hover:text-red-400">
                       {PERSONAL_INFO.phone}
                     </a>
                   </div>
@@ -205,8 +205,8 @@ const Contact: React.FC = () => {
             <div className="space-y-6">
               <div className="bg-white/95 backdrop-blur-sm p-8 rounded-2xl border border-slate-200 shadow-sm dark:bg-slate-900/50 dark:border-slate-800 dark:shadow-none">
                 <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2 dark:text-white">
-                  <span className="p-2 rounded-lg bg-violet-500/10">
-                    <Coffee size={20} className="text-violet-400" />
+                  <span className="p-2 rounded-lg bg-red-500/10">
+                    <Coffee size={20} className="text-red-400" />
                   </span>
                   Connect with me
                 </h3>
@@ -249,7 +249,7 @@ const Contact: React.FC = () => {
                 <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-slate-500">Check out my work</span>
-                    <a href="#projects" className="text-sm text-violet-600 hover:text-violet-500 flex items-center gap-1 dark:text-violet-400 dark:hover:text-violet-300">
+                    <a href="#projects" className="text-sm text-red-600 hover:text-red-500 flex items-center gap-1 dark:text-red-400 dark:hover:text-red-300">
                       View Projects
                       <ArrowUp size={14} className="rotate-45" />
                     </a>
@@ -286,7 +286,7 @@ const Contact: React.FC = () => {
         {/* Scroll to top button */}
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className={`fixed bottom-8 right-8 z-40 p-4 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-full shadow-lg hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] transition-all duration-300 group ${
+          className={`fixed bottom-8 right-8 z-40 p-4 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-full shadow-lg hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] transition-all duration-300 group ${
             showScrollTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
           }`}
           aria-label="Scroll to top"
@@ -300,8 +300,8 @@ const Contact: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/80 backdrop-blur-sm animate-fade-in">
           <div className="relative bg-gradient-to-b from-white to-slate-50 border border-slate-200 rounded-2xl w-full max-w-md p-8 shadow-2xl dark:from-slate-900 dark:to-slate-950 dark:border-slate-800">
             {/* Decorative elements */}
-            <div className="absolute -top-20 -right-20 w-40 h-40 bg-violet-600/20 rounded-full blur-3xl"></div>
-            <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-fuchsia-600/20 rounded-full blur-3xl"></div>
+            <div className="absolute -top-20 -right-20 w-40 h-40 bg-red-600/20 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-red-700/20 rounded-full blur-3xl"></div>
 
             {/* Close button */}
             <button
@@ -315,8 +315,8 @@ const Contact: React.FC = () => {
 
             {/* Modal header */}
             <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 rounded-xl bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 border border-violet-500/30">
-                <MessageSquare size={24} className="text-violet-400" />
+              <div className="p-3 rounded-xl bg-gradient-to-r from-red-600/20 to-red-700/20 border border-red-500/30">
+                <MessageSquare size={24} className="text-red-400" />
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Send a message</h3>
@@ -337,7 +337,7 @@ const Contact: React.FC = () => {
                       name="name"
                       placeholder="John Doe"
                       required
-                      className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-all dark:bg-slate-800/50 dark:border-slate-700 dark:text-white dark:placeholder-slate-500"
+                      className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 transition-all dark:bg-slate-800/50 dark:border-slate-700 dark:text-white dark:placeholder-slate-500"
                     />
                   </div>
 
@@ -348,7 +348,7 @@ const Contact: React.FC = () => {
                       name="email"
                       placeholder="john@example.com"
                       required
-                      className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:border-violet-500 focus:outline-none focus:ring-1 focus:ring-violet-500 transition-all dark:bg-slate-800/50 dark:border-slate-700 dark:text-white dark:placeholder-slate-500"
+                      className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 transition-all dark:bg-slate-800/50 dark:border-slate-700 dark:text-white dark:placeholder-slate-500"
                     />
                   </div>
 
@@ -366,7 +366,7 @@ const Contact: React.FC = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full relative py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white rounded-xl font-medium transition-all hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] disabled:opacity-50 overflow-hidden group"
+                    className="w-full relative py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl font-medium transition-all hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] disabled:opacity-50 overflow-hidden group"
                   >
                     <span className="relative z-10 flex items-center justify-center gap-2">
                       {loading ? (

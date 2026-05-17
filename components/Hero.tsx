@@ -25,8 +25,52 @@ const Hero: React.FC = () => {
   const [typedText, setTypedText] = useState("");
   const [cursorVisible, setCursorVisible] = useState(true);
   const [isTyping, setIsTyping] = useState(true);
+  const [nameColorIndex, setNameColorIndex] = useState(0);
+  const [cardColorIndex, setCardColorIndex] = useState(0);
   const heroRef = useRef<HTMLElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
+
+  // Color gradients that work well in both light and dark themes
+  const nameColorGradients = [
+    "from-red-400 via-red-500 to-red-600",
+    "from-orange-400 via-orange-500 to-orange-600",
+    "from-yellow-400 via-yellow-500 to-yellow-600",
+    "from-green-400 via-green-500 to-green-600",
+    "from-cyan-400 via-cyan-500 to-cyan-600",
+    "from-blue-400 via-blue-500 to-blue-600",
+    "from-purple-400 via-purple-500 to-purple-600",
+    "from-pink-400 via-pink-500 to-pink-600",
+  ];
+
+  // Card color gradients (darker for better visibility on cards)
+  const cardColorGradients = [
+    "from-red-600 via-red-700 to-red-800",
+    "from-orange-600 via-orange-700 to-orange-800",
+    "from-yellow-600 via-yellow-700 to-yellow-800",
+    "from-green-600 via-green-700 to-green-800",
+    "from-cyan-600 via-cyan-700 to-cyan-800",
+    "from-blue-600 via-blue-700 to-blue-800",
+    "from-purple-600 via-purple-700 to-purple-800",
+    "from-pink-600 via-pink-700 to-pink-800",
+  ];
+
+  // Cycle through name colors every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNameColorIndex((prev) => (prev + 1) % nameColorGradients.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Cycle through card colors every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCardColorIndex((prev) => (prev + 1) % cardColorGradients.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Typing animation for roles - Optimized to prevent flickering
   const roles = [
@@ -110,7 +154,7 @@ const Hero: React.FC = () => {
     {
       icon: <Braces size={18} />,
       name: "JavaScript",
-      color: "from-yellow-400 to-amber-500",
+      color: "from-red-400 to-red-500",
     },
     {
       icon: <Globe size={18} />,
@@ -122,8 +166,8 @@ const Hero: React.FC = () => {
   // Custom icons for title
   const TitleIcons = () => (
     <div className="flex items-center gap-2 mb-2 justify-center lg:justify-start">
-      <div className="p-1.5 rounded-lg bg-gradient-to-br from-violet-500/20 to-fuchsia-500/20 border border-violet-500/30">
-        <Code2 size={14} className="text-violet-400" />
+      <div className="p-1.5 rounded-lg bg-gradient-to-br from-red-500/20 to-red-600/20 border border-red-500/30">
+        <Code2 size={14} className="text-red-400" />
       </div>
       <div className="p-1.5 rounded-lg bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30">
         <Braces size={14} className="text-cyan-400" />
@@ -144,8 +188,8 @@ const Hero: React.FC = () => {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.07)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] dark:bg-[linear-gradient(to_right,#4f4f4f1a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f1a_1px,transparent_1px)]"></div>
 
       {/* Gradient orbs */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-violet-500/15 rounded-full blur-3xl animate-pulse will-change-transform dark:bg-violet-600/20"></div>
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-fuchsia-500/15 rounded-full blur-3xl animate-pulse delay-1000 will-change-transform dark:bg-fuchsia-600/20"></div>
+      <div className="absolute top-20 left-10 w-72 h-72 bg-red-500/15 rounded-full blur-3xl animate-pulse will-change-transform dark:bg-red-600/20"></div>
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-red-600/15 rounded-full blur-3xl animate-pulse delay-1000 will-change-transform dark:bg-red-700/20"></div>
 
       {/* Floating tech icons - reduced count for performance */}
       <div className="hidden lg:block absolute inset-0 overflow-hidden pointer-events-none">
@@ -198,10 +242,10 @@ const Hero: React.FC = () => {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-slate-900 tracking-tight dark:text-white">
                 Hi, I'm{" "}
                 <span className="relative inline-block">
-                  <span className="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400">
+                  <span className={`relative z-10 text-transparent bg-clip-text bg-gradient-to-r ${nameColorGradients[nameColorIndex]} transition-all duration-1000`}>
                     {PERSONAL_INFO.name}
                   </span>
-                  <span className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-violet-400 to-fuchsia-400 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
+                  <span className={`absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r ${nameColorGradients[nameColorIndex]} rounded-full transform scale-x-0 group-hover:scale-x-100 transition-all duration-1000 origin-left`}></span>
                 </span>
               </h1>
             </div>
@@ -209,13 +253,13 @@ const Hero: React.FC = () => {
             {/* Typing animation with role icons */}
             <div className="h-16 sm:h-20 mb-4 sm:mb-6">
               <div className="flex items-center justify-center lg:justify-start gap-2">
-                <div className="hidden sm:block p-1.5 rounded-lg bg-violet-500/10 border border-violet-500/30">
-                  <Code2 size={16} className="text-violet-400" />
+                <div className="hidden sm:block p-1.5 rounded-lg bg-red-500/10 border border-red-500/30">
+                  <Code2 size={16} className="text-red-400" />
                 </div>
                 <h2 className="text-xl sm:text-2xl lg:text-3xl text-slate-600 font-medium dark:text-slate-400">
                   <span className="text-slate-900 dark:text-white">{typedText}</span>
                   <span
-                    className={`ml-1 inline-block w-0.5 h-5 sm:h-6 lg:h-8 bg-gradient-to-b from-violet-400 to-fuchsia-400 ${cursorVisible ? "opacity-100" : "opacity-0"}`}
+                    className={`ml-1 inline-block w-0.5 h-5 sm:h-6 lg:h-8 bg-gradient-to-b from-red-400 to-red-600 ${cursorVisible ? "opacity-100" : "opacity-0"}`}
                   ></span>
                 </h2>
               </div>
@@ -223,7 +267,7 @@ const Hero: React.FC = () => {
 
             {/* Description with animated border */}
             <div className="relative group mb-6 sm:mb-8">
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-xl opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-red-600 to-red-700 rounded-xl opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
               <div className="relative bg-white/95 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-xl border border-slate-200 shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none">
                 <p className="text-sm sm:text-base md:text-lg text-slate-700 leading-relaxed dark:text-slate-300">
                   {PERSONAL_INFO.summary}
@@ -252,9 +296,9 @@ const Hero: React.FC = () => {
               ].map((stat, index) => (
                 <div
                   key={index}
-                  className="text-center p-2 sm:p-3 rounded-xl bg-white/80 border border-slate-200 hover:border-violet-400/60 transition-all group dark:bg-slate-900/50 dark:border-slate-800 dark:hover:border-violet-500/50"
+                  className="text-center p-2 sm:p-3 rounded-xl bg-white/80 border border-slate-200 hover:border-red-400/60 transition-all group dark:bg-slate-900/50 dark:border-slate-800 dark:hover:border-red-500/50"
                 >
-                  <div className="text-violet-600 mb-1 group-hover:scale-110 transition-transform dark:text-violet-400">
+                  <div className="text-red-600 mb-1 group-hover:scale-110 transition-transform dark:text-red-400">
                     {stat.icon}
                   </div>
                   <div className="text-slate-900 font-bold text-xs sm:text-sm md:text-base lg:text-lg dark:text-white">
@@ -271,7 +315,7 @@ const Hero: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-6 sm:mb-8">
               <a
                 href="#projects"
-                className="w-full sm:w-auto group relative px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-semibold transition-all hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] overflow-hidden text-sm sm:text-base"
+                className="w-full sm:w-auto group relative px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold transition-all hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] overflow-hidden text-sm sm:text-base"
               >
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   View My Work
@@ -285,7 +329,7 @@ const Hero: React.FC = () => {
               <a
                 href="/ArinJoshi.pdf"
                 download="ArinJoshi.pdf"
-                className="w-full sm:w-auto group px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-slate-100/90 backdrop-blur-sm hover:bg-slate-200/90 text-slate-900 font-semibold transition-all border border-slate-300 hover:border-violet-400 flex items-center justify-center gap-2 text-sm sm:text-base dark:bg-slate-800/50 dark:hover:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-violet-500/50"
+                className="w-full sm:w-auto group px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-slate-100/90 backdrop-blur-sm hover:bg-slate-200/90 text-slate-900 font-semibold transition-all border border-slate-300 hover:border-red-400 flex items-center justify-center gap-2 text-sm sm:text-base dark:bg-slate-800/50 dark:hover:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-red-500/50"
               >
                 <Download
                   size={16}
@@ -299,7 +343,7 @@ const Hero: React.FC = () => {
             <div className="flex items-center justify-center lg:justify-start gap-3 sm:gap-4">
               <a
                 href={`mailto:${PERSONAL_INFO.email}`}
-                className="p-2.5 sm:p-3 rounded-xl bg-white/90 border border-slate-200 text-slate-600 hover:text-violet-600 hover:border-violet-400 hover:scale-110 transition-all group dark:bg-slate-900/80 dark:border-slate-800 dark:text-slate-400 dark:hover:text-violet-400 dark:hover:border-violet-500/50"
+                className="p-2.5 sm:p-3 rounded-xl bg-white/90 border border-slate-200 text-slate-600 hover:text-red-600 hover:border-red-400 hover:scale-110 transition-all group dark:bg-slate-900/80 dark:border-slate-800 dark:text-slate-400 dark:hover:text-red-400 dark:hover:border-red-500/50"
               >
                 <Mail
                   size={18}
@@ -310,7 +354,7 @@ const Hero: React.FC = () => {
                 href="https://www.linkedin.com/in/arinjoshi/"
                 target="_blank"
                 rel="noreferrer"
-                className="p-2.5 sm:p-3 rounded-xl bg-white/90 border border-slate-200 text-slate-600 hover:text-violet-600 hover:border-violet-400 hover:scale-110 transition-all group dark:bg-slate-900/80 dark:border-slate-800 dark:text-slate-400 dark:hover:text-violet-400 dark:hover:border-violet-500/50"
+                className="p-2.5 sm:p-3 rounded-xl bg-white/90 border border-slate-200 text-slate-600 hover:text-red-600 hover:border-red-400 hover:scale-110 transition-all group dark:bg-slate-900/80 dark:border-slate-800 dark:text-slate-400 dark:hover:text-red-400 dark:hover:border-red-500/50"
               >
                 <Linkedin
                   size={18}
@@ -321,7 +365,7 @@ const Hero: React.FC = () => {
                 href="https://github.com/arinjoshi"
                 target="_blank"
                 rel="noreferrer"
-                className="p-2.5 sm:p-3 rounded-xl bg-white/90 border border-slate-200 text-slate-600 hover:text-violet-600 hover:border-violet-400 hover:scale-110 transition-all group dark:bg-slate-900/80 dark:border-slate-800 dark:text-slate-400 dark:hover:text-violet-400 dark:hover:border-violet-500/50"
+                className="p-2.5 sm:p-3 rounded-xl bg-white/90 border border-slate-200 text-slate-600 hover:text-red-600 hover:border-red-400 hover:scale-110 transition-all group dark:bg-slate-900/80 dark:border-slate-800 dark:text-slate-400 dark:hover:text-red-400 dark:hover:border-red-500/50"
               >
                 <Github
                   size={18}
@@ -336,8 +380,8 @@ const Hero: React.FC = () => {
             {/* Animated background rings - simplified for performance */}
             <div className="relative w-48 h-48 sm:w-64 sm:h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 mx-auto">
               <div className="absolute inset-0">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[180px] h-[180px] sm:w-[240px] sm:h-[240px] md:w-[300px] md:h-[300px] lg:w-[350px] lg:h-[350px] border border-violet-500/30 rounded-full animate-spin-slow"></div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[210px] h-[210px] sm:w-[280px] sm:h-[280px] md:w-[340px] md:h-[340px] lg:w-[400px] lg:h-[400px] border border-fuchsia-500/20 rounded-full animate-spin-slow animation-delay-2000"></div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[180px] h-[180px] sm:w-[240px] sm:h-[240px] md:w-[300px] md:h-[300px] lg:w-[350px] lg:h-[350px] border border-red-500/30 rounded-full animate-spin-slow"></div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[210px] h-[210px] sm:w-[280px] sm:h-[280px] md:w-[340px] md:h-[340px] lg:w-[400px] lg:h-[400px] border border-red-600/20 rounded-full animate-spin-slow animation-delay-2000"></div>
               </div>
 
               {/* Main profile card */}
@@ -346,10 +390,10 @@ const Hero: React.FC = () => {
                   {/* Profile image container */}
                   <div className="relative w-full h-full">
                     {/* Glow effect behind image */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-violet-600/20 to-fuchsia-600/20 rounded-full blur-3xl"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-700/20 rounded-full blur-3xl"></div>
 
                     {/* Animated gradient border */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-fuchsia-600 to-cyan-600 rounded-2xl sm:rounded-3xl lg:rounded-[2rem] animate-spin-slow"></div>
+                    <div className={`absolute inset-0 bg-gradient-to-r ${cardColorGradients[cardColorIndex]} rounded-2xl sm:rounded-3xl lg:rounded-[2rem] animate-spin-slow transition-all duration-1000`}></div>
 
                     {/* Transparent image container */}
                     <div className="absolute inset-1 sm:inset-1.5 lg:inset-2 bg-transparent rounded-2xl sm:rounded-3xl lg:rounded-[1.9rem] overflow-hidden">
@@ -400,7 +444,7 @@ const Hero: React.FC = () => {
 
               <div className="hidden sm:block absolute -top-5 lg:-top-10 -right-5 lg:-right-10 bg-white/95 backdrop-blur-sm p-2 lg:p-4 rounded-lg lg:rounded-xl border border-slate-200 shadow-lg animate-float animation-delay-2000 dark:bg-slate-900/90 dark:border-slate-700 dark:shadow-none">
                 <div className="flex items-center gap-1.5 lg:gap-2">
-                  <Zap size={12} className="lg:w-4 lg:h-4 text-violet-500" />
+                  <Zap size={12} className="lg:w-4 lg:h-4 text-red-500" />
                   <span className="text-xs lg:text-base text-slate-900 font-semibold dark:text-white">
                     MERN Expert
                   </span>

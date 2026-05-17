@@ -40,7 +40,7 @@ const Experience: React.FC = () => {
   // Company colors and tech stacks (you can customize these)
   const companyConfig: Record<string, { color: string, tech: string[], icon: React.ReactNode }> = {
     'NKB PlayTech Pvt. Ltd.': {
-      color: 'from-fuchsia-500 to-purple-600',
+      color: 'from-red-500 to-red-600',
       tech: ['React', 'WebSockets', 'Node.js', 'Game Dev'],
       icon: <Gamepad size={16} />
     },
@@ -59,7 +59,7 @@ const Experience: React.FC = () => {
   // Helper to get company config
   const getCompanyConfig = (company: string) => {
     return companyConfig[company] || {
-      color: 'from-violet-500 to-pink-500',
+      color: 'from-red-500 to-red-600',
       tech: ['React', 'JavaScript', 'Web Dev'],
       icon: <Briefcase size={16} />
     };
@@ -81,15 +81,15 @@ const Experience: React.FC = () => {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.07)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] dark:bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)]"></div>
       
       {/* Floating elements */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-violet-500/10 rounded-full blur-3xl animate-pulse dark:bg-violet-600/10"></div>
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-fuchsia-500/10 rounded-full blur-3xl animate-pulse delay-1000 dark:bg-fuchsia-600/10"></div>
+      <div className="absolute top-20 left-10 w-72 h-72 bg-red-500/10 rounded-full blur-3xl animate-pulse dark:bg-red-600/10"></div>
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-red-600/10 rounded-full blur-3xl animate-pulse delay-1000 dark:bg-red-700/10"></div>
       
       {/* Animated particles */}
       <div className="absolute inset-0 overflow-hidden">
         {[...Array(20)].map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-violet-500/20 rounded-full animate-float"
+            className="absolute w-1 h-1 bg-red-500/20 rounded-full animate-float"
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
@@ -103,14 +103,14 @@ const Experience: React.FC = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-violet-500/10 border border-violet-500/20 mb-6 backdrop-blur-sm">
-            <Rocket size={16} className="text-violet-400 animate-pulse" />
-            <span className="text-sm font-medium text-violet-700 dark:text-violet-300">Professional Journey</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 mb-6 backdrop-blur-sm">
+            <Rocket size={16} className="text-red-400 animate-pulse" />
+            <span className="text-sm font-medium text-red-700 dark:text-red-300">Professional Journey</span>
           </div>
           
           <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6 dark:text-white">
             Work{' '}
-            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400 bg-clip-text text-transparent animate-gradient">
+            <span className="bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent animate-gradient">
               Experience
             </span>
           </h2>
@@ -133,9 +133,9 @@ const Experience: React.FC = () => {
               key={index}
               className="relative group"
             >
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 rounded-xl opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-red-600 to-red-700 rounded-xl opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
               <div className="relative bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 p-6 text-center shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none">
-                <div className="inline-flex p-3 rounded-lg bg-violet-500/10 text-violet-600 mb-3 group-hover:scale-110 transition-transform dark:text-violet-400">
+                <div className="inline-flex p-3 rounded-lg bg-red-500/10 text-red-600 mb-3 group-hover:scale-110 transition-transform dark:text-red-400">
                   {stat.icon}
                 </div>
                 <div className="text-3xl font-bold text-slate-900 mb-1 dark:text-white">{stat.value}</div>
@@ -149,7 +149,7 @@ const Experience: React.FC = () => {
         <div className="max-w-4xl mx-auto" ref={timelineRef}>
           <div className="relative">
             {/* Main timeline line */}
-            <div className="absolute left-4 sm:left-1/2 transform sm:-translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-violet-600 via-fuchsia-600 to-transparent"></div>
+            <div className="absolute left-4 sm:left-1/2 transform sm:-translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-red-600 via-red-700 to-transparent"></div>
 
             {EXPERIENCE.map((exp, index) => {
               const config = getCompanyConfig(exp.company);
@@ -178,12 +178,12 @@ const Experience: React.FC = () => {
                     w-8 h-8 rounded-full bg-white border-4 
                     transition-all duration-500 z-10 dark:bg-slate-900
                     ${activeExp === exp.id 
-                      ? 'border-violet-500 scale-125 shadow-[0_0_30px_rgba(139,92,246,0.8)]' 
+                      ? 'border-red-500 scale-125 shadow-[0_0_30px_rgba(220,38,38,0.8)]' 
                       : 'border-slate-300 dark:border-slate-700'}
                   `}>
                     <div className={`
                       absolute inset-0 rounded-full animate-ping opacity-20
-                      ${activeExp === exp.id ? 'bg-violet-500' : 'bg-slate-500'}
+                      ${activeExp === exp.id ? 'bg-red-500' : 'bg-slate-500'}
                     `}></div>
                   </div>
 
@@ -226,12 +226,12 @@ const Experience: React.FC = () => {
                                   </span>
                                 )}
                               </div>
-                              <h3 className="text-2xl font-bold text-slate-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-violet-700 group-hover:to-slate-700 dark:text-white dark:group-hover:from-white dark:group-hover:to-slate-300 transition-all">
+                              <h3 className="text-2xl font-bold text-slate-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-red-700 group-hover:to-slate-700 dark:text-white dark:group-hover:from-white dark:group-hover:to-slate-300 transition-all">
                                 {exp.role}
                               </h3>
                               <div className="flex items-center gap-2 mt-2">
-                                <Briefcase size={14} className="text-violet-400" />
-                                <span className="text-violet-700 font-medium dark:text-violet-300">{exp.company}</span>
+                                <Briefcase size={14} className="text-red-400" />
+                                <span className="text-red-700 font-medium dark:text-red-300">{exp.company}</span>
                               </div>
                             </div>
                             
@@ -335,7 +335,7 @@ const Experience: React.FC = () => {
         <div className="text-center mt-16">
           <a 
             href="#contact" 
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white font-medium hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] transition-all group"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white font-medium hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] transition-all group"
           >
             <span>Open for Opportunities</span>
             <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
