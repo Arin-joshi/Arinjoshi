@@ -362,7 +362,7 @@ const Hero: React.FC = () => {
                 />
               </a>
               <a
-                href="https://github.com/arinjoshi"
+                href="https://github.com/Arin-joshi"
                 target="_blank"
                 rel="noreferrer"
                 className="p-2.5 sm:p-3 rounded-xl bg-white/90 border border-slate-200 text-slate-600 hover:text-red-600 hover:border-red-400 hover:scale-110 transition-all group dark:bg-slate-900/80 dark:border-slate-800 dark:text-slate-400 dark:hover:text-red-400 dark:hover:border-red-500/50"
