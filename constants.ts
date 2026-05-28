@@ -14,7 +14,7 @@ export const EXPERIENCE: Experience[] = [
     id: "exp-3",
     role: "Jr. React Developer",
     company: "NKB PlayTech Pvt. Ltd.",
-    period: "May 2025 - March 2026",
+    period: "May 2025 - April 2026",
     description: [
       "Developing real-time game applications using WebSockets and REST APIs.",
       "Handling complex game logic including multiplayer state syncing and instant updates.",
@@ -202,7 +202,7 @@ export const EDUCATION: Education[] = [
     period: "June 2019 - June 2020",
     score: "67.17 %"
   },
-   {
+  {
     id: "edu-3",
     degree: "Class 10",
     institution: "KPS School Raniwara",

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://arinjoshi.netlify.app/sitemap.xml

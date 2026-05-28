@@ -8,7 +8,12 @@ import Contact from './components/Contact';
 import Loader from './components/Loader';
 
 function App() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => {
+    if (typeof navigator === 'undefined') return false;
+    const ua = navigator.userAgent.toLowerCase();
+    const isBot = /googlebot|bingbot|yandexbot|baiduspider|duckduckbot|slurp|ia_archiver|facebookexternalhit|twitterbot|linkedinbot/i.test(ua);
+    return !isBot;
+  });
 
   useEffect(() => {
     const start = performance.now();
