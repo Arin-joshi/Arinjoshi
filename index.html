@@ -162,6 +162,18 @@
     #root>main {
       display: none;
     }
+
+    /* Prevent dark mode text coloring glitches from Tailwind CDN runtime lag */
+    html.dark .text-slate-900 {
+      color: #ffffff !important;
+    }
+    html.dark .text-slate-700 {
+      color: #cbd5e1 !important;
+    }
+    html.dark .text-slate-600,
+    html.dark .text-slate-500 {
+      color: #94a3b8 !important;
+    }
   </style>
 
   <script type="importmap">
