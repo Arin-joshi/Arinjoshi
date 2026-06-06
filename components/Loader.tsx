@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { Code2, Cpu, Sparkles, Zap, Brackets, Github } from 'lucide-react';
 
-const Loader = () => {
-  const [progress, setProgress] = useState(0);
-  const [loadingText, setLoadingText] = useState('Initializing');
+interface LoaderProps {
+  progress?: number;
+  loadingText?: string;
+}
+
+const Loader: React.FC<LoaderProps> = ({ progress: propProgress, loadingText: propLoadingText }) => {
+  const [internalProgress, setInternalProgress] = useState(0);
+  const [internalLoadingText, setInternalLoadingText] = useState('Initializing');
+
+  const progress = propProgress !== undefined ? propProgress : internalProgress;
+  const loadingText = propLoadingText !== undefined ? propLoadingText : internalLoadingText;
 
   // Simulate loading progress (single interval; avoids resetting on each tick)
   useEffect(() => {
+    if (propProgress !== undefined) return;
+
     const texts = [
       'Initializing',
       'Loading modules',
@@ -17,7 +27,7 @@ const Loader = () => {
     ];
 
     const interval = setInterval(() => {
-      setProgress((prev) => {
+      setInternalProgress((prev) => {
         if (prev >= 100) return 100;
         const next = prev + 1;
         const textIdx =
@@ -32,14 +42,14 @@ const Loader = () => {
                   : next >= 20
                     ? 1
                     : 0;
-        setLoadingText(texts[textIdx]);
+        setInternalLoadingText(texts[textIdx]);
         if (next >= 100) clearInterval(interval);
         return next;
       });
     }, 30);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [propProgress]);
 
   // Floating tech icons
   const techIcons = [

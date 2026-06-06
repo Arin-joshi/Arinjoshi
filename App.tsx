@@ -15,32 +15,119 @@ function App() {
     return !isBot;
   });
 
-  useEffect(() => {
-    const start = performance.now();
-    // Matches Loader progress (~100 steps × 30ms ≈ 3s) so the site does not appear mid-animation
-    const minLoaderMs = 3100;
-    let timeoutId: ReturnType<typeof setTimeout>;
+  const [progress, setProgress] = useState(0);
+  const [loadingText, setLoadingText] = useState('Initializing');
 
-    const finish = () => {
-      const elapsed = performance.now() - start;
-      const remaining = Math.max(0, minLoaderMs - elapsed);
-      timeoutId = setTimeout(() => setLoading(false), remaining);
+  useEffect(() => {
+    if (!loading) return;
+
+    let active = true;
+    const targetProgressRef = { current: 0 };
+    
+    // Smooth progress animation loop
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          // Small delay before transition out
+          setTimeout(() => setLoading(false), 200);
+          return 100;
+        }
+        
+        const target = targetProgressRef.current;
+        if (prev < target) {
+          const step = Math.max(1, Math.floor((target - prev) * 0.1));
+          const next = Math.min(100, prev + step);
+          
+          const texts = [
+            'Initializing',
+            'Loading modules',
+            'Compiling components',
+            'Preloading video background',
+            'Finalizing resources',
+            'Welcome!',
+          ];
+          const textIdx =
+            next >= 100
+              ? 5
+              : next >= 90
+                ? 4
+                : next >= 60
+                  ? 3
+                  : next >= 40
+                    ? 2
+                    : next >= 20
+                      ? 1
+                      : 0;
+          setLoadingText(texts[textIdx]);
+          return next;
+        }
+        return prev;
+      });
+    }, 30);
+
+    const startPreload = async () => {
+      // 1. Initial simulated progress to 30% for boot setup
+      for (let i = 0; i <= 30; i++) {
+        if (!active) return;
+        targetProgressRef.current = i;
+        await new Promise((r) => setTimeout(r, 15));
+      }
+
+      // 2. Fetch video with progress tracking (30% to 90%)
+      try {
+        const videoElement = document.createElement('video');
+        const supportsWebm = videoElement.canPlayType('video/webm; codecs="vp9, opus"') !== '';
+        let videoUrl = supportsWebm ? "/ArinJoshi.webm" : "/ArinJoshi.mp4";
+
+        let response = await fetch(videoUrl);
+        if (!response.ok && supportsWebm) {
+          // Fallback to mp4 if webm 404s
+          videoUrl = "/ArinJoshi.mp4";
+          response = await fetch(videoUrl);
+        }
+
+        if (!response.ok) throw new Error("Video load failed");
+
+        const reader = response.body?.getReader();
+        const contentLength = +(response.headers.get("Content-Length") || 0);
+
+        if (!reader || contentLength === 0) {
+          targetProgressRef.current = 90;
+        } else {
+          let receivedLength = 0;
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            receivedLength += value?.length || 0;
+            const downloadPercent = receivedLength / contentLength;
+            const mappedPercent = Math.min(90, 30 + Math.floor(downloadPercent * 60));
+            targetProgressRef.current = mappedPercent;
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to preload video, proceeding with normal load:", err);
+        targetProgressRef.current = 90;
+      }
+
+      // 3. Finalize progress to 100%
+      for (let i = targetProgressRef.current; i <= 100; i++) {
+        if (!active) return;
+        targetProgressRef.current = i;
+        await new Promise((r) => setTimeout(r, 10));
+      }
     };
 
-    if (document.readyState === 'complete') {
-      finish();
-    } else {
-      window.addEventListener('load', finish, { once: true });
-    }
+    startPreload();
 
     return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener('load', finish);
+      active = false;
+      clearInterval(interval);
     };
-  }, []);
+  }, [loading]);
 
   if (loading) {
-    return <Loader />;
+    return <Loader progress={progress} loadingText={loadingText} />;
   }
 
   return (
