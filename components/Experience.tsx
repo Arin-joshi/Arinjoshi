@@ -39,9 +39,14 @@ const Experience: React.FC = () => {
 
   // Company colors and tech stacks (you can customize these)
   const companyConfig: Record<string, { color: string, tech: string[], icon: React.ReactNode }> = {
-    'NKB PlayTech Pvt. Ltd.': {
+    'Aipxperts': {
+      color: 'from-purple-500 to-pink-600',
+      tech: ['React.js', 'PHP', 'Laravel', 'MySQL', 'AI Integration'],
+      icon: <Globe size={16} />
+    },
+    'NKB PlayTech Pvt. Ltd': {
       color: 'from-red-500 to-red-600',
-      tech: ['React', 'WebSockets', 'Node.js', 'Game Dev'],
+      tech: ['React.js', 'WebSockets', 'Node.js', 'TypeScript', 'Java'],
       icon: <Gamepad size={16} />
     },
     'Kotibox Global Technologies': {
@@ -51,7 +56,7 @@ const Experience: React.FC = () => {
     },
     'Celebal Technologies': {
       color: 'from-blue-500 to-indigo-600',
-      tech: ['React', 'JavaScript', 'HTML/CSS'],
+      tech: ['React.js', 'JavaScript', 'HTML/CSS'],
       icon: <Code2 size={16} />
     }
   };
@@ -116,7 +121,7 @@ const Experience: React.FC = () => {
           </h2>
           
           <p className="text-slate-600 max-w-2xl mx-auto text-lg dark:text-slate-400">
-            Over 2 years of hands-on experience building scalable applications
+            Over 3 years of hands-on experience building scalable applications
             and leading development initiatives
           </p>
         </div>

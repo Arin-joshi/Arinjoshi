@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X, Code2, ChevronDown, Home, Briefcase, FolderGit2, Cpu, GraduationCap, Mail } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
+import AudioToggle from "./AudioToggle";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -114,7 +115,11 @@ const Navbar: React.FC = () => {
 
               {/* Logo text with gradient */}
               <div className="relative overflow-hidden">
-                <span className="font-bold text-lg sm:text-xl tracking-tight text-slate-900 dark:text-white">
+                <span className={`font-bold text-lg sm:text-xl tracking-tight transition-colors duration-500 ${
+                  scrolled 
+                    ? "text-slate-900 dark:text-white" 
+                    : "text-slate-900 lg:text-white dark:text-white"
+                }`}>
                   Arin
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-red-700 dark:from-red-400 dark:to-red-500">
                     Joshi
@@ -139,15 +144,28 @@ const Navbar: React.FC = () => {
                       ${link.highlight 
                         ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/25 hover:shadow-red-500/40' 
                         : activeLink === link.href.substring(1)
-                          ? 'text-slate-900 bg-slate-900/5 dark:text-white dark:bg-white/10'
-                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-900/5 dark:text-slate-300 dark:hover:text-white dark:hover:bg-white/5'
+                          ? scrolled
+                            ? 'text-slate-900 bg-slate-900/5 dark:text-white dark:bg-white/10'
+                            : 'text-slate-900 lg:text-white bg-slate-900/5 dark:text-white dark:bg-white/10'
+                          : scrolled
+                            ? 'text-slate-600 hover:text-slate-900 hover:bg-slate-900/5 dark:text-slate-300 dark:hover:text-white dark:hover:bg-white/5'
+                            : 'text-slate-600 lg:text-slate-300 lg:hover:text-white hover:text-slate-900 hover:bg-slate-900/5 dark:text-slate-300 dark:hover:text-white dark:hover:bg-white/5'
                       }
                     `}
                   >
                     {/* Icon with animation */}
                     <span className={`
                       transition-transform duration-300 group-hover:scale-110
-                      ${link.highlight ? 'text-white/90' : 'text-slate-500 group-hover:text-red-600 dark:text-slate-400 dark:group-hover:text-red-400'}
+                      ${link.highlight 
+                        ? 'text-white/90' 
+                        : activeLink === link.href.substring(1)
+                          ? scrolled 
+                            ? 'text-slate-900 dark:text-white' 
+                            : 'text-slate-900 lg:text-white dark:text-white'
+                          : scrolled
+                            ? 'text-slate-500 group-hover:text-red-600 dark:text-slate-400 dark:group-hover:text-red-400'
+                            : 'text-slate-500 lg:text-slate-400 lg:group-hover:text-white group-hover:text-red-600 dark:text-slate-400 dark:group-hover:text-red-400'
+                      }
                     `}>
                       {link.icon}
                     </span>
@@ -164,11 +182,13 @@ const Navbar: React.FC = () => {
                   </a>
                 ))}
               </div>
+              <AudioToggle />
               <ThemeToggle />
             </div>
 
             {/* Mobile: theme + menu */}
             <div className="flex items-center gap-2 md:hidden">
+              <AudioToggle />
               <ThemeToggle />
               <button
                 onClick={() => setIsOpen(!isOpen)}

@@ -12,43 +12,37 @@ export const PERSONAL_INFO = {
 export const EXPERIENCE: Experience[] = [
   {
     id: "exp-3",
-    role: "Jr. React Developer",
-    company: "NKB PlayTech Pvt. Ltd.",
-    period: "May 2025 - April 2026",
+    role: "Software Engineer",
+    company: "Aipxperts",
+    period: "Feb 2026 - Present",
+    location: "Ahmedabad, Gujarat",
     description: [
-      "Developing real-time game applications using WebSockets and REST APIs.",
-      "Handling complex game logic including multiplayer state syncing and instant updates.",
-      "Building dynamic UI components that react instantly to live server data.",
-      "Implementing game animations, sound effects, and interactive gameplay elements.",
-      "Collaborating with backend developers to ensure smooth API and socket integration.",
-      "Debugging and optimizing performance for high concurrency environments."
+      "Building and enhancing a U.S.-based freelance marketplace and business growth platform (Legiit) serving digital marketers, entrepreneurs, and agencies using PHP, Laravel, React.js, and MySQL to develop scalable, production-ready features.",
+      "Led modernization of legacy PHP applications by migrating pages to React.js, creating highly responsive and user-friendly interfaces with improved UX/UI design that increased user engagement and overall platform efficiency.",
+      "Implemented AI-powered platform features, handled complex business logic, optimized MySQL database queries, and delivered third-party API integrations as maintainable production-grade solutions, reducing technical debt across the codebase."
     ]
   },
   {
     id: "exp-2",
-    role: "Mern Developer",
-    company: "Kotibox Global Technologies",
-    period: "Sept. 2023 - Feb. 2025",
+    role: "Frontend Developer",
+    company: "NKB PlayTech Pvt. Ltd",
+    period: "Sep 2023 - Jan 2026",
+    location: "Jaipur, Rajasthan",
     description: [
-      "Designed and deployed the company's first complete website using the MERN stack (React.js, html/css).",
-      "Implemented frontend routing with React Router for seamless navigation.",
-      "Built responsive, cross-browser-compatible layouts using Tailwind CSS.",
-      "Integrated REST APIs for dynamic data fetching and CRUD operations.",
-      "Managed deployment and hosting using cloud services (Vercel/Netlify & Render).",
-      "Improved website performance through code splitting and optimization."
+      "Built and maintained a production-scale gaming platform with 8+ interactive games using React.js, Node.js, TypeScript, Java, MongoDB, Firebase, and Supabase; handled high-volume user traffic, complex game logic, and real-time WebSocket state management.",
+      "Optimized frontend rendering via React.memo, useCallback, and code splitting; designed scalable backend architectures and resolved critical production issues to deliver reliable, high-performance gaming experiences with sub-100ms response times.",
+      "Accelerated feature delivery and debugging using Cursor AI, Google AI Studio, and Antigravity; managed sprint planning, bug tracking, and cross-team collaboration via Jira in an Agile/Scrum workflow."
     ]
   },
   {
     id: "exp-1",
-    role: "React.js Developer Internship",
+    role: "React.js Developer Intern",
     company: "Celebal Technologies",
-    period: "May 2023 - July 2023",
+    period: "May 2023 - Jul 2023",
+    location: "Jaipur, Rajasthan",
     description: [
-      "Learned the fundamentals of React.js including hooks (useState, useEffect), props, and state management.",
-      "Gained experience in component-based architecture and clean project structure.",
-      "Built small-scale UI components and integrated them into larger applications.",
-      "Practiced responsive design principles using CSS and media queries.",
-      "Collaborated with the team to debug issues and improve code quality."
+      "Developed 10+ reusable React.js functional components using React Hooks (useState, useEffect, useCallback) for scalable web applications following clean code, DRY, and SOLID design principles.",
+      "Implemented fully responsive UI layouts using CSS Grid, Flexbox, and media queries, achieving pixel-perfect, cross-browser-compatible designs across all devices; participated in code reviews and Agile sprint practices."
     ]
   }
 ];
