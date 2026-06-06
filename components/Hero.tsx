@@ -362,12 +362,15 @@ const Hero: React.FC = () => {
           <video
             ref={desktopVideoRef}
             className="hidden lg:block absolute inset-0 w-full h-full object-cover z-0 select-none pointer-events-none"
-            src="/ArinJoshi.mp4"
             autoPlay
             loop
             muted={isMuted}
             playsInline
-          />
+            preload="auto"
+          >
+            <source src="/ArinJoshi.webm" type="video/webm" />
+            <source src="/ArinJoshi.mp4" type="video/mp4" />
+          </video>
           {/* Desktop 70% Opacity Dark Overlay */}
           <div className="hidden lg:block absolute inset-0 bg-black/70 z-10 pointer-events-none" />
         </>
@@ -584,13 +587,16 @@ const Hero: React.FC = () => {
                     {/* Profile Card Video (plays on both Desktop and Mobile) */}
                     <video
                       ref={cardVideoRef}
-                      src="/ArinJoshi.mp4"
                       autoPlay
                       loop
                       muted={isDesktop ? true : isMuted}
                       playsInline
+                      preload="auto"
                       className="w-full h-full object-cover scale-[1.15] transition-transform duration-700 group-hover:scale-[1.2]"
-                    />
+                    >
+                      <source src="/ArinJoshi.webm" type="video/webm" />
+                      <source src="/ArinJoshi.mp4" type="video/mp4" />
+                    </video>
 
                     {/* Location badge inside the glass card */}
                     <div className="absolute bottom-3 sm:bottom-4 lg:bottom-6 left-3 sm:left-4 lg:left-6 right-3 sm:right-4 lg:right-6">
