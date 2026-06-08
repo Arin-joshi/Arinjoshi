@@ -157,7 +157,7 @@ export const PROJECTS: Project[] = [
     id: "proj-10",
     title: "Legiit Course Service Provider App",
     category: "App",
-    imageUrl: "/legiit-course.webp",
+    imageUrl: "/500x500Img.jpg",
     liveUrl: "https://legiit.com/sign-in",
     description: [
       "Authentication and account flows for the Legiit marketplace platform.",

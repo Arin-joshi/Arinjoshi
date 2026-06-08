@@ -368,7 +368,6 @@ const Hero: React.FC = () => {
             playsInline
             preload="auto"
           >
-            <source src="/ArinJoshi.webm" type="video/webm" />
             <source src="/ArinJoshi.mp4" type="video/mp4" />
           </video>
           {/* Desktop 70% Opacity Dark Overlay */}
@@ -594,7 +593,6 @@ const Hero: React.FC = () => {
                       preload="auto"
                       className="w-full h-full object-cover scale-[1.15] transition-transform duration-700 group-hover:scale-[1.2]"
                     >
-                      <source src="/ArinJoshi.webm" type="video/webm" />
                       <source src="/ArinJoshi.mp4" type="video/mp4" />
                     </video>
 

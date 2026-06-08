@@ -77,15 +77,9 @@ function App() {
       // 2. Fetch video with progress tracking (30% to 90%)
       try {
         const videoElement = document.createElement('video');
-        const supportsWebm = videoElement.canPlayType('video/webm; codecs="vp9, opus"') !== '';
-        let videoUrl = supportsWebm ? "/ArinJoshi.webm" : "/ArinJoshi.mp4";
+        let videoUrl = "/ArinJoshi.mp4";
 
         let response = await fetch(videoUrl);
-        if (!response.ok && supportsWebm) {
-          // Fallback to mp4 if webm 404s
-          videoUrl = "/ArinJoshi.mp4";
-          response = await fetch(videoUrl);
-        }
 
         if (!response.ok) throw new Error("Video load failed");
 
