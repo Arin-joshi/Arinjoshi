@@ -16,7 +16,7 @@ const AudioContext = createContext<AudioContextValue | null>(null);
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [isMuted, setIsMuted] = useState(false); // Default to unmuted (sound on)
+  const [isMuted, setIsMuted] = useState(true); // Default to muted to allow autoplay on all browsers
 
   const toggleMute = useCallback(() => {
     setIsMuted((prev) => !prev);
