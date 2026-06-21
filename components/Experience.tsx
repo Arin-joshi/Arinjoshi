@@ -1,397 +1,449 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { EXPERIENCE } from '../constants';
+import { useAudio } from '../contexts/AudioContext';
 import { 
   Briefcase, Calendar, MapPin, Code2, 
-  Sparkles, TrendingUp, Users, Rocket,
-  ChevronRight, Award, Clock, Zap,
-  Layers, GitBranch, Server, Globe
+  Clock, Users, ChevronRight, Globe, Activity
 } from 'lucide-react';
+import LookAtCursor from './LookAtCursor';
+
+interface CompanyMeta {
+  color: string;
+  accentColor: string;
+  subtitle: string;
+  icon: React.ReactNode;
+  tech: string[];
+  metrics: { label: string; value: string; desc: string }[];
+  status: 'Current' | 'Completed';
+  category: string;
+}
+
+const companyMetaMap: Record<string, CompanyMeta> = {
+  'exp-3': {
+    color: 'from-violet-500 to-indigo-600',
+    accentColor: '#8b5cf6',
+    subtitle: 'Platform Operations & Full Stack Engineering',
+    icon: <Globe size={16} className="text-violet-500 dark:text-violet-400" />,
+    tech: ['React.js', 'PHP', 'Laravel', 'MySQL', 'AI Integration'],
+    metrics: [
+      { label: 'Database Optimization', value: '+40%', desc: 'Optimized complex SQL queries and API response times.' },
+      { label: 'Frontend Migration', value: '100%', desc: 'Ported legacy monolith pages into modular React components.' },
+      { label: 'AI Search Matcher', value: '98%', desc: 'Engineered search matches for freelance digital marketer tools.' }
+    ],
+    status: 'Current',
+    category: 'Marketplace Engineering'
+  },
+  'exp-2': {
+    color: 'from-red-500 to-rose-600',
+    accentColor: '#ef4444',
+    subtitle: 'High-Frequency Gaming Systems & UI Optimization',
+    icon: <Activity size={16} className="text-red-500 dark:text-red-400" />,
+    tech: ['React.js', 'WebSockets', 'Node.js', 'TypeScript', 'MongoDB'],
+    metrics: [
+      { label: 'WebSocket Latency', value: '<100ms', desc: 'Achieved near-zero delay state synchronization over socket pipelines.' },
+      { label: 'Production Releases', value: '8+ Games', desc: 'Maintained and deployed highly interactive live multiplayer games.' },
+      { label: 'GC Memory Overhead', value: '-35%', desc: 'Optimized render cycles to prevent garbage collection drops.' }
+    ],
+    status: 'Completed',
+    category: 'Real-time Systems'
+  },
+  'exp-1': {
+    color: 'from-blue-500 to-cyan-600',
+    accentColor: '#3b82f6',
+    subtitle: 'Design Systems & UI Engineering',
+    icon: <Code2 size={16} className="text-blue-500 dark:text-blue-400" />,
+    tech: ['React.js', 'JavaScript', 'HTML5 / CSS3', 'Tailwind CSS'],
+    metrics: [
+      { label: 'Component Reusability', value: '90%', desc: 'Built atomic frontend blocks using SOLID react patterns.' },
+      { label: 'Pixel Fidelity', value: '100%', desc: 'Translated high-fidelity Figma specifications into interactive code.' },
+      { label: 'Cross-device Score', value: 'Grade A', desc: 'Guaranteed fully fluid layouts across all mobile and web viewports.' }
+    ],
+    status: 'Completed',
+    category: 'Design Systems'
+  }
+};
 
 const Experience: React.FC = () => {
-  const [activeExp, setActiveExp] = useState<string | null>(null);
-  const [animatedItems, setAnimatedItems] = useState<Set<string>>(new Set());
-  const [hoveredTech, setHoveredTech] = useState<string | null>(null);
-  const sectionRef = useRef<HTMLElement>(null);
-  const expRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const timelineRef = useRef<HTMLDivElement>(null);
+  const { isMuted } = useAudio();
+  const [selectedExpId, setSelectedExpId] = useState<string>(EXPERIENCE[0]?.id || 'exp-3');
+  const [activeTabId, setActiveTabId] = useState<string>(EXPERIENCE[0]?.id || 'exp-3');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  
+  // Hover and tilt coordinate states for the card spotlight borders
+  const [hoverCoords, setHoverCoords] = useState<Record<string, { x: number; y: number }>>({});
+  const [tiltStyle, setTiltStyle] = useState<Record<string, string>>({});
+  
+  // Tab transition state for the details panel content
+  const [animateCard, setAnimateCard] = useState<boolean>(true);
 
+  // Trigger fade-and-slide transition when selected experience changes
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const id = entry.target.getAttribute('data-id');
-            if (id && !animatedItems.has(id)) {
-              setAnimatedItems(prev => new Set(prev).add(id));
-            }
-          }
-        });
-      },
-      { threshold: 0.3, rootMargin: '50px' }
-    );
+    setAnimateCard(false);
+    const timer = setTimeout(() => setAnimateCard(true), 80);
+    return () => clearTimeout(timer);
+  }, [selectedExpId]);
 
-    expRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
+  const handleSelectCompany = (id: string) => {
+    if (id === activeTabId) return;
+    playAudioCue('select');
+    setActiveTabId(id);
+    setIsLoading(true);
 
-    return () => observer.disconnect();
-  }, [animatedItems]);
+    setTimeout(() => {
+      setSelectedExpId(id);
+      setIsLoading(false);
+    }, 500);
+  };
 
-  // Company colors and tech stacks (you can customize these)
-  const companyConfig: Record<string, { color: string, tech: string[], icon: React.ReactNode }> = {
-    'Aipxperts': {
-      color: 'from-purple-500 to-pink-600',
-      tech: ['React.js', 'PHP', 'Laravel', 'MySQL', 'AI Integration'],
-      icon: <Globe size={16} />
-    },
-    'NKB PlayTech Pvt. Ltd': {
-      color: 'from-red-500 to-red-600',
-      tech: ['React.js', 'WebSockets', 'Node.js', 'TypeScript', 'Java'],
-      icon: <Gamepad size={16} />
-    },
-    'Kotibox Global Technologies': {
-      color: 'from-emerald-500 to-cyan-600',
-      tech: ['MERN', 'React', 'Tailwind', 'REST API'],
-      icon: <Globe size={16} />
-    },
-    'Celebal Technologies': {
-      color: 'from-blue-500 to-indigo-600',
-      tech: ['React.js', 'JavaScript', 'HTML/CSS'],
-      icon: <Code2 size={16} />
+  // Premium subtle synthesizer sounds for physical feedback
+  const playAudioCue = (type: 'hover' | 'click' | 'select') => {
+    if (isMuted) return;
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      
+      osc.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      
+      const now = ctx.currentTime;
+      
+      if (type === 'hover') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1600, now);
+        osc.frequency.exponentialRampToValueAtTime(2200, now + 0.015);
+        gainNode.gain.setValueAtTime(0.005, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.015);
+        osc.start(now);
+        osc.stop(now + 0.015);
+      } else if (type === 'click') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(100, now + 0.04);
+        gainNode.gain.setValueAtTime(0.015, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+        osc.start(now);
+        osc.stop(now + 0.04);
+      } else if (type === 'select') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now); // C5
+        osc.frequency.exponentialRampToValueAtTime(1046.5, now + 0.1); // C6
+        gainNode.gain.setValueAtTime(0.01, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+        osc.start(now);
+        osc.stop(now + 0.1);
+        
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(783.99, now); // G5
+        osc2.frequency.exponentialRampToValueAtTime(1567.98, now + 0.1); // G6
+        osc2.connect(gain2);
+        gain2.connect(ctx.destination);
+        gain2.gain.setValueAtTime(0.006, now);
+        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+        osc2.start(now);
+        osc2.stop(now + 0.1);
+      }
+    } catch (e) {
+      // Audio fallback
     }
   };
 
-  // Helper to get company config
-  const getCompanyConfig = (company: string) => {
-    return companyConfig[company] || {
-      color: 'from-red-500 to-red-600',
-      tech: ['React', 'JavaScript', 'Web Dev'],
-      icon: <Briefcase size={16} />
+  // Cursor spotlight calculations
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, id: string) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    setHoverCoords(prev => ({
+      ...prev,
+      [id]: { x, y }
+    }));
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((centerY - y) / centerY) * 3; 
+    const rotateY = ((x - centerX) / centerX) * 3;
+    
+    setTiltStyle(prev => ({
+      ...prev,
+      [id]: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.008, 1.008, 1.008)`
+    }));
+  };
+
+  const handleMouseLeave = (id: string) => {
+    setHoverCoords(prev => {
+      const updated = { ...prev };
+      delete updated[id];
+      return updated;
+    });
+    setTiltStyle(prev => ({
+      ...prev,
+      [id]: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)'
+    }));
+  };
+
+  const getCompanyConfig = (id: string): CompanyMeta => {
+    return companyMetaMap[id] || {
+      color: 'from-slate-700 to-slate-800',
+      accentColor: '#64748b',
+      subtitle: 'Software Engineer',
+      icon: <Briefcase size={16} className="text-slate-500" />,
+      tech: ['React', 'JavaScript'],
+      metrics: [],
+      status: 'Completed',
+      category: 'Engineering'
     };
   };
 
-  // Calculate duration in months (simplified - you can enhance this)
-  const getDuration = (period: string) => {
-    if (period.includes('Present')) return 'Current';
-    return period.split('-')[1]?.trim() || '';
-  };
+  const activeExp = EXPERIENCE.find(e => e.id === selectedExpId) || EXPERIENCE[0];
+  const activeConfig = getCompanyConfig(activeExp.id);
+  const pendingConfig = getCompanyConfig(activeTabId);
 
   return (
     <section 
       id="experience" 
-      ref={sectionRef}
-      className="relative py-32 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden dark:from-slate-950 dark:via-slate-900 dark:to-slate-950"
+      className="relative py-28 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 overflow-hidden"
     >
-      {/* Animated background */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.07)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] dark:bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)]"></div>
+      {/* Background Micro-Grid & Soft Ambient Illumination */}
+      <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] opacity-60 pointer-events-none"></div>
       
-      {/* Floating elements */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-red-500/10 rounded-full blur-3xl animate-pulse dark:bg-red-600/10"></div>
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-red-600/10 rounded-full blur-3xl animate-pulse delay-1000 dark:bg-red-700/10"></div>
-      
-      {/* Animated particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-red-500/20 rounded-full animate-float"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${10 + Math.random() * 10}s`
-            }}
-          />
-        ))}
-      </div>
+      <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none dark:bg-indigo-500/3"></div>
+      <div className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none dark:bg-emerald-500/2"></div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 mb-6 backdrop-blur-sm">
-            <Rocket size={16} className="text-red-400 animate-pulse" />
-            <span className="text-sm font-medium text-red-700 dark:text-red-300">Professional Journey</span>
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+        
+        {/* Modern Section Header */}
+        <div className="text-center mb-16 flex flex-col items-center">
+          <LookAtCursor type="robot" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 mb-4 mt-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span className="text-[10px] font-mono tracking-widest text-slate-500 dark:text-slate-400 uppercase">PROFESSIONAL JOURNEY</span>
           </div>
           
-          <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6 dark:text-white">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4 dark:text-white">
             Work{' '}
-            <span className="bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent animate-gradient">
+            <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent dark:from-white dark:via-slate-200 dark:to-slate-400">
               Experience
             </span>
           </h2>
           
-          <p className="text-slate-600 max-w-2xl mx-auto text-lg dark:text-slate-400">
-            Over 3 years of hands-on experience building scalable applications
-            and leading development initiatives
+          <p className="text-slate-500 max-w-xl mx-auto text-sm sm:text-base dark:text-slate-400">
+            A review of core engineering roles, systems architecture, and frontend initiatives.
           </p>
         </div>
 
-        {/* Experience Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+        {/* Experience Metrics Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {[
-            { icon: <Briefcase size={20} />, label: 'Companies', value: EXPERIENCE.length },
-            { icon: <Clock size={20} />, label: 'Years Active', value: '3+' },
-            { icon: <Code2 size={20} />, label: 'Projects', value: '10+' },
-            { icon: <Users size={20} />, label: 'Teams', value: '3' },
+            { icon: <Briefcase size={18} />, label: 'ROLES HELD', value: EXPERIENCE.length },
+            { icon: <Clock size={18} />, label: 'YEARS ACTIVE', value: '3+' },
+            { icon: <Code2 size={18} />, label: 'APPLICATIONS SHIPPED', value: '15+' },
+            { icon: <Users size={18} />, label: 'TEAMS COORDINATED', value: '3' },
           ].map((stat, index) => (
             <div
               key={index}
-              className="relative group"
+              className="relative group overflow-hidden rounded-2xl border border-slate-200 bg-white/80 p-5 shadow-sm transition-all duration-300 dark:bg-slate-900/60 dark:border-slate-800 hover:-translate-y-1 hover:border-slate-350 dark:hover:border-slate-700"
             >
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-red-600 to-red-700 rounded-xl opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
-              <div className="relative bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 p-6 text-center shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none">
-                <div className="inline-flex p-3 rounded-lg bg-red-500/10 text-red-600 mb-3 group-hover:scale-110 transition-transform dark:text-red-400">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 group-hover:scale-110 transition-transform">
                   {stat.icon}
                 </div>
-                <div className="text-3xl font-bold text-slate-900 mb-1 dark:text-white">{stat.value}</div>
-                <div className="text-sm text-slate-600 dark:text-slate-400">{stat.label}</div>
+                <div>
+                  <div className="text-2xl font-black text-slate-900 dark:text-white">{stat.value}</div>
+                  <div className="text-[10px] font-mono tracking-wider text-slate-500 dark:text-slate-400">{stat.label}</div>
+                </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Timeline */}
-        <div className="max-w-4xl mx-auto" ref={timelineRef}>
-          <div className="relative">
-            {/* Main timeline line */}
-            <div className="absolute left-4 sm:left-1/2 transform sm:-translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-red-600 via-red-700 to-transparent"></div>
-
-            {EXPERIENCE.map((exp, index) => {
-              const config = getCompanyConfig(exp.company);
-              const isEven = index % 2 === 0;
-              const duration = getDuration(exp.period);
-              
+        {/* Interactive Dashboard Layout */}
+        <div className="grid lg:grid-cols-12 gap-8 items-start min-h-[520px]">
+          
+          {/* Left Navigation Tabs (4 columns) */}
+          <div className="lg:col-span-4 flex flex-col gap-2">
+            <span className="text-[11px] font-mono tracking-wider font-semibold text-slate-500 dark:text-slate-400 px-3 py-1 uppercase">
+              Select Company
+            </span>
+            {EXPERIENCE.map((exp, idx) => {
+              const isSelected = exp.id === activeTabId;
+              const meta = getCompanyConfig(exp.id);
               return (
-                <div
+                <button
                   key={exp.id}
-                  ref={(el) => (expRefs.current[index] = el)}
-                  data-id={`exp-${exp.id}`}
-                  onMouseEnter={() => setActiveExp(exp.id)}
-                  onMouseLeave={() => setActiveExp(null)}
-                  className={`
-                    relative flex flex-col sm:flex-row items-start gap-8 mb-12 last:mb-0
-                    transform transition-all duration-1000 ease-out
-                    ${animatedItems.has(`exp-${exp.id}`) 
-                      ? 'translate-y-0 opacity-100' 
-                      : 'translate-y-20 opacity-0'}
-                  `}
-                  style={{ transitionDelay: `${index * 200}ms` }}
+                  onClick={() => handleSelectCompany(exp.id)}
+                  onMouseEnter={() => playAudioCue('hover')}
+                  className={`w-full text-left rounded-2xl p-4 transition-all duration-200 border relative group ${
+                    isSelected 
+                      ? 'bg-white border-slate-900 text-slate-900 shadow-md dark:bg-slate-900 dark:border-white dark:text-white' 
+                      : 'bg-white/40 border-slate-200/60 hover:bg-white text-slate-600 dark:bg-slate-900/40 dark:border-slate-800/80 dark:text-slate-400 dark:hover:bg-slate-900/80 dark:hover:border-slate-750'
+                  }`}
                 >
-                  {/* Timeline dot with glow */}
-                  <div className={`
-                    absolute left-4 sm:left-1/2 transform sm:-translate-x-1/2 
-                    w-8 h-8 rounded-full bg-white border-4 
-                    transition-all duration-500 z-10 dark:bg-slate-900
-                    ${activeExp === exp.id 
-                      ? 'border-red-500 scale-125 shadow-[0_0_30px_rgba(220,38,38,0.8)]' 
-                      : 'border-slate-300 dark:border-slate-700'}
-                  `}>
-                    <div className={`
-                      absolute inset-0 rounded-full animate-ping opacity-20
-                      ${activeExp === exp.id ? 'bg-red-500' : 'bg-slate-500'}
-                    `}></div>
-                  </div>
-
-                  {/* Content card */}
-                  <div className={`
-                    w-full sm:w-[calc(50%-2rem)] 
-                    ${isEven ? 'sm:ml-auto sm:pl-8' : 'sm:mr-auto sm:pr-8'}
-                    pl-12 sm:pl-0
-                  `}>
-                    <div className={`
-                      group relative transform transition-all duration-500
-                      ${activeExp === exp.id ? 'scale-[1.02]' : 'scale-100'}
-                    `}>
-                      {/* Animated border */}
-                      <div className={`
-                        absolute -inset-0.5 bg-gradient-to-r ${config.color} 
-                        rounded-2xl opacity-0 group-hover:opacity-100 blur transition duration-500
-                        ${activeExp === exp.id ? 'opacity-100' : ''}
-                      `}></div>
-
-                      {/* Main card */}
-                      <div className="relative bg-white/95 backdrop-blur-sm rounded-2xl border border-slate-200 overflow-hidden shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none">
-                        {/* Company header with gradient */}
-                        <div className={`
-                          p-6 bg-gradient-to-r ${config.color} bg-opacity-10 
-                          border-b border-slate-200 dark:border-slate-800
-                        `}>
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <div className="flex items-center gap-2 mb-2">
-                                <span className={`
-                                  px-3 py-1 rounded-full text-xs font-semibold
-                                  bg-white/10 backdrop-blur-sm border border-white/20
-                                `}>
-                                  {duration}
-                                </span>
-                                {index === 0 && (
-                                  <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                                    Current
-                                  </span>
-                                )}
-                              </div>
-                              <h3 className="text-2xl font-bold text-slate-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-red-700 group-hover:to-slate-700 dark:text-white dark:group-hover:from-white dark:group-hover:to-slate-300 transition-all">
-                                {exp.role}
-                              </h3>
-                              <div className="flex items-center gap-2 mt-2">
-                                <Briefcase size={14} className="text-red-400" />
-                                <span className="text-red-700 font-medium dark:text-red-300">{exp.company}</span>
-                              </div>
-                            </div>
-                            
-                            {/* Company icon */}
-                            <div className="p-3 rounded-xl bg-slate-100/90 border border-slate-200 dark:bg-slate-800/80 dark:border-slate-700">
-                              {config.icon}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Content body */}
-                        <div className="p-6">
-                          {/* Period */}
-                          <div className="flex items-center gap-2 mb-4 text-sm">
-                            <Calendar size={14} className="text-slate-500" />
-                            <span className="text-slate-600 dark:text-slate-400">{exp.period}</span>
-                            {exp.location && (
-                              <>
-                                <span className="w-1 h-1 rounded-full bg-slate-600"></span>
-                                <MapPin size={14} className="text-slate-500" />
-                                <span className="text-slate-600 dark:text-slate-400">{exp.location}</span>
-                              </>
-                            )}
-                          </div>
-
-                          {/* Description list */}
-                          <ul className="space-y-3 mb-6">
-                            {exp.description.map((item, i) => (
-                              <li 
-                                key={i} 
-                                className="flex items-start gap-3 text-slate-700 text-sm group/item dark:text-slate-300"
-                                style={{ transitionDelay: `${i * 50}ms` }}
-                              >
-                                <span className={`
-                                  mt-1.5 w-1.5 h-1.5 rounded-full bg-gradient-to-r ${config.color} 
-                                  flex-shrink-0 group-hover/item:scale-125 transition-transform
-                                `}></span>
-                                <span>{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-
-                          {/* Tech stack used */}
-                          <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
-                            <p className="text-xs font-semibold text-slate-500 mb-2 flex items-center gap-1">
-                              <Layers size={12} />
-                              TECH STACK
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                              {config.tech.map((tech, i) => (
-                                <div
-                                  key={i}
-                                  onMouseEnter={() => setHoveredTech(tech)}
-                                  onMouseLeave={() => setHoveredTech(null)}
-                                  className={`
-                                    px-3 py-1.5 rounded-lg text-xs font-medium
-                                    transition-all duration-300 cursor-default
-                                    ${hoveredTech === tech 
-                                      ? `bg-gradient-to-r ${config.color} text-white scale-105` 
-                                      : 'bg-slate-100/90 text-slate-700 border border-slate-200 dark:bg-slate-800/80 dark:text-slate-300 dark:border-slate-700'}
-                                  `}
-                                >
-                                  {tech}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Key achievements badge (for recent roles) */}
-                          {index === 0 && (
-                            <div className="mt-4 flex items-center gap-2">
-                              <Award size={14} className="text-yellow-500" />
-                              <span className="text-xs text-yellow-500">Lead Developer • Key Contributor</span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Animated progress indicator */}
-                        <div className={`
-                          absolute bottom-0 left-0 h-1 bg-gradient-to-r ${config.color} 
-                          transition-all duration-700
-                          ${activeExp === exp.id ? 'w-full' : 'w-0'}
-                        `}></div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-xl transition-colors ${isSelected ? 'bg-slate-100 dark:bg-slate-800' : 'bg-slate-50 dark:bg-slate-950'}`}>
+                        {meta.icon}
+                      </div>
+                      <div>
+                        <div className="text-[9px] font-mono tracking-wider opacity-60">STREAM_0{idx+1}</div>
+                        <div className="font-semibold text-sm tracking-wide">{exp.company}</div>
                       </div>
                     </div>
+                    <ChevronRight size={14} className={`transition-transform duration-200 ${isSelected ? 'translate-x-0.5 text-slate-900 dark:text-white' : 'opacity-20'}`} />
                   </div>
-
-                  {/* Year badge for desktop */}
-                  <div className="hidden sm:block absolute left-1/2 transform -translate-x-1/2 -bottom-6">
-                    <span className="px-3 py-1 rounded-full bg-slate-800 text-xs text-slate-400 border border-slate-700">
-                      {exp.period.split('-')[0].trim()}
+                  
+                  <div className="mt-3 flex items-center justify-between text-[10px] font-mono opacity-80">
+                    <span>{exp.period.split('-')[0].trim()}</span>
+                    <span className={`px-2 py-0.5 rounded-md text-[9px] ${
+                      isSelected 
+                        ? 'bg-slate-100 text-slate-900 dark:bg-slate-800 dark:text-slate-200' 
+                        : 'bg-slate-50 text-slate-500 dark:bg-slate-950 dark:text-slate-500'
+                    }`}>
+                      {meta.status}
                     </span>
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
+
+          {/* Right Details Panel (8 columns) */}
+          <div className={`lg:col-span-8 transition-all duration-300 ${
+            animateCard ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}>
+            <div 
+              className="group relative transition-all duration-200 rounded-3xl"
+              onMouseMove={(e) => handleMouseMove(e, activeExp.id)}
+              onMouseLeave={() => handleMouseLeave(activeExp.id)}
+              style={{ 
+                transform: tiltStyle[activeExp.id] || 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
+                transition: 'transform 0.2s ease-out'
+              }}
+            >
+              {/* Glowing spotlight border wrapper */}
+              <div 
+                className="relative p-[1px] rounded-3xl bg-slate-200 dark:bg-slate-800 transition-all duration-300"
+                style={{
+                  background: hoverCoords[activeExp.id]
+                    ? `radial-gradient(300px circle at ${hoverCoords[activeExp.id].x}px ${hoverCoords[activeExp.id].y}px, ${activeConfig.accentColor}, rgba(226, 232, 240, 0.4) 70%)`
+                    : undefined
+                }}
+              >
+                <div className="bg-white/95 dark:bg-slate-950 rounded-[23px] p-6 sm:p-8 backdrop-blur-xl transition-all duration-300 relative">
+                  
+                  {/* Premium Brand-Colored Spinner Overlay (0.5s timeout transition) */}
+                  <div className={`absolute inset-0 bg-white/40 dark:bg-slate-950/40 backdrop-blur-[3px] flex items-center justify-center z-25 rounded-[23px] transition-all duration-300 pointer-events-none ${
+                    isLoading ? 'opacity-100' : 'opacity-0'
+                  }`}>
+                    <div className="flex flex-col items-center gap-3">
+                      <div 
+                        className="w-10 h-10 border-2 border-transparent rounded-full animate-spin"
+                        style={{
+                          borderTopColor: pendingConfig.accentColor,
+                          borderRightColor: pendingConfig.accentColor,
+                        }}
+                      ></div>
+                      <span className="text-[10px] font-mono tracking-widest text-slate-500 dark:text-slate-400 uppercase select-none">
+                        Updating Stream...
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <span className="text-[10px] font-mono tracking-widest text-slate-400 dark:text-slate-500 uppercase">{activeConfig.category}</span>
+                        <span className="text-slate-300 dark:text-slate-700">&bull;</span>
+                        <span className={`inline-flex items-center gap-1 text-[10px] font-mono ${activeConfig.status === 'Current' ? 'text-emerald-500 font-bold' : 'text-slate-400'}`}>
+                          {activeConfig.status === 'Current' && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>}
+                          {activeConfig.status}
+                        </span>
+                      </div>
+                      <h3 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                        {activeExp.role}
+                      </h3>
+                      <p className="text-sm font-mono text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-1.5">
+                        <Briefcase size={13} className="text-slate-400" />
+                        <span className="font-bold text-slate-800 dark:text-slate-200">{activeExp.company}</span>
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-start sm:items-end text-xs font-mono text-slate-500 dark:text-slate-400 gap-1.5">
+                      <span className="flex items-center gap-1.5">
+                        <Calendar size={13} />
+                        {activeExp.period}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <MapPin size={13} />
+                        {activeExp.location}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="mb-8 pt-4 border-t border-slate-100 dark:border-slate-900">
+                    <ul className="space-y-4">
+                      {activeExp.description.map((desc, dIdx) => (
+                        <li 
+                          key={dIdx} 
+                          className="flex items-start gap-3.5 text-sm leading-relaxed text-slate-600 dark:text-slate-300 font-sans group/item"
+                        >
+                          <span className={`mt-2 w-1.5 h-1.5 rounded-full bg-gradient-to-r ${activeConfig.color} flex-shrink-0 group-hover/item:scale-125 transition-transform duration-200`}></span>
+                          <span>{desc}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="mb-8">
+                    <span className="text-[11px] font-mono tracking-wider font-semibold text-slate-500 dark:text-slate-400 block mb-4 uppercase">
+                      Measurable Impact
+                    </span>
+                    <div className="grid sm:grid-cols-3 gap-4">
+                      {activeConfig.metrics.map((metric, mIdx) => (
+                        <div 
+                          key={mIdx} 
+                          className="p-4 rounded-xl bg-slate-50/50 border border-slate-200/50 dark:bg-slate-900/30 dark:border-slate-800/80 relative overflow-hidden"
+                        >
+                          <div className={`text-xl font-bold bg-gradient-to-r ${activeConfig.color} bg-clip-text text-transparent mb-1`}>
+                            {metric.value}
+                          </div>
+                          <div className="text-xs font-semibold text-slate-800 dark:text-slate-200 mb-1">{metric.label}</div>
+                          <div className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal">{metric.desc}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="text-[11px] font-mono tracking-wider font-semibold text-slate-500 dark:text-slate-400 block mb-3 uppercase">
+                      Core Technologies
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {activeConfig.tech.map((tech, tIdx) => (
+                        <span
+                          key={tIdx}
+                          className="px-3 py-1.5 rounded-lg text-xs font-mono bg-slate-50 text-slate-700 border border-slate-150 transition-colors duration-200 hover:bg-slate-100 hover:border-slate-300 dark:bg-slate-900/60 dark:text-slate-300 dark:border-slate-800 dark:hover:bg-slate-900 dark:hover:border-slate-700"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        {/* Call to action */}
-        <div className="text-center mt-16">
-          <a 
-            href="#contact" 
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-red-600 to-red-700 text-white font-medium hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] transition-all group"
-          >
-            <span>Open for Opportunities</span>
-            <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
-          </a>
-        </div>
       </div>
-
-      <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0) translateX(0); }
-          25% { transform: translateY(-20px) translateX(10px); }
-          50% { transform: translateY(-10px) translateX(-10px); }
-          75% { transform: translateY(10px) translateX(5px); }
-        }
-        .animate-float {
-          animation: float linear infinite;
-        }
-        @keyframes gradient {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        .animate-gradient {
-          background-size: 200% auto;
-          animation: gradient 4s linear infinite;
-        }
-      `}</style>
     </section>
   );
 };
-
-// Custom Gamepad icon component
-function Gamepad({ size = 16 }: { size?: number }) {
-  return (
-    <svg 
-      width={size} 
-      height={size} 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2"
-      strokeLinecap="round" 
-      strokeLinejoin="round"
-    >
-      <line x1="6" x2="10" y1="12" y2="12"></line>
-      <line x1="8" x2="8" y1="10" y2="14"></line>
-      <line x1="15" x2="15.01" y1="13" y2="13"></line>
-      <line x1="18" x2="18.01" y1="11" y2="11"></line>
-      <rect width="20" height="12" x="2" y="6" rx="2"></rect>
-    </svg>
-  );
-}
 
 export default Experience;

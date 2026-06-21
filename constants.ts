@@ -85,7 +85,7 @@ export const PROJECTS: Project[] = [
     id: "proj-4",
     title: "Company Website",
     category: "Web",
-    imageUrl: "https://picsum.photos/id/3/800/600",
+    imageUrl: "/kotibox.png",
     liveUrl: "https://kotiboxglobaltech.com/",
     description: [
       "Fully responsive corporate website built using the MERN stack.",
@@ -157,7 +157,7 @@ export const PROJECTS: Project[] = [
     id: "proj-10",
     title: "Legiit Course Service Provider App",
     category: "App",
-    imageUrl: "/500x500Img.jpg",
+    imageUrl: "Legiit.png",
     liveUrl: "https://legiit.com/sign-in",
     description: [
       "Authentication and account flows for the Legiit marketplace platform.",

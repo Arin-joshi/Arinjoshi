@@ -70,7 +70,9 @@ const Navbar: React.FC = () => {
     e.preventDefault();
     const element = document.querySelector(href);
     if (element) {
-      const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - 80;
+      const navbar = document.querySelector('nav');
+      const navbarHeight = navbar ? navbar.offsetHeight : 80;
+      const offsetTop = element.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
       window.scrollTo({
         top: offsetTop,
         behavior: "smooth"

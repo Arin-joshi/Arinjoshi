@@ -1,339 +1,400 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SKILLS, CERTIFICATIONS, EDUCATION } from '../constants';
+import { useAudio } from '../contexts/AudioContext';
 import { 
-  Award, BookOpen, GraduationCap, Code2, 
+  Award, GraduationCap, Code2, 
   Sparkles, Zap, Cpu, Brain, Trophy,
-  ChevronRight, ExternalLink, Calendar,
-  MapPin, Star, TrendingUp
+  ExternalLink, Calendar, MapPin, Star
 } from 'lucide-react';
+import LookAtCursor from './LookAtCursor';
+
+interface CategoryStyle {
+  color: string;
+  accentColor: string;
+  icon: React.ReactNode;
+  bg: string;
+  text: string;
+  categoryDesc: string;
+}
+
+const categoryConfig: Record<string, CategoryStyle> = {
+  Frontend: { 
+    color: 'from-cyan-500 to-blue-500', 
+    accentColor: '#06b6d4',
+    icon: <Code2 size={14} />, 
+    bg: 'bg-cyan-500/10 dark:bg-cyan-500/5', 
+    text: 'text-cyan-500 dark:text-cyan-400',
+    categoryDesc: 'Production React interfaces, state managers & responsive engines.'
+  },
+  Backend: { 
+    color: 'from-emerald-500 to-teal-500', 
+    accentColor: '#10b981',
+    icon: <Cpu size={14} />, 
+    bg: 'bg-emerald-500/10 dark:bg-emerald-500/5', 
+    text: 'text-emerald-500 dark:text-emerald-400',
+    categoryDesc: 'Scalable service logic, Socket.io channels & API gateway routers.'
+  },
+  Database: { 
+    color: 'from-purple-500 to-indigo-500', 
+    accentColor: '#a855f7',
+    icon: <Brain size={14} />, 
+    bg: 'bg-purple-500/10 dark:bg-purple-500/5', 
+    text: 'text-purple-500 dark:text-purple-400',
+    categoryDesc: 'Structured data relationships, NoSQL query profiles & indexing.'
+  },
+  Core: { 
+    color: 'from-red-500 to-rose-500', 
+    accentColor: '#ef4444',
+    icon: <Zap size={14} />, 
+    bg: 'bg-red-500/10 dark:bg-red-500/5', 
+    text: 'text-red-500 dark:text-red-400',
+    categoryDesc: 'System architecture foundations, algorithms & design principles.'
+  }
+};
 
 const Skills: React.FC = () => {
+  const { isMuted } = useAudio();
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [animatedItems, setAnimatedItems] = useState<Set<string>>(new Set());
-  const [hoveredCert, setHoveredCert] = useState<string | null>(null);
-  const sectionRef = useRef<HTMLElement>(null);
-  const skillRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const certRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const eduRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [hoverCoords, setHoverCoords] = useState<Record<string, { x: number; y: number }>>({});
+  const [tiltStyle, setTiltStyle] = useState<Record<string, string>>({});
+  const [animateSkills, setAnimateSkills] = useState<boolean>(true);
+  
+  // Instantaneous filter change
+  const handleFilterChange = (category: string) => {
+    if (category === activeCategory) return;
+    playAudioCue('select');
+    setActiveCategory(category);
+  };
 
-  // Intersection Observer for scroll animations
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const id = entry.target.getAttribute('data-id');
-            if (id && !animatedItems.has(id)) {
-              setAnimatedItems(prev => new Set(prev).add(id));
-            }
-          }
-        });
-      },
-      { threshold: 0.2, rootMargin: '50px' }
-    );
+  // Synthesizer audio engine
+  const playAudioCue = (type: 'hover' | 'click' | 'select') => {
+    if (isMuted) return;
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+      
+      osc.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      
+      const now = ctx.currentTime;
+      
+      if (type === 'hover') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1600, now);
+        osc.frequency.exponentialRampToValueAtTime(2200, now + 0.015);
+        gainNode.gain.setValueAtTime(0.004, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.015);
+        osc.start(now);
+        osc.stop(now + 0.015);
+      } else if (type === 'click') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(550, now);
+        osc.frequency.exponentialRampToValueAtTime(80, now + 0.04);
+        gainNode.gain.setValueAtTime(0.015, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.04);
+        osc.start(now);
+        osc.stop(now + 0.04);
+      } else if (type === 'select') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.exponentialRampToValueAtTime(1046.5, now + 0.1);
+        gainNode.gain.setValueAtTime(0.01, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+        osc.start(now);
+        osc.stop(now + 0.1);
+      }
+    } catch (e) {
+      // Audio fallback
+    }
+  };
 
-    [...skillRefs.current, ...certRefs.current, ...eduRefs.current].forEach((ref) => {
-      if (ref) observer.observe(ref);
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, id: string) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    setHoverCoords(prev => ({ ...prev, [id]: { x, y } }));
+    
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((centerY - y) / centerY) * 3; 
+    const rotateY = ((x - centerX) / centerX) * 3;
+    
+    setTiltStyle(prev => ({
+      ...prev,
+      [id]: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.008, 1.008, 1.008)`
+    }));
+  };
+
+  const handleMouseLeave = (id: string) => {
+    setHoverCoords(prev => {
+      const updated = { ...prev };
+      delete updated[id];
+      return updated;
     });
+    setTiltStyle(prev => ({
+      ...prev,
+      [id]: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)'
+    }));
+  };
 
-    return () => observer.disconnect();
-  }, [animatedItems]);
-
-  // Category filter for skills
   const categories = ['all', ...new Set(SKILLS.map(s => s.category))];
   const filteredSkills = activeCategory === 'all' 
     ? SKILLS 
     : SKILLS.filter(s => s.category === activeCategory);
 
-  // Category colors and icons
-  const categoryConfig = {
-    Frontend: { color: 'from-cyan-500 to-blue-500', icon: <Code2 size={14} />, bg: 'bg-cyan-500/10', text: 'text-cyan-400' },
-    Backend: { color: 'from-green-500 to-emerald-500', icon: <Cpu size={14} />, bg: 'bg-green-500/10', text: 'text-green-400' },
-    Database: { color: 'from-red-500 to-red-600', icon: <Brain size={14} />, bg: 'bg-red-500/10', text: 'text-red-400' },
-    Core: { color: 'from-orange-500 to-red-500', icon: <Zap size={14} />, bg: 'bg-orange-500/10', text: 'text-orange-400' },
+  const getStyle = (category: string): CategoryStyle => {
+    return categoryConfig[category] || { 
+      color: 'from-slate-500 to-slate-600', 
+      accentColor: '#64748b',
+      icon: <Code2 size={14} />, 
+      bg: 'bg-slate-500/10', 
+      text: 'text-slate-400',
+      categoryDesc: 'Software engineering skill depth.'
+    };
   };
 
   return (
     <section 
       id="skills" 
-      ref={sectionRef}
-      className="relative py-32 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden dark:from-slate-950 dark:via-slate-900 dark:to-slate-950"
+      className="relative py-28 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 overflow-hidden"
     >
-      {/* Animated background grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.07)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] dark:bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)]"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] opacity-60 pointer-events-none"></div>
       
-      {/* Floating orbs */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-red-500/10 rounded-full blur-3xl animate-pulse dark:bg-red-600/10"></div>
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl animate-pulse delay-1000 dark:bg-cyan-600/10"></div>
-      <div className="absolute top-40 right-40 w-60 h-60 bg-emerald-500/10 rounded-full blur-3xl animate-pulse delay-700 dark:bg-emerald-600/10"></div>
+      <div className="absolute top-1/4 left-1/10 w-96 h-96 bg-red-500/5 rounded-full blur-3xl pointer-events-none dark:bg-red-600/3"></div>
+      <div className="absolute bottom-1/4 right-1/10 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none dark:bg-cyan-600/3"></div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         
-        {/* Section Header with animated gradient */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 mb-6 backdrop-blur-sm">
-            <Sparkles size={16} className="text-red-400 animate-pulse" />
-            <span className="text-sm font-medium text-red-700 dark:text-red-300">Technical Expertise</span>
+        <div className="text-center mb-16 flex flex-col items-center">
+          <LookAtCursor type="duck" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 mb-4 mt-2">
+            <Sparkles size={13} className="text-red-400 animate-pulse" />
+            <span className="text-[10px] font-mono tracking-widest text-slate-500 dark:text-slate-400 uppercase">TECHNICAL EXPERTISE</span>
           </div>
           
-          <h2 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6 dark:text-white">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4 dark:text-white">
             Engineering{' '}
-            <span className="bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent animate-gradient">
+            <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent dark:from-white dark:via-slate-200 dark:to-slate-400">
               Excellence
             </span>
           </h2>
           
-          <p className="text-slate-600 max-w-2xl mx-auto text-lg dark:text-slate-400">
-            Full-stack development expertise with a focus on 
-            <span className="text-slate-900 font-semibold dark:text-white"> React.js </span> 
-            and modern web technologies
+          <p className="text-slate-500 max-w-xl mx-auto text-sm sm:text-base dark:text-slate-400">
+            A matrix of programming languages, framework state machines, and system logic libraries.
           </p>
-        </div>
 
-        {/* Skills Section with Category Filter */}
-        <div className="mb-20">
-          {/* Category Filter Buttons */}
-          <div className="flex flex-wrap justify-center gap-3 mb-10">
-            {categories.map((category) => (
+          {/* Category Switchers */}
+          <div className="flex flex-wrap justify-center gap-3 mt-8">
+            {categories.map((cat) => (
               <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
+                key={cat}
+                onClick={() => handleFilterChange(cat)}
+                onMouseEnter={() => playAudioCue('hover')}
                 className={`
-                  px-4 py-2 rounded-full text-sm font-medium transition-all duration-300
-                  ${activeCategory === category 
-                    ? 'bg-red-600 text-white shadow-[0_0_20px_rgba(220,38,38,0.5)]' 
-                    : 'bg-slate-100/90 text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-red-400 dark:bg-slate-800/50 dark:text-slate-400 dark:hover:text-white dark:border-slate-700 dark:hover:border-red-500/50'
+                  px-4 py-1.5 rounded-xl text-xs font-mono tracking-wider transition-all duration-200 border
+                  ${activeCategory === cat 
+                    ? 'bg-slate-900 border-slate-900 text-white shadow-md dark:bg-white dark:border-white dark:text-slate-900' 
+                    : 'bg-white/80 border-slate-200 text-slate-600 hover:text-slate-900 dark:bg-slate-900/50 dark:border-slate-800 dark:text-slate-400 dark:hover:text-white'
                   }
                 `}
               >
-                {category.charAt(0).toUpperCase() + category.slice(1)}
-                {activeCategory === category && (
-                  <span className="ml-2 inline-block w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                )}
+                {cat.charAt(0).toUpperCase() + cat.slice(1)}
               </button>
             ))}
           </div>
+        </div>
 
-          {/* Skills Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        {/* Skills Grid Section */}
+        <div className="relative min-h-[220px] mb-24">
+          <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 transition-all duration-300 ${
+            animateSkills ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+          }`}>
             {filteredSkills.map((skill, index) => {
-              const config = categoryConfig[skill.category as keyof typeof categoryConfig] || 
-                { color: 'from-slate-500 to-slate-600', icon: <Code2 size={14} />, bg: 'bg-slate-500/10', text: 'text-slate-400' };
+              const cfg = getStyle(skill.category);
+              const cardId = `skill-${index}`;
               
               return (
                 <div
                   key={index}
-                  ref={(el) => (skillRefs.current[index] = el)}
-                  data-id={`skill-${index}`}
-                  className={`
-                    group relative transform transition-all duration-700 ease-out
-                    ${animatedItems.has(`skill-${index}`) 
-                      ? 'translate-y-0 opacity-100' 
-                      : 'translate-y-10 opacity-0'}
-                  `}
-                  style={{ transitionDelay: `${index * 50}ms` }}
+                  className="group relative transition-all duration-200 rounded-2xl"
+                  onMouseMove={(e) => handleMouseMove(e, cardId)}
+                  onMouseLeave={() => handleMouseLeave(cardId)}
+                  style={{ 
+                    transform: tiltStyle[cardId] || 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
+                    transition: 'transform 0.2s ease-out'
+                  }}
                 >
-                  {/* Animated border gradient */}
-                  <div className={`absolute -inset-0.5 bg-gradient-to-r ${config.color} rounded-xl opacity-0 group-hover:opacity-100 blur transition duration-500`}></div>
-                  
-                  <div className="relative bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 hover:border-transparent p-5 transition-all duration-300 shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none">
-                    {/* Skill icon and name */}
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className={`p-2 rounded-lg ${config.bg} ${config.text}`}>
-                        {config.icon}
+                  <div 
+                    className="relative p-[1px] rounded-2xl bg-slate-200 dark:bg-slate-800 transition-all duration-300"
+                    style={{
+                      background: hoverCoords[cardId]
+                        ? `radial-gradient(160px circle at ${hoverCoords[cardId].x}px ${hoverCoords[cardId].y}px, ${cfg.accentColor}, rgba(226, 232, 240, 0.4) 70%)`
+                        : undefined
+                    }}
+                  >
+                    <div className="bg-white dark:bg-slate-950 rounded-[15px] p-5 relative min-h-[130px] flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-center justify-between mb-3">
+                          <div className={`p-2 rounded-lg ${cfg.bg} ${cfg.text}`}>
+                            {cfg.icon}
+                          </div>
+                          <span className={`text-[9px] font-mono tracking-wider ${cfg.text}`}>
+                            {skill.category}
+                          </span>
+                        </div>
+                        <h4 className="text-sm font-bold text-slate-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-slate-900 group-hover:to-slate-700 transition-all dark:text-white dark:group-hover:from-white dark:group-hover:to-slate-350">
+                          {skill.name}
+                        </h4>
                       </div>
-                      <span className="text-slate-900 font-semibold group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-red-700 group-hover:to-slate-800 transition-all dark:text-white dark:group-hover:from-white dark:group-hover:to-slate-300">
-                        {skill.name}
-                      </span>
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-2 font-mono leading-normal select-none">
+                        {cfg.categoryDesc}
+                      </p>
                     </div>
-                    
-                    {/* Skill level indicator */}
-                    <div className="mt-3 flex items-center gap-2">
-                      <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden dark:bg-slate-800">
-                        <div className={`h-full bg-gradient-to-r ${config.color} w-[85%] group-hover:w-full transition-all duration-700`}></div>
-                      </div>
-                      <span className={`text-xs ${config.text}`}>Expert</span>
-                    </div>
-                    
-                    {/* Category badge */}
-                    <span className={`absolute top-1.5 right-1.5 text-[8px] px-1 py-0.5 rounded-full ${config.bg} ${config.text} border border-slate-500`}>
-                      {skill.category}
-                    </span>
                   </div>
                 </div>
               );
             })}
           </div>
+
+
         </div>
 
-        {/* Certifications & Education Grid */}
-        <div className="grid lg:grid-cols-2 gap-8" id="education">
-          {/* Certifications Section */}
+        {/* Certifications & Education Split Grid */}
+        <div className="grid lg:grid-cols-2 gap-12" id="education">
+          
+          {/* Certifications Panel */}
           <div>
             <div className="flex items-center gap-3 mb-8">
-              <div className="p-3 bg-gradient-to-br from-red-500/20 to-red-600/20 rounded-xl border border-red-500/30">
-                <Trophy size={24} className="text-red-400" />
+              <div className="p-2.5 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+                <Trophy size={18} className="text-red-500 dark:text-red-400" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Certifications</h3>
-                <p className="text-slate-500 text-sm">Professional achievements</p>
+                <h3 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">Certifications</h3>
+                <p className="text-slate-500 text-xs font-mono">Academic achievements & coursework</p>
               </div>
             </div>
             
             <div className="space-y-4">
-              {CERTIFICATIONS.map((cert, index) => (
-                <div
-                  key={cert.id}
-                  ref={(el) => (certRefs.current[index] = el)}
-                  data-id={`cert-${cert.id}`}
-                  onMouseEnter={() => setHoveredCert(cert.id)}
-                  onMouseLeave={() => setHoveredCert(null)}
-                  className={`
-                    group relative transform transition-all duration-700 ease-out
-                    ${animatedItems.has(`cert-${cert.id}`) 
-                      ? 'translate-x-0 opacity-100' 
-                      : '-translate-x-10 opacity-0'}
-                  `}
-                  style={{ transitionDelay: `${index * 100}ms` }}
-                >
-                  {/* Animated background */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 to-red-700/20 rounded-xl opacity-0 group-hover:opacity-100 blur-xl transition-opacity"></div>
-                  
-                  <div className="relative bg-white/95 backdrop-blur-sm p-6 rounded-xl border border-slate-200 hover:border-red-400/60 transition-all group shadow-sm dark:bg-slate-900/50 dark:border-slate-800 dark:hover:border-red-500/50 dark:shadow-none">
-                    <div className="flex items-start gap-4">
-                      {/* Icon with animation */}
-                      <div className={`
-                        p-3 rounded-xl bg-red-500/10 text-red-400 transition-all duration-300
-                        ${hoveredCert === cert.id ? 'scale-110 rotate-12' : ''}
-                      `}>
-                        <Award size={20} />
-                      </div>
-                      
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <h4 className="text-slate-900 font-semibold text-lg mb-1 group-hover:text-red-600 transition-colors dark:text-white dark:group-hover:text-red-400">
-                              {cert.name}
-                            </h4>
-                            <p className="text-slate-600 text-sm flex items-center gap-2 dark:text-slate-400">
-                              <span>by {cert.issuer}</span>
-                              <span className="w-1 h-1 rounded-full bg-slate-600"></span>
-                              <span className="text-emerald-400">Verified</span>
-                            </p>
+              {CERTIFICATIONS.map((cert, index) => {
+                const certId = `cert-${cert.id}`;
+                return (
+                  <div
+                    key={cert.id}
+                    className="group relative transition-all duration-200 rounded-2xl"
+                    onMouseMove={(e) => handleMouseMove(e, certId)}
+                    onMouseLeave={() => handleMouseLeave(certId)}
+                    style={{ 
+                      transform: tiltStyle[certId] || 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)',
+                      transition: 'transform 0.2s ease-out'
+                    }}
+                  >
+                    <div 
+                      className="relative p-[1px] rounded-2xl bg-slate-200 dark:bg-slate-800 transition-all duration-300"
+                      style={{
+                        background: hoverCoords[certId]
+                          ? `radial-gradient(180px circle at ${hoverCoords[certId].x}px ${hoverCoords[certId].y}px, #ef4444, rgba(226, 232, 240, 0.4) 70%)`
+                          : undefined
+                      }}
+                    >
+                      <div className="bg-white/95 dark:bg-slate-950 p-5 rounded-[15px] relative">
+                        <div className="flex items-start gap-4">
+                          <div className="p-2.5 rounded-lg bg-red-500/10 text-red-500">
+                            <Award size={18} />
                           </div>
                           
-                          {/* Certificate ID (mock) */}
-                          <span className="text-xs text-slate-600 bg-slate-100 px-2 py-1 rounded dark:text-slate-600 dark:bg-slate-800/50">
-                            #{cert.id.split('-')[1]}
-                          </span>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-start justify-between gap-2">
+                              <div>
+                                <h4 className="text-sm font-bold text-slate-900 dark:text-white leading-snug">
+                                  {cert.name}
+                                </h4>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                                  Issuer: {cert.issuer}
+                                </p>
+                              </div>
+                              <span className="text-[9px] font-mono text-slate-500 dark:text-slate-500 bg-slate-50 dark:bg-slate-900 px-2 py-0.5 rounded">
+                                ID: #{cert.id.split('-')[1]}
+                              </span>
+                            </div>
+                            
+                            <div className="flex flex-wrap gap-1.5 mt-3">
+                              {['Software', 'Engineering', 'Verified'].map((tag, i) => (
+                                <span key={i} className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-slate-50 text-slate-650 border border-slate-150 dark:bg-slate-900 dark:text-slate-400 dark:border-slate-850">
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                            
+                            <button 
+                              onClick={() => playAudioCue('click')}
+                              className="mt-4 text-xs font-mono text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white flex items-center gap-1 group/btn"
+                            >
+                              Launch Verification
+                              <ExternalLink size={10} className="group-hover/btn:translate-x-0.5 transition-transform" />
+                            </button>
+                          </div>
                         </div>
-                        
-                        {/* Skills tags */}
-                        <div className="flex flex-wrap gap-2 mt-3">
-                          {['React', 'Web Dev', 'Professional'].map((tag, i) => (
-                            <span key={i} className="text-xs px-2 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800/80 dark:text-slate-400 dark:border-slate-700">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                        
-                        {/* View certificate link */}
-                        <button className="mt-4 text-sm text-red-400 hover:text-red-300 flex items-center gap-1 group/btn">
-                          View Certificate
-                          <ExternalLink size={12} className="group-hover/btn:translate-x-1 transition-transform" />
-                        </button>
                       </div>
                     </div>
-                    
-                    {/* Animated progress indicator */}
-                    <div className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-red-600 to-red-700 w-0 group-hover:w-full transition-all duration-700"></div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
-          {/* Education Section */}
+          {/* Education Panel */}
           <div>
             <div className="flex items-center gap-3 mb-8">
-              <div className="p-3 bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 rounded-xl border border-emerald-500/30">
-                <GraduationCap size={24} className="text-emerald-400" />
+              <div className="p-2.5 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+                <GraduationCap size={18} className="text-emerald-500 dark:text-emerald-400" />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-slate-900 dark:text-white">Education</h3>
-                <p className="text-slate-500 text-sm">Academic background</p>
+                <h3 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">Education</h3>
+                <p className="text-slate-500 text-xs font-mono">Academic background records</p>
               </div>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 relative pl-6">
+              {/* Thin vertical timeline connector track */}
+              <div className="absolute left-3 top-2 bottom-6 w-[1px] bg-slate-200 dark:bg-slate-850"></div>
+
               {EDUCATION.map((edu, index) => (
-                <div
-                  key={edu.id}
-                  ref={(el) => (eduRefs.current[index] = el)}
-                  data-id={`edu-${edu.id}`}
-                  className={`
-                    group relative transform transition-all duration-700 ease-out
-                    ${animatedItems.has(`edu-${edu.id}`) 
-                      ? 'translate-x-0 opacity-100' 
-                      : 'translate-x-10 opacity-0'}
-                  `}
-                  style={{ transitionDelay: `${index * 150}ms` }}
-                >
-                  {/* Timeline connector */}
-                  {index < EDUCATION.length - 1 && (
-                    <div className="absolute left-5 top-12 bottom-0 w-0.5 bg-gradient-to-b from-emerald-500 to-transparent"></div>
-                  )}
+                <div key={edu.id} className="relative group/edu">
+                  {/* Timeline circle node */}
+                  <div className="absolute -left-6 top-1.5 transform -translate-x-1/2 w-3 h-3 rounded-full bg-slate-50 border border-slate-350 dark:bg-slate-950 dark:border-slate-750 flex items-center justify-center">
+                    <div className="w-1 h-1 rounded-full bg-emerald-500 group-hover/edu:scale-125 transition-transform duration-300"></div>
+                  </div>
                   
-                  <div className="relative flex gap-4">
-                    {/* Timeline dot with animation */}
-                    <div className="relative">
-                      <div className={`
-                        w-10 h-10 rounded-full bg-emerald-500/20 border-2 border-emerald-500 
-                        flex items-center justify-center transition-all duration-500
-                        group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(16,185,129,0.5)]
-                      `}>
-                        <GraduationCap size={18} className="text-emerald-400" />
-                      </div>
+                  {/* Card wrapper */}
+                  <div className="bg-white/95 dark:bg-slate-900/40 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-200 hover:border-emerald-500/40 dark:hover:border-emerald-500/30">
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <h4 className="text-sm font-bold text-slate-950 dark:text-white leading-snug">
+                        {edu.degree}
+                      </h4>
+                      {edu.score && (
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-500 border border-emerald-500/25">
+                          {edu.score}
+                        </span>
+                      )}
                     </div>
                     
-                    {/* Content card */}
-                    <div className="flex-1 bg-white/95 backdrop-blur-sm p-6 rounded-xl border border-slate-200 hover:border-emerald-500/60 transition-all group-hover:translate-x-2 shadow-sm dark:bg-slate-900/50 dark:border-slate-800 dark:hover:border-emerald-500/50 dark:shadow-none">
-                      <div className="flex items-start justify-between mb-2">
-                        <h4 className="text-xl font-bold text-slate-900 group-hover:text-emerald-600 transition-colors dark:text-white dark:group-hover:text-emerald-400">
-                          {edu.degree}
-                        </h4>
-                        {edu.score && (
-                          <span className="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-sm font-medium border border-emerald-500/30">
-                            {edu.score}
-                          </span>
-                        )}
-                      </div>
-                      
-                      <p className="text-emerald-400 font-medium mb-3">{edu.institution}</p>
-                      
-                      <div className="flex items-center gap-4 text-sm text-slate-500">
-                        <span className="flex items-center gap-1">
-                          <Calendar size={14} />
-                          {edu.period}
-                        </span>
-                        {edu.id === 'edu-1' && (
-                          <span className="flex items-center gap-1 text-yellow-500">
-                            <Star size={14} />
-                            Outstanding Achievement
-                          </span>
-                        )}
-                      </div>
-                      
-                      {/* Additional info for latest education */}
+                    <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">{edu.institution}</p>
+                    
+                    <div className="flex items-center gap-3 text-[10px] font-mono text-slate-400">
+                      <span className="flex items-center gap-1">
+                        <Calendar size={12} />
+                        {edu.period}
+                      </span>
                       {edu.id === 'edu-1' && (
-                        <div className="mt-4 flex gap-2">
-                          <span className="text-xs px-2 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-                            Computer Science
-                          </span>
-                          <span className="text-xs px-2 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/30">
-                            B.Tech
-                          </span>
-                        </div>
+                        <span className="flex items-center gap-1 text-yellow-500">
+                          <Star size={12} className="fill-yellow-500/10" />
+                          Outstanding CGPA
+                        </span>
                       )}
                     </div>
                   </div>
@@ -341,33 +402,9 @@ const Skills: React.FC = () => {
               ))}
             </div>
           </div>
+
         </div>
 
-        {/* Skills Summary Stats */}
-        <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { label: 'Years Experience', value: '3+', icon: <TrendingUp size={20} />, color: 'from-blue-500 to-cyan-500' },
-            { label: 'Projects Completed', value: '15+', icon: <Code2 size={20} />, color: 'from-red-500 to-red-600' },
-            { label: 'Certifications', value: CERTIFICATIONS.length.toString(), icon: <Award size={20} />, color: 'from-emerald-500 to-teal-500' },
-            { label: 'Technologies', value: SKILLS.length.toString(), icon: <Cpu size={20} />, color: 'from-orange-500 to-red-500' },
-          ].map((stat, index) => (
-            <div
-              key={index}
-              className="relative group"
-            >
-              <div className={`absolute -inset-0.5 bg-gradient-to-r ${stat.color} rounded-xl opacity-0 group-hover:opacity-100 blur transition duration-500`}></div>
-              <div className="relative bg-white/95 backdrop-blur-sm rounded-xl border border-slate-200 p-6 text-center shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none">
-                <div className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${stat.color}/20 mb-3`}>
-                  <div className={`text-transparent bg-clip-text bg-gradient-to-r ${stat.color}`}>
-                    {stat.icon}
-                  </div>
-                </div>
-                <div className="text-3xl font-bold text-slate-900 mb-1 dark:text-white">{stat.value}</div>
-                <div className="text-sm text-slate-600 dark:text-slate-400">{stat.label}</div>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );
