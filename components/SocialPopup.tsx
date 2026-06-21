@@ -105,8 +105,7 @@ const SocialPopup: React.FC<{ ready?: boolean }> = ({ ready = false }) => {
 
       {/* Modal Container */}
       <div
-        className={`relative w-full max-w-[360px] bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-6 shadow-2xl backdrop-blur-xl transition-all duration-300 ease-out transform ${animate ? 'scale-100 opacity-100 translate-y-0' : 'scale-90 opacity-0 translate-y-4'
-          }`}
+        className={`relative w-full max-w-[320px] sm:max-w-[360px] bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl backdrop-blur-xl transition-all duration-300 ease-out transform ${animate ? 'scale-100 opacity-100 translate-y-0' : 'scale-90 opacity-0 translate-y-4'}`}
       >
         {/* Cursor Tracking Mascot floating at the top */}
         <div className="absolute -top-12 left-0 right-0 flex justify-center pointer-events-none select-none">
@@ -130,29 +129,30 @@ const SocialPopup: React.FC<{ ready?: boolean }> = ({ ready = false }) => {
             <span className="text-[9px] font-mono tracking-wider uppercase font-semibold">LET'S CONNECT</span>
           </div>
 
-          <h3 className="text-lg font-extrabold text-slate-900 dark:text-white leading-tight tracking-tight">
+          <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white leading-tight tracking-tight">
             Checkout My Social Media!
           </h3>
-          <p className="text-slate-500 dark:text-slate-400 text-xs mt-2 max-w-[280px] mx-auto leading-relaxed">
+          <p className="text-slate-500 dark:text-slate-400 text-[11px] sm:text-xs mt-1.5 sm:mt-2 max-w-[260px] sm:max-w-[280px] mx-auto leading-relaxed">
             Follow my journey, see what I'm coding, or just drop a hello! I post code tutorials, designs, and tech logs.
           </p>
 
           {/* Social Platform Grid */}
-          <div className="flex flex-col gap-3 mt-6">
+          <div className="flex flex-col gap-2 sm:gap-3 mt-4 sm:mt-6">
             {/* YouTube */}
             <a
               href="https://www.youtube.com/@ArinJoshi"
               target="_blank"
               rel="noopener noreferrer"
               onClick={playClick}
-              className="flex items-center gap-4 p-3 bg-gradient-to-r from-red-500/5 to-rose-500/5 hover:from-red-500/10 hover:to-rose-500/10 dark:from-red-500/10 dark:to-rose-500/10 border border-red-500/10 hover:border-red-500/30 rounded-2xl transition-all duration-300 hover:-translate-y-0.5 group"
+              className="flex items-center gap-2.5 sm:gap-4 p-2 sm:p-3 bg-gradient-to-r from-red-500/5 to-rose-500/5 hover:from-red-500/10 hover:to-rose-500/10 dark:from-red-500/10 dark:to-rose-500/10 border border-red-500/10 hover:border-red-500/30 rounded-xl sm:rounded-2xl transition-all duration-300 hover:-translate-y-0.5 group"
             >
-              <div className="p-2 bg-red-500 text-white rounded-xl shadow-md shadow-red-500/20 group-hover:scale-105 transition-transform">
-                <Youtube size={16} />
+              <div className="p-1.5 sm:p-2 bg-red-500 text-white rounded-lg sm:rounded-xl shadow-md shadow-red-500/20 group-hover:scale-105 transition-transform">
+                <Youtube size={14} className="sm:block hidden" />
+                <Youtube size={12} className="sm:hidden block" />
               </div>
               <div className="text-left">
-                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200">YouTube Channel</h4>
-                <p className="text-[9px] font-mono text-slate-400 dark:text-slate-500">Funny Vlog Dekhega/gi?😂</p>
+                <h4 className="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200">YouTube Channel</h4>
+                <p className="text-[8px] sm:text-[9px] font-mono text-slate-400 dark:text-slate-500">Funny Vlog Dekhega/gi?😂</p>
               </div>
             </a>
 
@@ -162,14 +162,15 @@ const SocialPopup: React.FC<{ ready?: boolean }> = ({ ready = false }) => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={playClick}
-              className="flex items-center gap-4 p-3 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 hover:from-blue-500/10 hover:to-indigo-500/10 dark:from-blue-500/10 dark:to-indigo-500/10 border border-blue-500/10 hover:border-blue-500/30 rounded-2xl transition-all duration-300 hover:-translate-y-0.5 group"
+              className="flex items-center gap-2.5 sm:gap-4 p-2 sm:p-3 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 hover:from-blue-500/10 hover:to-indigo-500/10 dark:from-blue-500/10 dark:to-indigo-500/10 border border-blue-500/10 hover:border-blue-500/30 rounded-xl sm:rounded-2xl transition-all duration-300 hover:-translate-y-0.5 group"
             >
-              <div className="p-2 bg-blue-650 text-white rounded-xl shadow-md shadow-blue-500/20 bg-blue-600 group-hover:scale-105 transition-transform">
-                <Linkedin size={16} />
+              <div className="p-1.5 sm:p-2 bg-blue-650 text-white rounded-lg sm:rounded-xl shadow-md shadow-blue-500/20 bg-blue-600 group-hover:scale-105 transition-transform">
+                <Linkedin size={14} className="sm:block hidden" />
+                <Linkedin size={12} className="sm:hidden block" />
               </div>
               <div className="text-left">
-                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200">LinkedIn Profile</h4>
-                <p className="text-[9px] font-mono text-slate-400 dark:text-slate-500">Professional network & contact</p>
+                <h4 className="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200">LinkedIn Profile</h4>
+                <p className="text-[8px] sm:text-[9px] font-mono text-slate-400 dark:text-slate-500">Professional network & contact</p>
               </div>
             </a>
 
@@ -179,14 +180,15 @@ const SocialPopup: React.FC<{ ready?: boolean }> = ({ ready = false }) => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={playClick}
-              className="flex items-center gap-4 p-3 bg-gradient-to-r from-pink-500/5 to-purple-500/5 hover:from-pink-500/10 hover:to-purple-500/10 dark:from-pink-500/10 dark:to-purple-500/10 border border-pink-500/10 hover:border-pink-500/30 rounded-2xl transition-all duration-300 hover:-translate-y-0.5 group"
+              className="flex items-center gap-2.5 sm:gap-4 p-2 sm:p-3 bg-gradient-to-r from-pink-500/5 to-purple-500/5 hover:from-pink-500/10 hover:to-purple-500/10 dark:from-pink-500/10 dark:to-purple-500/10 border border-pink-500/10 hover:border-pink-500/30 rounded-xl sm:rounded-2xl transition-all duration-300 hover:-translate-y-0.5 group"
             >
-              <div className="p-2 bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 text-white rounded-xl shadow-md shadow-pink-500/20 group-hover:scale-105 transition-transform">
-                <Instagram size={16} />
+              <div className="p-1.5 sm:p-2 bg-gradient-to-tr from-yellow-500 via-pink-500 to-purple-600 text-white rounded-lg sm:rounded-xl shadow-md shadow-pink-500/20 group-hover:scale-105 transition-transform">
+                <Instagram size={14} className="sm:block hidden" />
+                <Instagram size={12} className="sm:hidden block" />
               </div>
               <div className="text-left">
-                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200">Instagram Handle</h4>
-                <p className="text-[9px] font-mono text-slate-400 dark:text-slate-500">Behind the scenes & photography</p>
+                <h4 className="text-[10px] sm:text-xs font-bold text-slate-800 dark:text-slate-200">Instagram Handle</h4>
+                <p className="text-[8px] sm:text-[9px] font-mono text-slate-400 dark:text-slate-500">Behind the scenes & photography</p>
               </div>
             </a>
           </div>

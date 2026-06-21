@@ -1,4 +1,20 @@
 User-agent: *
 Allow: /
+Disallow: /node_modules/
+Disallow: /.env
+Disallow: /.env.local
 
-Sitemap: https://arinjoshi.netlify.app/sitemap.xml
+# Crawl delay for respectful crawling
+Crawl-delay: 1
+
+# Sitemaps
+Sitemap: https://arinjoshi.vercel.app/sitemap.xml
+
+# Allow specific search engines for better indexing
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1

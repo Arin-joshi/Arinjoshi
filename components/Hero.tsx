@@ -359,16 +359,16 @@ const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
     <section
       id="about"
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-gradient-to-b from-slate-100 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 lg:bg-slate-950 lg:dark:bg-slate-950"
+      className="relative min-h-screen flex items-center justify-center pt-32 sm:pt-36 lg:pt-40 pb-20 overflow-hidden bg-gradient-to-b from-slate-100 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 lg:bg-slate-950 lg:dark:bg-slate-950"
     >
       {/* ── Personalized welcome banner ── */}
       {visitorName && (
         <div
-          className="absolute top-20 left-0 right-0 z-30 flex justify-center px-4"
+          className="absolute top-16 sm:top-20 lg:top-24 left-0 right-0 z-30 flex justify-center px-4"
           style={{ animation: 'hero-welcome-slide 0.7s cubic-bezier(0.34,1.56,0.64,1) both' }}
         >
           <div
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md border"
+            className="flex items-center gap-2 sm:gap-2.5 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-2xl text-xs sm:text-sm font-semibold backdrop-blur-md border"
             style={{
               background: 'linear-gradient(135deg, rgba(225,29,72,0.12), rgba(124,58,237,0.12))',
               borderColor: 'rgba(225,29,72,0.3)',
@@ -376,7 +376,7 @@ const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
               color: 'white',
             }}
           >
-            <span className="text-sm" style={{ animation: 'hero-wave 1.5s 0.5s ease-in-out 3' }}>👋</span>
+            <span className="text-xs sm:text-sm" style={{ animation: 'hero-wave 1.5s 0.5s ease-in-out 3' }}>👋</span>
             <span className="text-white/80">Welcome,&nbsp;</span>
             <span
               className="font-extrabold"
