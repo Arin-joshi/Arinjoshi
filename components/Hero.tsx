@@ -22,13 +22,15 @@ import {
   Braces,
 } from "lucide-react";
 
-const Hero: React.FC = () => {
+interface HeroProps {
+  visitorName?: string;
+}
+
+const Hero: React.FC<HeroProps> = ({ visitorName }) => {
   const { isMuted } = useAudio();
   const [typedText, setTypedText] = useState("");
   const [cursorVisible, setCursorVisible] = useState(true);
-  const [isTyping, setIsTyping] = useState(true);
   const [nameColorIndex, setNameColorIndex] = useState(0);
-  const [cardColorIndex, setCardColorIndex] = useState(0);
   const [isDesktop, setIsDesktop] = useState(true);
   const heroRef = useRef<HTMLElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
@@ -55,11 +57,10 @@ const Hero: React.FC = () => {
     };
 
     const playVideo = (video: HTMLVideoElement) => {
-      video.play().catch((err) => {
-        console.log("Video play blocked, retrying muted:", err);
-        // Fallback to muted so it autoplays visually
+      video.play().catch(() => {
+        // Fallback to muted autoplay if browser blocks audio autoplay
         video.muted = true;
-        video.play().catch((e) => console.log("Video failed to play even when muted:", e));
+        video.play().catch(() => {});
       });
     };
 
@@ -356,6 +357,44 @@ const Hero: React.FC = () => {
       ref={heroRef}
       className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden bg-gradient-to-b from-slate-100 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 lg:bg-slate-950 lg:dark:bg-slate-950"
     >
+      {/* ── Personalized welcome banner ── */}
+      {visitorName && (
+        <div
+          className="absolute top-20 left-0 right-0 z-30 flex justify-center px-4"
+          style={{ animation: 'hero-welcome-slide 0.7s cubic-bezier(0.34,1.56,0.64,1) both' }}
+        >
+          <div
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-md border"
+            style={{
+              background: 'linear-gradient(135deg, rgba(225,29,72,0.12), rgba(124,58,237,0.12))',
+              borderColor: 'rgba(225,29,72,0.3)',
+              boxShadow: '0 2px 12px rgba(225,29,72,0.15), inset 0 1px 0 rgba(255,255,255,0.08)',
+              color: 'white',
+            }}
+          >
+            <span className="text-sm" style={{ animation: 'hero-wave 1.5s 0.5s ease-in-out 3' }}>👋</span>
+            <span className="text-white/80">Welcome,&nbsp;</span>
+            <span
+              className="font-extrabold"
+              style={{ background: 'linear-gradient(90deg,#fb7185,#a78bfa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+            >
+              {visitorName}
+            </span>
+            <span className="text-white/60">! ✨</span>
+          </div>
+        </div>
+      )}
+      <style>{`
+        @keyframes hero-welcome-slide {
+          from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes hero-wave {
+          0%, 100% { transform: rotate(0deg); }
+          25%       { transform: rotate(20deg); }
+          75%       { transform: rotate(-10deg); }
+        }
+      `}</style>
       {/* Desktop Full-Screen Background Video */}
       {isDesktop && (
         <>

@@ -42,7 +42,7 @@ const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       sender: 'ai',
-      text: "Hey there! 👋 I am Arin's digital twin bot. Ask me anything about his experience, projects, coding skills, or education!"
+      text: "Hey there! 👋 I'm Arina — Arin's AI companion. Ask me anything about his experience, projects, coding skills, or education!"
     }
   ]);
   const [inputVal, setInputVal] = useState<string>('');
@@ -187,7 +187,7 @@ const AIAssistant: React.FC = () => {
     if (clean.match(/\b(hi|hello|hey|greetings|hola|yo|sup)\b/)) {
       return {
         sender: 'ai',
-        text: "Hey there! 👋 I am Arin's digital twin bot. Ask me anything about his experience, projects, coding skills, or education!"
+        text: "Hey there! 👋 I'm Arina — Arin's AI companion. Ask me anything about his experience, projects, coding skills, or education!"
       };
     }
 
@@ -275,7 +275,15 @@ const AIAssistant: React.FC = () => {
       </button>
 
       {isChatOpen && (
-        <div className="fixed bottom-24 left-8 z-50 w-[calc(100vw-64px)] sm:w-[320px] h-[420px] bg-white/95 dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl shadow-2xl flex flex-col backdrop-blur-xl animate-fade-in transition-all duration-300">
+        <>
+          {/* Mobile-only backdrop blur (hidden on sm and above) */}
+          <div
+            className="fixed inset-0 z-40 sm:hidden bg-black/40 backdrop-blur-sm transition-opacity duration-300"
+            onClick={handleToggleChat}
+            aria-hidden="true"
+          />
+
+          <div className="fixed bottom-24 left-8 z-50 w-[calc(100vw-64px)] sm:w-[320px] h-[420px] bg-white/95 dark:bg-slate-900/95 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl shadow-2xl flex flex-col backdrop-blur-xl animate-fade-in transition-all duration-300">
           
           {/* Header (No overflow-hidden on container allows robot mascot to float higher) */}
           <div className="relative p-4 bg-gradient-to-r from-violet-600 to-indigo-500 text-white flex items-center justify-between border-b border-indigo-400/20 rounded-t-3xl">
@@ -285,10 +293,10 @@ const AIAssistant: React.FC = () => {
             </div>
 
             <div className="pl-14 flex flex-col">
-              <span className="text-xs font-extrabold tracking-tight">Arin's AI Assistant</span>
+              <span className="text-xs font-extrabold tracking-tight">Arina ✨</span>
               <span className="text-[9px] font-mono opacity-80 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                Resume Bot Online
+                Arin's AI · Online
               </span>
             </div>
 
@@ -404,6 +412,7 @@ const AIAssistant: React.FC = () => {
           </form>
 
         </div>
+        </>
       )}
     </>
   );

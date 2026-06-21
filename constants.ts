@@ -200,7 +200,7 @@ export const EDUCATION: Education[] = [
     id: "edu-3",
     degree: "Class 10",
     institution: "KPS School Raniwara",
-    period: "June 2017 - June 2028",
+    period: "June 2017 - June 2018",
     score: "68.40 %"
   }
 ];

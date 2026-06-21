@@ -3,30 +3,31 @@ import { Youtube, Linkedin, Instagram, X, Sparkles } from 'lucide-react';
 import { useAudio } from '../contexts/AudioContext';
 import LookAtCursor from './LookAtCursor';
 
-const SocialPopup: React.FC = () => {
+const SocialPopup: React.FC<{ ready?: boolean }> = ({ ready = false }) => {
   const { isMuted } = useAudio();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [animate, setAnimate] = useState<boolean>(false);
 
   useEffect(() => {
-    // Check if the user has already seen it in this session
-    // (Bypass session check on localhost for easy developer testing on reloads!)
+    if (!ready) return; // ⏳ wait until loading screen is fully done
+
+    // Only show once per session (bypass on localhost for dev testing)
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
     const seen = sessionStorage.getItem('social-popup-seen');
     if (seen === 'true' && !isLocalhost) return;
 
+    // 🎉 10 seconds AFTER portfolio becomes visible
     const timer = setTimeout(() => {
       setIsOpen(true);
-      // Fade/Zoom in after mount
       setTimeout(() => {
         setAnimate(true);
         playChime();
       }, 50);
       sessionStorage.setItem('social-popup-seen', 'true');
-    }, 10000); // 10 seconds delay
+    }, 10000);
 
     return () => clearTimeout(timer);
-  }, [isMuted]);
+  }, [ready, isMuted]);
 
   // Ascending major arpeggio chime sound for premium interaction feedback
   const playChime = () => {
@@ -96,18 +97,16 @@ const SocialPopup: React.FC = () => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Premium Backdrop blur overlay */}
-      <div 
-        className={`absolute inset-0 bg-slate-950/60 backdrop-blur-md transition-opacity duration-300 ease-out ${
-          animate ? 'opacity-100' : 'opacity-0'
-        }`}
+      <div
+        className={`absolute inset-0 bg-slate-950/60 backdrop-blur-md transition-opacity duration-300 ease-out ${animate ? 'opacity-100' : 'opacity-0'
+          }`}
         onClick={handleClose}
       />
 
       {/* Modal Container */}
-      <div 
-        className={`relative w-full max-w-[360px] bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-6 shadow-2xl backdrop-blur-xl transition-all duration-300 ease-out transform ${
-          animate ? 'scale-100 opacity-100 translate-y-0' : 'scale-90 opacity-0 translate-y-4'
-        }`}
+      <div
+        className={`relative w-full max-w-[360px] bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-6 shadow-2xl backdrop-blur-xl transition-all duration-300 ease-out transform ${animate ? 'scale-100 opacity-100 translate-y-0' : 'scale-90 opacity-0 translate-y-4'
+          }`}
       >
         {/* Cursor Tracking Mascot floating at the top */}
         <div className="absolute -top-12 left-0 right-0 flex justify-center pointer-events-none select-none">
@@ -117,7 +116,7 @@ const SocialPopup: React.FC = () => {
         </div>
 
         {/* Close Button */}
-        <button 
+        <button
           onClick={handleClose}
           className="absolute top-4 right-4 p-1.5 rounded-full text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
         >
@@ -141,9 +140,9 @@ const SocialPopup: React.FC = () => {
           {/* Social Platform Grid */}
           <div className="flex flex-col gap-3 mt-6">
             {/* YouTube */}
-            <a 
-              href="https://www.youtube.com/@ArinJoshi" 
-              target="_blank" 
+            <a
+              href="https://www.youtube.com/@ArinJoshi"
+              target="_blank"
               rel="noopener noreferrer"
               onClick={playClick}
               className="flex items-center gap-4 p-3 bg-gradient-to-r from-red-500/5 to-rose-500/5 hover:from-red-500/10 hover:to-rose-500/10 dark:from-red-500/10 dark:to-rose-500/10 border border-red-500/10 hover:border-red-500/30 rounded-2xl transition-all duration-300 hover:-translate-y-0.5 group"
@@ -153,14 +152,14 @@ const SocialPopup: React.FC = () => {
               </div>
               <div className="text-left">
                 <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200">YouTube Channel</h4>
-                <p className="text-[9px] font-mono text-slate-400 dark:text-slate-500">Tech tutorials & coding streams</p>
+                <p className="text-[9px] font-mono text-slate-400 dark:text-slate-500">Funny Vlog Dekhega/gi?😂</p>
               </div>
             </a>
 
             {/* LinkedIn */}
-            <a 
-              href="https://www.linkedin.com/in/arinjoshi/" 
-              target="_blank" 
+            <a
+              href="https://www.linkedin.com/in/arinjoshi/"
+              target="_blank"
               rel="noopener noreferrer"
               onClick={playClick}
               className="flex items-center gap-4 p-3 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 hover:from-blue-500/10 hover:to-indigo-500/10 dark:from-blue-500/10 dark:to-indigo-500/10 border border-blue-500/10 hover:border-blue-500/30 rounded-2xl transition-all duration-300 hover:-translate-y-0.5 group"
@@ -175,9 +174,9 @@ const SocialPopup: React.FC = () => {
             </a>
 
             {/* Instagram */}
-            <a 
-              href="https://www.instagram.com/click_by_arin/" 
-              target="_blank" 
+            <a
+              href="https://www.instagram.com/click_by_arin/"
+              target="_blank"
               rel="noopener noreferrer"
               onClick={playClick}
               className="flex items-center gap-4 p-3 bg-gradient-to-r from-pink-500/5 to-purple-500/5 hover:from-pink-500/10 hover:to-purple-500/10 dark:from-pink-500/10 dark:to-purple-500/10 border border-pink-500/10 hover:border-pink-500/30 rounded-2xl transition-all duration-300 hover:-translate-y-0.5 group"
@@ -193,7 +192,7 @@ const SocialPopup: React.FC = () => {
           </div>
 
           {/* Decline Link */}
-          <button 
+          <button
             onClick={handleClose}
             className="text-[10px] font-mono tracking-wider text-slate-400 hover:text-slate-600 dark:hover:text-slate-350 transition-colors mt-5 uppercase hover:underline"
           >
