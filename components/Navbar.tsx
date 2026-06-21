@@ -107,9 +107,10 @@ const Navbar: React.FC = () => {
               {/* Logo image with animation */}
               <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-red-600 to-red-700 flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-red-500/25">
                 <img
-                  src="/ArinJoshi.png"
-                  alt="Arin Joshi Logo"
+                  src="/favicon.png"
+                  alt="Arin Joshi"
                   className="w-7 h-7 sm:w-9 sm:h-9 object-contain rounded-lg group-hover:rotate-6 transition-transform duration-300"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                 />
                 {/* Animated overlay */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>

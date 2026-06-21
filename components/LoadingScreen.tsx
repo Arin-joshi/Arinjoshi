@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useAudio } from '../contexts/AudioContext';
 
 interface LoadingScreenProps {
   onComplete: (visitorName: string) => void;
@@ -20,7 +21,8 @@ const FUNNY_MSGS = [
 ];
 
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
-  const [phase, setPhase] = useState<'loading' | 'name' | 'welcome' | 'exit'>('loading');
+  const { setMuted } = useAudio();
+  const [phase, setPhase] = useState<'loading' | 'name' | 'sound' | 'welcome' | 'exit'>('loading');
   const [progress, setProgress] = useState(0);
   const [visitorName, setVisitorName] = useState('');
   const [inputVal, setInputVal] = useState('');
@@ -122,11 +124,16 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       return;
     }
     setVisitorName(name);
-    setPhase('welcome');
+    setPhase('sound');
   };
 
   const handleSkip = () => {
     setVisitorName('Friend');
+    setPhase('sound');
+  };
+
+  const handleSoundChoice = (soundOn: boolean) => {
+    setMuted(!soundOn);
     setPhase('welcome');
   };
 
@@ -204,7 +211,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
 
       {/* ── Main glass card ── */}
       <div
-        className={`relative z-10 w-full max-w-[280px] sm:max-w-sm mx-4 transition-all duration-500 ${phase === 'loading' ? 'translate-y-0 opacity-100' : ''
+        className={`relative z-10 w-full max-w-[240px] sm:max-w-sm mx-4 transition-all duration-500 ${phase === 'loading' ? 'translate-y-0 opacity-100' : ''
           } ${phase === 'name' ? 'translate-y-0 opacity-100' : ''} ${phase === 'welcome' ? 'scale-105 opacity-100' : ''
           }`}
       >
@@ -213,20 +220,20 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
           background: 'linear-gradient(135deg, rgba(225,29,72,0.8), rgba(124,58,237,0.6), rgba(14,165,233,0.4))',
           boxShadow: '0 0 60px rgba(225,29,72,0.25), 0 0 120px rgba(124,58,237,0.15)',
         }}>
-          <div className="rounded-3xl bg-[#0a0f1e]/90 backdrop-blur-2xl p-5 sm:p-8">
+          <div className="rounded-3xl bg-[#0a0f1e]/90 backdrop-blur-2xl p-4 sm:p-8">
 
             {/* Logo / Brand */}
-            <div className="flex flex-col items-center mb-5 sm:mb-8">
-              <div className="relative mb-3 sm:mb-4">
+            <div className="flex flex-col items-center mb-4 sm:mb-8">
+              <div className="relative mb-2 sm:mb-4">
                 <div
-                  className="w-10 h-10 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center text-xl sm:text-3xl"
+                  className="w-9 h-9 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl flex items-center justify-center text-lg sm:text-3xl"
                   style={{
                     background: 'linear-gradient(135deg, #e11d48, #7c3aed)',
                     boxShadow: '0 0 30px rgba(225,29,72,0.5)',
                     animation: 'ls-pulse-logo 2s ease-in-out infinite',
                   }}
                 >
-                  {phase === 'welcome' ? '🎉' : phase === 'name' ? '👋' : '⚡'}
+                  {phase === 'welcome' ? '🎉' : phase === 'name' ? '👋' : phase === 'sound' ? '🎵' : '⚡'}
                 </div>
                 {/* Ping ring */}
                 <div
@@ -235,7 +242,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
                 />
               </div>
 
-              <h1 className="text-base sm:text-xl font-extrabold tracking-tight text-white">
+              <h1 className="text-sm sm:text-xl font-extrabold tracking-tight text-white">
                 {phase === 'welcome'
                   ? <span className="bg-gradient-to-r from-yellow-300 via-pink-300 to-purple-300 bg-clip-text text-transparent">
                     {welcomeText}
@@ -245,9 +252,11 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
                   </span>
                 }
               </h1>
-              <p className="text-[9px] sm:text-[11px] text-slate-500 mt-1 font-mono tracking-widest uppercase">
+              <p className="text-[8px] sm:text-[11px] text-slate-500 mt-0.5 font-mono tracking-widest uppercase">
                 {phase === 'welcome'
                   ? "Let's create something amazing 🚀"
+                  : phase === 'sound'
+                  ? 'Choose your vibe 🎧'
                   : 'Software Engineer · MERN Stack · React'
                 }
               </p>
@@ -401,6 +410,42 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
                   Nahi bataunga/bataungi 🤐 (skip)
                 </button>
               </form>
+            )}
+
+            {/* ── PHASE: SOUND ── */}
+            {phase === 'sound' && (
+              <div className="flex flex-col items-center gap-3 sm:gap-4">
+                <p className="text-xs sm:text-sm font-bold text-white text-center">
+                  Sound chahiye? 🎵
+                </p>
+                <p className="text-[10px] text-slate-400 text-center -mt-1">
+                  Background music aur effects on karu? 🎶
+                </p>
+
+                <div className="flex gap-3 w-full">
+                  <button
+                    onClick={() => handleSoundChoice(true)}
+                    className="flex-1 flex flex-col items-center gap-1.5 py-3 sm:py-4 rounded-2xl border-2 border-emerald-500/40 hover:border-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] group"
+                  >
+                    <span className="text-2xl sm:text-3xl group-hover:animate-bounce">🔊</span>
+                    <span className="text-xs font-bold text-emerald-400">Haan ON!</span>
+                    <span className="text-[9px] text-slate-500">Vibe on karo 🎉</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleSoundChoice(false)}
+                    className="flex-1 flex flex-col items-center gap-1.5 py-3 sm:py-4 rounded-2xl border-2 border-slate-600/40 hover:border-slate-500 bg-slate-800/40 hover:bg-slate-700/40 transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] group"
+                  >
+                    <span className="text-2xl sm:text-3xl">🔇</span>
+                    <span className="text-xs font-bold text-slate-400">Nahi, OFF</span>
+                    <span className="text-[9px] text-slate-500">Shant rehna hai 🤫</span>
+                  </button>
+                </div>
+
+                <p className="text-[9px] text-slate-700 text-center font-mono">
+                  Baad mein bhi change kar sakte ho ↗
+                </p>
+              </div>
             )}
 
             {/* ── PHASE: WELCOME ── */}

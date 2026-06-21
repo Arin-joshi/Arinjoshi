@@ -9,6 +9,7 @@ import React, {
 type AudioContextValue = {
   isMuted: boolean;
   toggleMute: () => void;
+  setMuted: (muted: boolean) => void;
 };
 
 const AudioContext = createContext<AudioContextValue | null>(null);
@@ -16,15 +17,19 @@ const AudioContext = createContext<AudioContextValue | null>(null);
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [isMuted, setIsMuted] = useState(true); // Default to muted to allow autoplay on all browsers
+  const [isMuted, setIsMuted] = useState(true); // Default muted for autoplay policy
 
   const toggleMute = useCallback(() => {
     setIsMuted((prev) => !prev);
   }, []);
 
+  const setMuted = useCallback((muted: boolean) => {
+    setIsMuted(muted);
+  }, []);
+
   const value = useMemo(
-    () => ({ isMuted, toggleMute }),
-    [isMuted, toggleMute]
+    () => ({ isMuted, toggleMute, setMuted }),
+    [isMuted, toggleMute, setMuted]
   );
 
   return (
