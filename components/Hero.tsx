@@ -24,9 +24,10 @@ import {
 
 interface HeroProps {
   visitorName?: string;
+  ready?: boolean;
 }
 
-const Hero: React.FC<HeroProps> = ({ visitorName }) => {
+const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
   const { isMuted } = useAudio();
   const [typedText, setTypedText] = useState("");
   const [cursorVisible, setCursorVisible] = useState(true);
@@ -50,6 +51,9 @@ const Hero: React.FC<HeroProps> = ({ visitorName }) => {
 
   // Play/pause background videos based on viewport visibility and handle autoplay policies
   useEffect(() => {
+    // Only set up video playback after loading is complete
+    if (!ready) return;
+
     const observerOptions = {
       root: null,
       rootMargin: "0px",
@@ -141,7 +145,7 @@ const Hero: React.FC<HeroProps> = ({ visitorName }) => {
       window.removeEventListener("pointerdown", enableSoundOnInteraction);
       window.removeEventListener("keydown", enableSoundOnInteraction);
     };
-  }, [isMuted, isDesktop]);
+  }, [isMuted, isDesktop, ready]);
 
   // Dynamically sync video muted state with isMuted state
   useEffect(() => {
@@ -401,11 +405,10 @@ const Hero: React.FC<HeroProps> = ({ visitorName }) => {
           <video
             ref={desktopVideoRef}
             className="hidden lg:block absolute inset-0 w-full h-full object-cover z-0 select-none pointer-events-none"
-            autoPlay
             loop
             muted={isMuted}
             playsInline
-            preload="auto"
+            preload={ready ? "auto" : "none"}
           >
             <source src="/ArinJoshi.mp4" type="video/mp4" />
           </video>
@@ -625,11 +628,10 @@ const Hero: React.FC<HeroProps> = ({ visitorName }) => {
                     {/* Profile Card Video (plays on both Desktop and Mobile) */}
                     <video
                       ref={cardVideoRef}
-                      autoPlay
                       loop
                       muted={isDesktop ? true : isMuted}
                       playsInline
-                      preload="auto"
+                      preload={ready ? "auto" : "none"}
                       className="w-full h-full object-cover scale-[1.15] transition-transform duration-700 group-hover:scale-[1.2]"
                     >
                       <source src="/ArinJoshi.mp4" type="video/mp4" />

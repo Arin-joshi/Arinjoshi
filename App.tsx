@@ -33,7 +33,7 @@ function App() {
         <SocialPopup ready={visitorName !== null} />
         <AIAssistant />
         <main>
-          <Hero visitorName={visitorName ?? ''} />
+          <Hero visitorName={visitorName ?? ''} ready={visitorName !== null} />
           <div className="relative overflow-hidden">
             <SplashCursor />
             <Experience />
