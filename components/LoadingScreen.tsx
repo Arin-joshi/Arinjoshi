@@ -7,30 +7,12 @@ interface LoadingScreenProps {
 
 const PARTICLES = Array.from({ length: 28 }, (_, i) => i);
 
-const FUNNY_MSGS = [
-  { emoji: '🤔', main: 'Kya soch raha/rahi hai...?', sub: 'Naam batana koi crime nahi hai yaar! 😂' },
-  { emoji: '👀', main: 'Arre O! Sun raha/rahi hai?', sub: 'Bas ek chhota sa naam chahiye... deal? 🤝' },
-  { emoji: '😏', main: 'Ladka hai? Ladki hai?', sub: 'Koi baat nahi — dono ke liye kaam ek hi: Naam bata! 😎' },
-  { emoji: '🌹', main: 'Agar ladki ho toh...', sub: 'Aree sorry! Number nahi, sirf Naam chahiye bhai! 😅🙏' },
-  { emoji: '💅', main: 'Itna soch kya raha/rahi hai?', sub: 'Portfolio dekha, ab toh pehchaan bata! ✨' },
-  { emoji: '🕵️', main: 'Hm... Sharma? Verma? ya Soni?', sub: 'Guess karte thak jayenge yaar, tu hi bata! 😆' },
-  { emoji: '🦸', main: 'Naam batao — hero/heroine bano!', sub: 'Welcome screen mein star bana dunga! 🌟' },
-  { emoji: '🤫', main: 'Sharmao mat yaar!', sub: 'Website judge nahi karegi... main toh karunga 😜' },
-  { emoji: '🚀', main: 'Rocket speed se bata!', sub: 'Arin ka portfolio tera wait kar raha hai! 🔥' },
-  { emoji: '🎧', main: 'Naam likh aur chilla "LET\'S GO!"', sub: 'Trust me, bahut maza aayega portfolio mein! 🕺🕷️' },
-];
-
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const { setMuted } = useAudio();
-  const [phase, setPhase] = useState<'loading' | 'name' | 'sound' | 'welcome' | 'exit'>('loading');
+  const [phase, setPhase] = useState<'loading' | 'sound' | 'welcome' | 'exit'>('loading');
   const [progress, setProgress] = useState(0);
   const [visitorName, setVisitorName] = useState('');
-  const [inputVal, setInputVal] = useState('');
-  const [inputError, setInputError] = useState(false);
   const [welcomeText, setWelcomeText] = useState('');
-  const [funnyIdx, setFunnyIdx] = useState(0);
-  const [msgVisible, setMsgVisible] = useState(true);
-  const inputRef = useRef<HTMLInputElement>(null);
   const progressRef = useRef<number>(0);
   const rafRef = useRef<number>();
 
@@ -59,8 +41,8 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       if (t < 1) {
         rafRef.current = requestAnimationFrame(tick);
       } else {
-        // Hold at 100% briefly then transition to name phase
-        setTimeout(() => setPhase('name'), 600);
+        // Hold at 100% briefly then transition to sound phase
+        setTimeout(() => setPhase('sound'), 600);
       }
     };
 
@@ -70,30 +52,10 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
     };
   }, [phase]);
 
-  // Auto-focus input when name phase starts
-  useEffect(() => {
-    if (phase === 'name') {
-      setTimeout(() => inputRef.current?.focus(), 400);
-    }
-  }, [phase]);
-
-  // Cycle funny messages every 2.5s during name phase
-  useEffect(() => {
-    if (phase !== 'name') return;
-    const id = setInterval(() => {
-      setMsgVisible(false);
-      setTimeout(() => {
-        setFunnyIdx(prev => (prev + 1) % FUNNY_MSGS.length);
-        setMsgVisible(true);
-      }, 300);
-    }, 2500);
-    return () => clearInterval(id);
-  }, [phase]);
-
   // Typewriter for welcome message
   useEffect(() => {
     if (phase !== 'welcome') return;
-    const fullText = `Welcome, ${visitorName}! ✨`;
+    const fullText = visitorName ? `Welcome, ${visitorName}! ✨` : `Welcome! ✨`;
     let i = 0;
     setWelcomeText('');
     const id = setInterval(() => {
@@ -113,24 +75,6 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
     const t = setTimeout(() => onComplete(visitorName), 900);
     return () => clearTimeout(t);
   }, [phase, visitorName, onComplete]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const name = inputVal.trim();
-    if (!name) {
-      setInputError(true);
-      setTimeout(() => setInputError(false), 700);
-      inputRef.current?.focus();
-      return;
-    }
-    setVisitorName(name);
-    setPhase('sound');
-  };
-
-  const handleSkip = () => {
-    setVisitorName('Friend');
-    setPhase('sound');
-  };
 
   const handleSoundChoice = (soundOn: boolean) => {
     setMuted(!soundOn);
@@ -211,9 +155,9 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
 
       {/* ── Main glass card ── */}
       <div
-        className={`relative z-10 w-full max-w-[240px] sm:max-w-sm mx-4 transition-all duration-500 ${phase === 'loading' ? 'translate-y-0 opacity-100' : ''
-          } ${phase === 'name' ? 'translate-y-0 opacity-100' : ''} ${phase === 'welcome' ? 'scale-105 opacity-100' : ''
-          }`}
+        className={`relative z-10 w-full max-w-[240px] sm:max-w-sm mx-4 transition-all duration-500 ${
+          phase === 'loading' || phase === 'sound' ? 'translate-y-0 opacity-100' : ''
+        } ${phase === 'welcome' ? 'scale-105 opacity-100' : ''}`}
       >
         {/* Glowing border wrapper */}
         <div className="relative rounded-3xl p-[1.5px]" style={{
@@ -233,7 +177,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
                     animation: 'ls-pulse-logo 2s ease-in-out infinite',
                   }}
                 >
-                  {phase === 'welcome' ? '🎉' : phase === 'name' ? '👋' : phase === 'sound' ? '🎵' : '⚡'}
+                  {phase === 'welcome' ? '🎉' : phase === 'sound' ? '🎵' : '⚡'}
                 </div>
                 {/* Ping ring */}
                 <div
@@ -323,93 +267,6 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
                   Loading your experience...
                 </p>
               </div>
-            )}
-
-            {/* ── PHASE: NAME INPUT ── */}
-            {phase === 'name' && (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-
-                {/* Rotating funny message block */}
-                <div
-                  className="text-center min-h-[58px] flex flex-col items-center justify-center"
-                  style={{
-                    opacity: msgVisible ? 1 : 0,
-                    transform: msgVisible ? 'translateY(0px)' : 'translateY(6px)',
-                    transition: 'opacity 0.3s ease, transform 0.3s ease',
-                  }}
-                >
-                  <span className="text-xl sm:text-2xl block mb-0.5" style={{ display: 'inline-block', animation: 'ls-emoji-pop 0.4s ease-out' }}>
-                    {FUNNY_MSGS[funnyIdx].emoji}
-                  </span>
-                  <p className="text-[11px] sm:text-xs font-bold text-white leading-snug">
-                    {FUNNY_MSGS[funnyIdx].main}
-                  </p>
-                  <p className="text-[10px] text-slate-400 mt-0.5 leading-snug">
-                    {FUNNY_MSGS[funnyIdx].sub}
-                  </p>
-                </div>
-
-                {/* Pill progress dots */}
-                <div className="flex justify-center gap-1">
-                  {FUNNY_MSGS.map((_, i) => (
-                    <div
-                      key={i}
-                      className="rounded-full transition-all duration-300"
-                      style={{
-                        width: i === funnyIdx ? 14 : 4,
-                        height: 4,
-                        background: i === funnyIdx
-                          ? 'linear-gradient(90deg,#e11d48,#7c3aed)'
-                          : 'rgba(100,100,130,0.35)',
-                      }}
-                    />
-                  ))}
-                </div>
-
-                <div className={`relative transition-all duration-200 ${inputError ? 'animate-[ls-shake_0.4s_ease]' : ''}`}>
-                  <input
-                    ref={inputRef}
-                    type="text"
-                    value={inputVal}
-                    onChange={(e) => setInputVal(e.target.value)}
-                    placeholder="Apna naam type karo yaar... 😄"
-                    maxLength={30}
-                    autoComplete="off"
-                    className={`w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl bg-slate-900/80 border text-white placeholder-slate-600 text-xs sm:text-sm font-medium focus:outline-none transition-all duration-300 ${inputError
-                      ? 'border-red-500 shadow-[0_0_12px_rgba(239,68,68,0.4)]'
-                      : 'border-slate-700 focus:border-violet-500 focus:shadow-[0_0_16px_rgba(124,58,237,0.3)]'
-                      }`}
-                  />
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 text-base pointer-events-none select-none">
-                    ✍️
-                  </div>
-                </div>
-
-                {inputError && (
-                  <p className="text-[10px] text-red-400 text-center font-semibold">
-                    Arre yaar! Naam toh bata pehle! 🙈
-                  </p>
-                )}
-
-                <button
-                  type="submit"
-                  className="w-full py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm text-white transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
-                  style={{
-                    background: 'linear-gradient(135deg, #e11d48, #7c3aed)',
-                    boxShadow: '0 4px 24px rgba(225,29,72,0.4)',
-                  }}
-                >
-                  Haan Bhai, Let's Go! 🚀
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleSkip}
-                  className="text-[10px] text-slate-600 hover:text-slate-400 transition-colors text-center py-0.5 font-mono"
-                >
-                  Nahi bataunga/bataungi 🤐 (skip)
-                </button>
-              </form>
             )}
 
             {/* ── PHASE: SOUND ── */}
