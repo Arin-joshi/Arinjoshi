@@ -36,6 +36,18 @@ const Contact: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lock background scroll when contact modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   const playAudioCue = (type: 'hover' | 'click' | 'focus') => {
     if (isMuted) return;
     try {

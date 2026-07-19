@@ -45,41 +45,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const loadData = async () => {
     if (!isFirebaseConfigured || !db) {
-      // Fallback to localStorage if available, or static constants
-      try {
-        const localPersonalInfo = localStorage.getItem('portfolio_personal_info');
-        const localExperience = localStorage.getItem('portfolio_experience');
-        const localProjects = localStorage.getItem('portfolio_projects');
-        const localSkills = localStorage.getItem('portfolio_skills');
-        const localEducation = localStorage.getItem('portfolio_education');
-        const localCertifications = localStorage.getItem('portfolio_certifications');
-
-        if (localPersonalInfo) setPersonalInfo(JSON.parse(localPersonalInfo));
-        else setPersonalInfo(PERSONAL_INFO);
-
-        if (localExperience) setExperience(JSON.parse(localExperience));
-        else setExperience(EXPERIENCE);
-
-        if (localProjects) setProjects(JSON.parse(localProjects));
-        else setProjects(PROJECTS);
-
-        if (localSkills) setSkills(JSON.parse(localSkills));
-        else setSkills(SKILLS);
-
-        if (localEducation) setEducation(JSON.parse(localEducation));
-        else setEducation(EDUCATION);
-
-        if (localCertifications) setCertifications(JSON.parse(localCertifications));
-        else setCertifications(CERTIFICATIONS);
-      } catch (e) {
-        console.error("Local storage loading error, using static fallbacks:", e);
-        setPersonalInfo(PERSONAL_INFO);
-        setExperience(EXPERIENCE);
-        setProjects(PROJECTS);
-        setSkills(SKILLS);
-        setEducation(EDUCATION);
-        setCertifications(CERTIFICATIONS);
-      }
+      setPersonalInfo(PERSONAL_INFO);
+      setExperience(EXPERIENCE);
+      setProjects(PROJECTS);
+      setSkills(SKILLS);
+      setEducation(EDUCATION);
+      setCertifications(CERTIFICATIONS);
       setLoading(false);
       return;
     }
@@ -113,7 +84,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         expList = expSnap.docs.map(doc => doc.data() as Experience);
       }
-      // Sort experiences (exp-3, exp-2, exp-1... we can sort by period or id descending)
+      // Sort experiences (exp-3, exp-2, exp-1)
       expList.sort((a, b) => b.id.localeCompare(a.id));
       setExperience(expList);
 
@@ -210,24 +181,17 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (isFirebaseConfigured && db) {
       const { doc, setDoc } = await getFirestoreHelpers();
       await setDoc(doc(db, 'portfolio_config', 'personal_info'), data);
-    } else {
-      localStorage.setItem('portfolio_personal_info', JSON.stringify(data));
     }
   };
 
   const saveExperience = async (exp: Experience) => {
     setExperience(prev => {
       const exists = prev.some(e => e.id === exp.id);
-      let updated;
       if (exists) {
-        updated = prev.map(e => e.id === exp.id ? exp : e);
+        return prev.map(e => e.id === exp.id ? exp : e);
       } else {
-        updated = [exp, ...prev];
+        return [exp, ...prev];
       }
-      if (!isFirebaseConfigured || !db) {
-        localStorage.setItem('portfolio_experience', JSON.stringify(updated));
-      }
-      return updated;
     });
 
     if (isFirebaseConfigured && db) {
@@ -237,13 +201,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const deleteExperience = async (id: string) => {
-    setExperience(prev => {
-      const updated = prev.filter(e => e.id !== id);
-      if (!isFirebaseConfigured || !db) {
-        localStorage.setItem('portfolio_experience', JSON.stringify(updated));
-      }
-      return updated;
-    });
+    setExperience(prev => prev.filter(e => e.id !== id));
     if (isFirebaseConfigured && db) {
       const { doc, deleteDoc } = await getFirestoreHelpers();
       await deleteDoc(doc(db, 'experience', id));
@@ -253,16 +211,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const saveProject = async (proj: Project) => {
     setProjects(prev => {
       const exists = prev.some(p => p.id === proj.id);
-      let updated;
       if (exists) {
-        updated = prev.map(p => p.id === proj.id ? proj : p);
+        return prev.map(p => p.id === proj.id ? proj : p);
       } else {
-        updated = [...prev, proj];
+        return [...prev, proj];
       }
-      if (!isFirebaseConfigured || !db) {
-        localStorage.setItem('portfolio_projects', JSON.stringify(updated));
-      }
-      return updated;
     });
 
     if (isFirebaseConfigured && db) {
@@ -272,13 +225,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const deleteProject = async (id: string) => {
-    setProjects(prev => {
-      const updated = prev.filter(p => p.id !== id);
-      if (!isFirebaseConfigured || !db) {
-        localStorage.setItem('portfolio_projects', JSON.stringify(updated));
-      }
-      return updated;
-    });
+    setProjects(prev => prev.filter(p => p.id !== id));
     if (isFirebaseConfigured && db) {
       const { doc, deleteDoc } = await getFirestoreHelpers();
       await deleteDoc(doc(db, 'projects', id));
@@ -287,21 +234,16 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const saveSkill = async (skill: Skill, oldName?: string) => {
     setSkills(prev => {
-      let updated;
       if (oldName) {
-        updated = prev.map(s => s.name === oldName ? skill : s);
+        return prev.map(s => s.name === oldName ? skill : s);
       } else {
         const exists = prev.some(s => s.name === skill.name);
         if (exists) {
-          updated = prev.map(s => s.name === skill.name ? skill : s);
+          return prev.map(s => s.name === skill.name ? skill : s);
         } else {
-          updated = [...prev, skill];
+          return [...prev, skill];
         }
       }
-      if (!isFirebaseConfigured || !db) {
-        localStorage.setItem('portfolio_skills', JSON.stringify(updated));
-      }
-      return updated;
     });
 
     if (isFirebaseConfigured && db) {
@@ -314,13 +256,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const deleteSkill = async (name: string) => {
-    setSkills(prev => {
-      const updated = prev.filter(s => s.name !== name);
-      if (!isFirebaseConfigured || !db) {
-        localStorage.setItem('portfolio_skills', JSON.stringify(updated));
-      }
-      return updated;
-    });
+    setSkills(prev => prev.filter(s => s.name !== name));
     if (isFirebaseConfigured && db) {
       const { doc, deleteDoc } = await getFirestoreHelpers();
       await deleteDoc(doc(db, 'skills', `skill-${name.replace(/\s+/g, '_')}`));
@@ -330,16 +266,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const saveEducation = async (edu: Education) => {
     setEducation(prev => {
       const exists = prev.some(e => e.id === edu.id);
-      let updated;
       if (exists) {
-        updated = prev.map(e => e.id === edu.id ? edu : e);
+        return prev.map(e => e.id === edu.id ? edu : e);
       } else {
-        updated = [edu, ...prev];
+        return [edu, ...prev];
       }
-      if (!isFirebaseConfigured || !db) {
-        localStorage.setItem('portfolio_education', JSON.stringify(updated));
-      }
-      return updated;
     });
 
     if (isFirebaseConfigured && db) {
@@ -349,13 +280,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const deleteEducation = async (id: string) => {
-    setEducation(prev => {
-      const updated = prev.filter(e => e.id !== id);
-      if (!isFirebaseConfigured || !db) {
-        localStorage.setItem('portfolio_education', JSON.stringify(updated));
-      }
-      return updated;
-    });
+    setEducation(prev => prev.filter(e => e.id !== id));
     if (isFirebaseConfigured && db) {
       const { doc, deleteDoc } = await getFirestoreHelpers();
       await deleteDoc(doc(db, 'education', id));
@@ -365,16 +290,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const saveCertification = async (cert: Certification) => {
     setCertifications(prev => {
       const exists = prev.some(c => c.id === cert.id);
-      let updated;
       if (exists) {
-        updated = prev.map(c => c.id === cert.id ? cert : c);
+        return prev.map(c => c.id === cert.id ? cert : c);
       } else {
-        updated = [...prev, cert];
+        return [...prev, cert];
       }
-      if (!isFirebaseConfigured || !db) {
-        localStorage.setItem('portfolio_certifications', JSON.stringify(updated));
-      }
-      return updated;
     });
 
     if (isFirebaseConfigured && db) {
@@ -384,13 +304,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const deleteCertification = async (id: string) => {
-    setCertifications(prev => {
-      const updated = prev.filter(c => c.id !== id);
-      if (!isFirebaseConfigured || !db) {
-        localStorage.setItem('portfolio_certifications', JSON.stringify(updated));
-      }
-      return updated;
-    });
+    setCertifications(prev => prev.filter(c => c.id !== id));
     if (isFirebaseConfigured && db) {
       const { doc, deleteDoc } = await getFirestoreHelpers();
       await deleteDoc(doc(db, 'certifications', id));
