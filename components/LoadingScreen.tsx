@@ -8,13 +8,18 @@ interface LoadingScreenProps {
 const PARTICLES = Array.from({ length: 28 }, (_, i) => i);
 
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
-  const { setMuted } = useAudio();
-  const [phase, setPhase] = useState<'loading' | 'sound' | 'welcome' | 'exit'>('loading');
+  const { isMuted, toggleMute } = useAudio();
+  const [phase, setPhase] = useState<'loading' | 'exit'>('loading');
   const [progress, setProgress] = useState(0);
-  const [visitorName, setVisitorName] = useState('');
-  const [welcomeText, setWelcomeText] = useState('');
+  const [soundBtnPulse, setSoundBtnPulse] = useState(true);
   const progressRef = useRef<number>(0);
   const rafRef = useRef<number>();
+
+  // Stop the pulse effect after user interacts with the sound toggle
+  const handleToggleSound = () => {
+    toggleMute();
+    setSoundBtnPulse(false);
+  };
 
   // Simulate progressive loading (fast at start, slower mid, snap at end)
   useEffect(() => {
@@ -24,7 +29,6 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
     const duration = 10000; // ms
 
     const ease = (t: number) => {
-      // Custom ease: fast start, slow middle, fast finish
       if (t < 0.4) return t * 1.8;
       if (t < 0.85) return 0.72 + (t - 0.4) * 0.36;
       return 0.88 + (t - 0.85) * 0.8;
@@ -41,8 +45,8 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
       if (t < 1) {
         rafRef.current = requestAnimationFrame(tick);
       } else {
-        // Hold at 100% briefly then transition to sound phase
-        setTimeout(() => setPhase('sound'), 600);
+        // Hold at 100% briefly then exit directly
+        setTimeout(() => setPhase('exit'), 600);
       }
     };
 
@@ -52,41 +56,18 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
     };
   }, [phase]);
 
-  // Typewriter for welcome message
-  useEffect(() => {
-    if (phase !== 'welcome') return;
-    const fullText = visitorName ? `Welcome, ${visitorName}! ✨` : `Welcome! ✨`;
-    let i = 0;
-    setWelcomeText('');
-    const id = setInterval(() => {
-      i++;
-      setWelcomeText(fullText.slice(0, i));
-      if (i >= fullText.length) {
-        clearInterval(id);
-        setTimeout(() => setPhase('exit'), 1200);
-      }
-    }, 55);
-    return () => clearInterval(id);
-  }, [phase, visitorName]);
-
   // After exit animation completes, call onComplete
   useEffect(() => {
     if (phase !== 'exit') return;
-    const t = setTimeout(() => onComplete(visitorName), 900);
+    const t = setTimeout(() => onComplete(''), 900);
     return () => clearTimeout(t);
-  }, [phase, visitorName, onComplete]);
-
-  const handleSoundChoice = (soundOn: boolean) => {
-    setMuted(!soundOn);
-    setPhase('welcome');
-  };
+  }, [phase, onComplete]);
 
   const isExiting = phase === 'exit';
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden transition-all duration-700 ${isExiting ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'
-        }`}
+      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden transition-all duration-700 ${isExiting ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100'}`}
       style={{ willChange: 'opacity, transform' }}
     >
       {/* ── Deep dark luxury background ── */}
@@ -155,8 +136,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
 
       {/* ── Main glass card ── */}
       <div
-        className={`relative z-10 w-full max-w-[240px] sm:max-w-sm mx-4 transition-all duration-500 ${phase === 'loading' || phase === 'sound' ? 'translate-y-0 opacity-100' : ''
-          } ${phase === 'welcome' ? 'scale-105 opacity-100' : ''}`}
+        className="relative z-10 w-full max-w-[240px] sm:max-w-sm mx-4 transition-all duration-500 translate-y-0 opacity-100"
       >
         {/* Glowing border wrapper */}
         <div className="relative rounded-3xl p-[1.5px]" style={{
@@ -176,7 +156,7 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
                     animation: 'ls-pulse-logo 2s ease-in-out infinite',
                   }}
                 >
-                  {phase === 'welcome' ? '🎉' : phase === 'sound' ? '🎵' : '⚡'}
+                  {'⚡'}
                 </div>
                 {/* Ping ring */}
                 <div
@@ -186,22 +166,12 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
               </div>
 
               <h1 className="text-sm sm:text-xl font-extrabold tracking-tight text-white">
-                {phase === 'welcome'
-                  ? <span className="bg-gradient-to-r from-yellow-300 via-pink-300 to-purple-300 bg-clip-text text-transparent">
-                    {welcomeText}
-                  </span>
-                  : <span className="bg-gradient-to-r from-red-400 via-pink-300 to-violet-400 bg-clip-text text-transparent">
-                    Arin Joshi
-                  </span>
-                }
+                <span className="bg-gradient-to-r from-red-400 via-pink-300 to-violet-400 bg-clip-text text-transparent">
+                  Arin Joshi
+                </span>
               </h1>
               <p className="text-[8px] sm:text-[11px] text-slate-500 mt-0.5 font-mono tracking-widest uppercase">
-                {phase === 'welcome'
-                  ? "Let's create something amazing 🚀"
-                  : phase === 'sound'
-                    ? 'Choose your vibe 🎧'
-                    : 'Software Engineer · MERN Stack · React'
-                }
+                Software Engineer · MERN Stack · React
               </p>
             </div>
 
@@ -265,75 +235,37 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
                 <p className="text-[10px] text-slate-600 font-mono text-center animate-pulse">
                   Loading your experience...
                 </p>
+
+                {/* ── Sound Toggle Pill — inline on loading screen ── */}
+                <button
+                  onClick={handleToggleSound}
+                  title={isMuted ? 'Turn sound ON' : 'Turn sound OFF'}
+                  className={`relative flex items-center gap-2 px-3.5 py-1.5 rounded-full border text-[10px] font-mono font-semibold transition-all duration-300 select-none ${
+                    isMuted
+                      ? 'border-slate-700 bg-slate-800/60 text-slate-400 hover:border-slate-500 hover:text-slate-200'
+                      : 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20'
+                  } ${soundBtnPulse ? 'ls-sound-pulse' : ''}`}
+                >
+                  {/* Pulse ring when sound is OFF to draw attention */}
+                  {isMuted && soundBtnPulse && (
+                    <span className="absolute inset-0 rounded-full border border-slate-500/60 animate-ping opacity-50 pointer-events-none" />
+                  )}
+
+                  <span className="text-sm leading-none">
+                    {isMuted ? '🔇' : '🔊'}
+                  </span>
+                  <span>{isMuted ? 'Sound OFF' : 'Sound ON'}</span>
+
+                  {/* Toggle track */}
+                  <span className={`w-7 h-3.5 rounded-full flex items-center transition-all duration-300 ${isMuted ? 'bg-slate-700' : 'bg-emerald-500'}`}>
+                    <span className={`w-2.5 h-2.5 rounded-full bg-white shadow-sm transition-all duration-300 ${isMuted ? 'ml-0.5' : 'ml-[14px]'}`} />
+                  </span>
+                </button>
+
               </div>
             )}
 
-            {/* ── PHASE: SOUND ── */}
-            {phase === 'sound' && (
-              <div className="flex flex-col items-center gap-3 sm:gap-4">
-                <p className="text-xs sm:text-sm font-bold text-white text-center">
-                  Sound chahiye? 🎵
-                </p>
-                <p className="text-[10px] text-slate-400 text-center -mt-1">
-                  Background music aur effects on karu? 🎶
-                </p>
 
-                <div className="flex gap-3 w-full">
-                  <button
-                    onClick={() => handleSoundChoice(true)}
-                    className="flex-1 flex flex-col items-center gap-1.5 py-3 sm:py-4 rounded-2xl border-2 border-emerald-500/40 hover:border-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] group"
-                  >
-                    <span className="text-2xl sm:text-3xl group-hover:animate-bounce">🔊</span>
-                    <span className="text-xs font-bold text-emerald-400">Haan ON!</span>
-                    <span className="text-[9px] text-slate-500">Vibe on karo 🎉</span>
-                  </button>
-
-                  <button
-                    onClick={() => handleSoundChoice(false)}
-                    className="flex-1 flex flex-col items-center gap-1.5 py-3 sm:py-4 rounded-2xl border-2 border-slate-600/40 hover:border-slate-500 bg-slate-800/40 hover:bg-slate-700/40 transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] group"
-                  >
-                    <span className="text-2xl sm:text-3xl">🔇</span>
-                    <span className="text-xs font-bold text-slate-400">Nahi, OFF</span>
-                    <span className="text-[9px] text-slate-500">Shant rehna hai 🤫</span>
-                  </button>
-                </div>
-
-                <p className="text-[9px] text-slate-700 text-center font-mono">
-                  Baad mein bhi change kar sakte ho ↗
-                </p>
-              </div>
-            )}
-
-            {/* ── PHASE: WELCOME ── */}
-            {phase === 'welcome' && (
-              <div className="flex flex-col items-center gap-5">
-                {/* Confetti-style emoji burst */}
-                <div className="flex gap-3 text-2xl animate-bounce">
-                  {'🎊 🌟 🎉'.split(' ').map((e, i) => (
-                    <span
-                      key={i}
-                      className="inline-block"
-                      style={{ animation: `ls-pop 0.5s ${i * 0.1}s ease-out both` }}
-                    >
-                      {e}
-                    </span>
-                  ))}
-                </div>
-                <p className="text-slate-400 text-xs text-center font-mono">
-                  Preparing your personalized experience...
-                </p>
-                <div className="w-full h-1 bg-slate-800 rounded-full overflow-hidden">
-                  <div
-                    className="h-full rounded-full"
-                    style={{
-                      width: '100%',
-                      background: 'linear-gradient(90deg, #10b981, #3b82f6, #8b5cf6)',
-                      animation: 'ls-bar-fill 1s ease-in-out forwards',
-                    }}
-                  />
-                </div>
-              </div>
-            )}
 
           </div>
         </div>
@@ -372,13 +304,6 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
           0%   { transform: scale(1); opacity: 0.7; }
           100% { transform: scale(1.8); opacity: 0; }
         }
-        @keyframes ls-shake {
-          0%, 100% { transform: translateX(0); }
-          20%       { transform: translateX(-6px); }
-          40%       { transform: translateX(6px); }
-          60%       { transform: translateX(-4px); }
-          80%       { transform: translateX(4px); }
-        }
         @keyframes ls-pop {
           0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
           70%  { transform: scale(1.3) rotate(5deg); opacity: 1; }
@@ -390,11 +315,6 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         }
         @keyframes spin {
           to { transform: rotate(360deg); }
-        }
-        @keyframes ls-emoji-pop {
-          0%   { transform: scale(0.4) rotate(-15deg); opacity: 0; }
-          60%  { transform: scale(1.25) rotate(8deg); opacity: 1; }
-          100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
       `}</style>
     </div>

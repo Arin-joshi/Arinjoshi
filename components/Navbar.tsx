@@ -208,16 +208,6 @@ const Navbar: React.FC<NavbarProps> = ({ onAdminClick }) => {
               <AudioToggle />
               <ThemeToggle />
               <button
-                onClick={onAdminClick}
-                className="relative w-10 h-10 rounded-lg border border-slate-200 bg-white/90 text-slate-800 hover:border-red-400 transition-all duration-300 flex items-center justify-center group dark:bg-slate-800/80 dark:border-slate-700 dark:text-white dark:hover:border-red-500/50"
-                title="Admin Control Panel"
-              >
-                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-red-600/20 to-red-700/20 opacity-0 group-hover:opacity-100 blur transition-opacity"></div>
-                <div className="relative transition-transform duration-300 group-hover:scale-110">
-                  <Lock size={16} />
-                </div>
-              </button>
-              <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="relative w-10 h-10 rounded-lg border border-slate-200 bg-white/90 text-slate-800 hover:border-red-400 transition-all duration-300 flex items-center justify-center group dark:bg-slate-800/80 dark:border-slate-700 dark:text-white dark:hover:border-red-500/50"
                 aria-label="Toggle menu"
@@ -289,6 +279,23 @@ const Navbar: React.FC<NavbarProps> = ({ onAdminClick }) => {
                 )}
               </a>
             ))}
+
+            {/* Admin Panel button — bottom of mobile menu */}
+            <div className="border-t border-slate-200/60 dark:border-slate-700/60 mt-1 pt-2">
+              <button
+                onClick={() => { onAdminClick?.(); setIsOpen(false); }}
+                className="w-full group relative px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-3 bg-gradient-to-r from-red-600/10 to-rose-600/10 hover:from-red-600/20 hover:to-rose-600/20 border border-red-500/20 hover:border-red-500/40 text-red-500 dark:text-red-400"
+                style={{
+                  transitionDelay: isOpen ? `${navLinks.length * 50 + 50}ms` : '0ms',
+                  opacity: isOpen ? 1 : 0,
+                  transform: isOpen ? 'translateX(0)' : 'translateX(10px)'
+                }}
+              >
+                <Lock size={15} className="text-red-500 dark:text-red-400" />
+                <span className="flex-1 text-left">Admin Panel</span>
+                <span className="text-[9px] font-mono bg-red-500/15 border border-red-500/25 text-red-400 px-1.5 py-0.5 rounded tracking-wider">CTRL</span>
+              </button>
+            </div>
           </div>
         </div>
       </nav>
