@@ -84,19 +84,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
       localStorage.removeItem('admin_remember_email');
     }
 
-    if (!isConfigured || !auth) {
-      // Mock Auth Fallback
-      setTimeout(() => {
-        const mockSavedPassword = localStorage.getItem('portfolio_admin_mock_password') || 'admin123';
-        if (email === 'admin@portfolio.com' && password === mockSavedPassword) {
-          setUser({ email: 'admin@portfolio.com', displayName: 'Local Admin' });
-          setStatusMessage({ type: 'success', text: 'Welcome back, Admin! (Mock Mode)' });
-          setTimeout(() => setStatusMessage(null), 3000);
-        } else {
-          setAuthError('Mock Auth: Enter email "admin@portfolio.com" and password to log in.');
-        }
-        setAuthLoading(false);
-      }, 600);
+    if (!auth) {
+      setAuthError('Firebase Authentication is not initialized. Please verify your configurations.');
+      setAuthLoading(false);
       return;
     }
     try {
@@ -394,12 +384,11 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
               Sign in to modify your portfolio content in real-time
             </p>
 
-            {/* Config warning alert */}
             {!isConfigured && (
-              <div className="mt-3.5 p-2.5 bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-[9px] sm:text-[10px] font-mono rounded-xl flex gap-1.5 text-left leading-normal">
+              <div className="mt-3.5 p-2.5 bg-red-500/10 border border-red-500/20 text-red-400 text-[9px] sm:text-[10px] font-mono rounded-xl flex gap-1.5 text-left leading-normal">
                 <AlertCircle size={14} className="shrink-0" />
                 <span>
-                  <strong>Firebase Local Mode:</strong> Connected locally via Browser Storage.
+                  <strong>Configuration Error:</strong> Firebase environment keys are missing. Please add them to your .env file.
                 </span>
               </div>
             )}
