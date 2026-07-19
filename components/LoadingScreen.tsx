@@ -155,9 +155,8 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
 
       {/* ── Main glass card ── */}
       <div
-        className={`relative z-10 w-full max-w-[240px] sm:max-w-sm mx-4 transition-all duration-500 ${
-          phase === 'loading' || phase === 'sound' ? 'translate-y-0 opacity-100' : ''
-        } ${phase === 'welcome' ? 'scale-105 opacity-100' : ''}`}
+        className={`relative z-10 w-full max-w-[240px] sm:max-w-sm mx-4 transition-all duration-500 ${phase === 'loading' || phase === 'sound' ? 'translate-y-0 opacity-100' : ''
+          } ${phase === 'welcome' ? 'scale-105 opacity-100' : ''}`}
       >
         {/* Glowing border wrapper */}
         <div className="relative rounded-3xl p-[1.5px]" style={{
@@ -200,8 +199,8 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
                 {phase === 'welcome'
                   ? "Let's create something amazing 🚀"
                   : phase === 'sound'
-                  ? 'Choose your vibe 🎧'
-                  : 'Software Engineer · MERN Stack · React'
+                    ? 'Choose your vibe 🎧'
+                    : 'Software Engineer · MERN Stack · React'
                 }
               </p>
             </div>
