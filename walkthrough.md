@@ -4,34 +4,29 @@ We have successfully integrated a dynamic, fully responsive Firebase Admin Panel
 
 ---
 
-## 🚀 Dual-Mode System (Firebase + Local Storage Fallback)
+## 🛡️ Enforced Production Security (Strict Firebase Auth)
 
-To ensure the project is **100% functional immediately** without forcing you to setup Firebase databases first, we have built a **Dual-Mode System**:
+We have **completely removed the insecure mock authentication bypasses, mock accounts, and local storage password storage** from the codebase. 
 
-1. **Local Storage / Mock Mode (Default)**:
-   - If the Firebase keys in `.env.local` are not configured (or remain as the default placeholders), the Admin Panel automatically falls back to utilizing **Browser Local Storage**!
-   - You can click the **Lock** icon in the header and log in using the local mock credentials:
-     - **Email**: `admin@portfolio.com`
-     - **Password**: `admin123` (or the custom password you update to!)
-   - You can edit any info, add/delete projects, and even **upload files** (which are automatically converted to Base64 strings and stored locally). All changes will be saved to your browser's local storage and reflected in the UI immediately upon reload!
-2. **Live Firebase Mode**:
-   - Once you add your live keys to `.env.local`, the app will seamlessly transition to utilizing your live **Firebase Authentication, Cloud Firestore, and Firebase Storage** backend.
-   - On the very first load under Firebase, the database will automatically initialize itself by seeding all your current portfolio data from `constants.ts`.
+1. **Strict Firebase Authentication**:
+   - The login panel connects directly and securely to your **Firebase Authentication** console.
+   - Access is restricted exclusively to authenticated users added to your Firebase Auth settings (e.g. `thakararinjoshi@gmail.com`). There are no backdoor/mock administrator endpoints inside the frontend source code.
+2. **ID Remember Option**:
+   - Added a `Remember email ID 💾` checkbox in the login form. If enabled, it securely caches your admin email address in `localStorage`, so you don't need to retype it next time.
+   - The password field is **explicitly excluded from browser caching** to keep your admin credentials completely safe.
+3. **Dedicated Account Security Sidebar Tab**:
+   - Created a dedicated **Account Security 🔒** sidebar tab in the admin workspace.
+   - Designed it with a **glowing gradient-pulse border** special effect panel. You can update your account password at any time, which writes directly to Firebase Auth.
 
 ---
 
-## 🛡️ Added Security & UI Features
+## 🚀 Live Integration Settings
 
-To improve security, loading visual fidelity, and user convenience:
-1. **ID Remember Option**:
-   - Added a `Remember email ID 💾` checkbox in the login form. If enabled, it securely caches your admin email address in `localStorage`, so you don't need to retype it next time.
-   - The password field is **explicitly excluded from browser caching** to keep your admin credentials completely safe.
-2. **Dedicated Account Security Sidebar Tab**:
-   - Removed the password-change form from the "Personal Details" tab and created a dedicated **Account Security 🔒** sidebar tab in the admin workspace.
-   - Designed it with a **glowing gradient-pulse border** special effect panel. You can update your account password at any time.
-3. **Pulsing Skeleton Loaders**:
+1. **Pulsing Skeleton Loaders**:
    - Built custom responsive **Pulsing Skeleton Cards** inside [Experience.tsx](file:///c:/Users/ASUS/Desktop/Arinjoshi/components/Experience.tsx), [Projects.tsx](file:///c:/Users/ASUS/Desktop/Arinjoshi/components/Projects.tsx), and [Skills.tsx](file:///c:/Users/ASUS/Desktop/Arinjoshi/components/Skills.tsx).
    - Instead of displaying layout shifts or blank blocks, the sections render beautifully designed pulsating placeholder layouts while Firestore is fetching database records.
+2. **Direct Asset URL Overwrites**:
+   - Avoids the need to upgrade to a paid Firebase Storage bucket pricing plan. Under the **Personal Details** tab, you can paste links or paths (e.g. `/ArinJoshi.mp4` / `/ArinJoshi.pdf`) directly, which updates the website's audio/video elements instantly.
 
 ---
 
@@ -40,7 +35,7 @@ To improve security, loading visual fidelity, and user convenience:
 ### 1. Database & Auth Configuration
 - **[NEW] [firebase.ts](file:///c:/Users/ASUS/Desktop/Arinjoshi/firebase.ts)**: Configures and initializes Firebase Authentication, Firestore, and Storage. Includes fallback guards to detect if configuration is valid.
 - **[NEW] [.env.example](file:///c:/Users/ASUS/Desktop/Arinjoshi/.env.example)**: Provides a configuration template for `.env.local` to help map your Firebase web app credentials.
-- **[NEW] [DataContext.tsx](file:///c:/Users/ASUS/Desktop/Arinjoshi/contexts/DataContext.tsx)**: Manages global portfolio data. Automatically checks if Firestore is empty on load and boots/seeds it with your static `constants.ts` values. In Local Storage mode, it loads/saves to/from your browser's storage cache.
+- **[NEW] [DataContext.tsx](file:///c:/Users/ASUS/Desktop/Arinjoshi/contexts/DataContext.tsx)**: Manages global portfolio data. Automatically checks if Firestore is empty on load and boots/seeds it with your static `constants.ts` values.
 
 ### 2. Sleek Responsive UI Components
 - **[NEW] [AdminPanel.tsx](file:///c:/Users/ASUS/Desktop/Arinjoshi/components/AdminPanel.tsx)**:
@@ -62,13 +57,9 @@ The following component files read data dynamically from `DataContext` with auto
 
 ## ⚡ How to Setup Your Firebase Project
 
-To transition from Local Storage mode to live Firebase hosting:
+To connect your live Firebase hosting:
 
-### Step 1: Create a Firebase Project
-1. Go to [Firebase Console](https://console.firebase.google.com/) and click **Add Project**.
-2. Register a new **Web App** in your project settings to obtain the config parameters.
-
-### Step 2: Configure Environment Variables
+### Step 1: Configure Environment Variables
 1. Create a file named `.env.local` in your root directory: `c:\Users\ASUS\Desktop\Arinjoshi\.env.local`.
 2. Copy the template from [.env.example](file:///c:/Users/ASUS/Desktop/Arinjoshi/.env.example) and fill in your keys:
    ```env
@@ -80,7 +71,7 @@ To transition from Local Storage mode to live Firebase hosting:
    VITE_FIREBASE_APP_ID=your-app-id
    ```
 
-### Step 3: Enable Firebase Features in Console
+### Step 2: Enable Firebase Features in Console
 1. **Authentication**: Enable **Email/Password** provider in the Auth tab, and add your admin user (email and password).
 2. **Cloud Firestore**: Click **Create Database**. In rules tab, enable read/write permissions for logged-in admin users:
    ```javascript
@@ -94,20 +85,8 @@ To transition from Local Storage mode to live Firebase hosting:
      }
    }
    ```
-3. **Firebase Storage**: Create a storage bucket and define rules to allow uploads for authenticated admin users:
-   ```javascript
-   rules_version = '2';
-   service firebase.storage {
-     match /b/{bucket}/o {
-       match /{allPaths=**} {
-         allow read: if true;
-         allow write: if request.auth != null;
-       }
-     }
-   }
-   ```
 
-### Step 4: Run the App
+### Step 3: Run the App
 - Restart your Vite local development server (`npm run dev`) so that the newly created `.env.local` variables load.
 - Open your portfolio and click the **Lock** icon in the header to authenticate.
 - **Note**: The very first time the portfolio page is loaded with a configured database, the database will automatically initialize itself with the contents of your static `constants.ts` file.
@@ -119,4 +98,4 @@ We compiled the application using Vite's production bundler:
 ```bash
 npm run build
 ```
-- **Result**: `✓ built in 3.73s` with zero errors. All TypeScript files compiled successfully, and code splitting worked correctly with dynamic Firebase loading chunks.
+- **Result**: `✓ built in 3.74s` with zero errors. All TypeScript files compiled successfully, and code splitting worked correctly with dynamic Firebase loading chunks.
