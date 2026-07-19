@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AudioProvider } from './contexts/AudioContext';
+import { DataProvider } from './contexts/DataContext';
 
 // Clean up Google search text fragments from URL
 if (typeof window !== 'undefined') {
@@ -25,7 +26,9 @@ root.render(
   <React.StrictMode>
     <ThemeProvider>
       <AudioProvider>
-        <App />
+        <DataProvider>
+          <App />
+        </DataProvider>
       </AudioProvider>
     </ThemeProvider>
   </React.StrictMode>

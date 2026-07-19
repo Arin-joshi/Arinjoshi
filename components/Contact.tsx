@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PERSONAL_INFO } from '../constants';
+import { useData } from '../contexts/DataContext';
 import { useAudio } from '../contexts/AudioContext';
 import LookAtCursor from './LookAtCursor';
 import {
@@ -21,6 +21,7 @@ import {
 
 const Contact: React.FC = () => {
   const { isMuted } = useAudio();
+  const { personalInfo } = useData();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -238,12 +239,12 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase">Email Address</p>
-                    <a href={`mailto:${PERSONAL_INFO.email}`} className="text-xs sm:text-sm font-semibold text-slate-900 hover:text-red-500 transition-colors dark:text-white dark:hover:text-red-400">
-                      {PERSONAL_INFO.email}
+                    <a href={`mailto:${personalInfo.email}`} className="text-xs sm:text-sm font-semibold text-slate-900 hover:text-red-500 transition-colors dark:text-white dark:hover:text-red-400">
+                      {personalInfo.email}
                     </a>
                   </div>
                 </div>
-
+ 
                 <div 
                   className="flex items-center gap-3.5 p-4 bg-white/90 dark:bg-slate-900/30 rounded-2xl border border-slate-200 dark:border-slate-800/80 transition-all duration-300 relative group overflow-hidden"
                   onMouseMove={(e) => handleMouseMove(e, 'phone-card')}
@@ -259,12 +260,12 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase">Telephone Phone</p>
-                    <a href={`tel:${PERSONAL_INFO.phone}`} className="text-xs sm:text-sm font-semibold text-slate-900 hover:text-red-500 transition-colors dark:text-white dark:hover:text-red-400">
-                      {PERSONAL_INFO.phone}
+                    <a href={`tel:${personalInfo.phone}`} className="text-xs sm:text-sm font-semibold text-slate-900 hover:text-red-500 transition-colors dark:text-white dark:hover:text-red-400">
+                      {personalInfo.phone}
                     </a>
                   </div>
                 </div>
-
+ 
                 <div 
                   className="sm:col-span-2 flex items-center gap-3.5 p-4 bg-white/90 dark:bg-slate-900/30 rounded-2xl border border-slate-200 dark:border-slate-800/80 transition-all duration-300 relative group overflow-hidden"
                   onMouseMove={(e) => handleMouseMove(e, 'location-card')}
@@ -280,7 +281,7 @@ const Contact: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase">HQ Location</p>
-                    <p className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white">{PERSONAL_INFO.location}</p>
+                    <p className="text-xs sm:text-sm font-semibold text-slate-900 dark:text-white">{personalInfo.location}</p>
                   </div>
                 </div>
               </div>
@@ -361,7 +362,7 @@ const Contact: React.FC = () => {
           <div className="relative pt-8 border-t border-slate-200/60 dark:border-slate-800/40">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <p className="text-xs sm:text-sm text-slate-500 flex items-center gap-2">
-                © {new Date().getFullYear()} {PERSONAL_INFO.name}. 
+                © {new Date().getFullYear()} {personalInfo.name}. 
                 <span className="hidden sm:inline">All rights reserved.</span>
                 <span className="flex items-center gap-1.5 text-xs text-slate-400">
                   Made with <Heart size={10} className="text-red-500 fill-red-500 animate-pulse" /> using React

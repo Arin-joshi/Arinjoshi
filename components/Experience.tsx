@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { EXPERIENCE } from '../constants';
+import { useData } from '../contexts/DataContext';
 import { useAudio } from '../contexts/AudioContext';
 import { 
   Briefcase, Calendar, MapPin, Code2, 
@@ -65,9 +65,17 @@ const companyMetaMap: Record<string, CompanyMeta> = {
 
 const Experience: React.FC = () => {
   const { isMuted } = useAudio();
-  const [selectedExpId, setSelectedExpId] = useState<string>(EXPERIENCE[0]?.id || 'exp-3');
-  const [activeTabId, setActiveTabId] = useState<string>(EXPERIENCE[0]?.id || 'exp-3');
+  const { loading, experience } = useData();
+  const [selectedExpId, setSelectedExpId] = useState<string>('');
+  const [activeTabId, setActiveTabId] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (experience.length > 0 && !selectedExpId) {
+      setSelectedExpId(experience[0].id);
+      setActiveTabId(experience[0].id);
+    }
+  }, [experience, selectedExpId]);
   
   // Hover and tilt coordinate states for the card spotlight borders
   const [hoverCoords, setHoverCoords] = useState<Record<string, { x: number; y: number }>>({});
@@ -200,9 +208,42 @@ const Experience: React.FC = () => {
     };
   };
 
-  const activeExp = EXPERIENCE.find(e => e.id === selectedExpId) || EXPERIENCE[0];
+  const activeExp = experience.find(e => e.id === selectedExpId) || experience[0] || { id: '', company: '', role: '', period: '', description: [] };
   const activeConfig = getCompanyConfig(activeExp.id);
   const pendingConfig = getCompanyConfig(activeTabId);
+
+  if (loading) {
+    return (
+      <section id="experience" className="relative py-28 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] opacity-60 pointer-events-none" />
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 z-10 animate-pulse">
+          {/* Header Skeleton */}
+          <div className="text-center mb-16 flex flex-col items-center">
+            <div className="w-14 h-14 bg-slate-200 dark:bg-slate-800 rounded-full mb-4" />
+            <div className="h-6 w-36 bg-slate-200 dark:bg-slate-800 rounded-full mb-3" />
+            <div className="h-10 w-64 bg-slate-200 dark:bg-slate-800 rounded-lg mb-4" />
+            <div className="h-4 w-96 bg-slate-200 dark:bg-slate-800 rounded-md" />
+          </div>
+          {/* Stats Skeletons */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className="h-20 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
+            ))}
+          </div>
+          {/* Interactive Area Skeletons */}
+          <div className="grid lg:grid-cols-12 gap-8 items-start min-h-[500px]">
+            <div className="lg:col-span-4 flex flex-col gap-3">
+              <div className="h-4 w-28 bg-slate-200 dark:bg-slate-800 rounded mb-2" />
+              {[1, 2, 3].map(i => (
+                <div key={i} className="h-24 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
+              ))}
+            </div>
+            <div className="lg:col-span-8 h-[400px] bg-slate-200 dark:bg-slate-800 rounded-3xl" />
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section 
@@ -240,7 +281,7 @@ const Experience: React.FC = () => {
         {/* Experience Metrics Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {[
-            { icon: <Briefcase size={18} />, label: 'ROLES HELD', value: EXPERIENCE.length },
+            { icon: <Briefcase size={18} />, label: 'ROLES HELD', value: experience.length },
             { icon: <Clock size={18} />, label: 'YEARS ACTIVE', value: '3+' },
             { icon: <Code2 size={18} />, label: 'APPLICATIONS SHIPPED', value: '15+' },
             { icon: <Users size={18} />, label: 'TEAMS COORDINATED', value: '3' },
@@ -270,7 +311,7 @@ const Experience: React.FC = () => {
             <span className="text-[11px] font-mono tracking-wider font-semibold text-slate-500 dark:text-slate-400 px-3 py-1 uppercase">
               Select Company
             </span>
-            {EXPERIENCE.map((exp, idx) => {
+            {experience.map((exp, idx) => {
               const isSelected = exp.id === activeTabId;
               const meta = getCompanyConfig(exp.id);
               return (

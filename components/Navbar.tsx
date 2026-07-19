@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Menu, X, Code2, ChevronDown, Home, Briefcase, FolderGit2, Cpu, GraduationCap, Mail } from "lucide-react";
+import { Menu, X, Code2, ChevronDown, Home, Briefcase, FolderGit2, Cpu, GraduationCap, Mail, Lock } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import AudioToggle from "./AudioToggle";
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  onAdminClick?: () => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ onAdminClick }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeLink, setActiveLink] = useState("about");
@@ -187,12 +191,32 @@ const Navbar: React.FC = () => {
               </div>
               <AudioToggle />
               <ThemeToggle />
+              <button
+                onClick={onAdminClick}
+                className="relative w-10 h-10 rounded-lg border border-slate-200 bg-white/90 text-slate-800 hover:border-red-400 transition-all duration-300 flex items-center justify-center group dark:bg-slate-800/80 dark:border-slate-700 dark:text-white dark:hover:border-red-500/50"
+                title="Admin Control Panel"
+              >
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-red-600/20 to-red-700/20 opacity-0 group-hover:opacity-100 blur transition-opacity"></div>
+                <div className="relative transition-transform duration-300 group-hover:scale-110">
+                  <Lock size={16} />
+                </div>
+              </button>
             </div>
 
             {/* Mobile: theme + menu */}
             <div className="flex items-center gap-2 md:hidden">
               <AudioToggle />
               <ThemeToggle />
+              <button
+                onClick={onAdminClick}
+                className="relative w-10 h-10 rounded-lg border border-slate-200 bg-white/90 text-slate-800 hover:border-red-400 transition-all duration-300 flex items-center justify-center group dark:bg-slate-800/80 dark:border-slate-700 dark:text-white dark:hover:border-red-500/50"
+                title="Admin Control Panel"
+              >
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-red-600/20 to-red-700/20 opacity-0 group-hover:opacity-100 blur transition-opacity"></div>
+                <div className="relative transition-transform duration-300 group-hover:scale-110">
+                  <Lock size={16} />
+                </div>
+              </button>
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="relative w-10 h-10 rounded-lg border border-slate-200 bg-white/90 text-slate-800 hover:border-red-400 transition-all duration-300 flex items-center justify-center group dark:bg-slate-800/80 dark:border-slate-700 dark:text-white dark:hover:border-red-500/50"

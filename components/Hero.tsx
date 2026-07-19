@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { PERSONAL_INFO } from "../constants";
+import { useData } from "../contexts/DataContext";
 import { useAudio } from "../contexts/AudioContext";
 import {
   ArrowRight,
@@ -29,6 +29,7 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
   const { isMuted } = useAudio();
+  const { personalInfo } = useData();
   const [typedText, setTypedText] = useState("");
   const [cursorVisible, setCursorVisible] = useState(true);
   const [nameColorIndex, setNameColorIndex] = useState(0);
@@ -397,12 +398,13 @@ const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
           0%, 100% { transform: rotate(0deg); }
           25%       { transform: rotate(20deg); }
           75%       { transform: rotate(-10deg); }
-        }
       `}</style>
+
       {/* Desktop Full-Screen Background Video */}
       {isDesktop && (
         <>
           <video
+            key={personalInfo.videoUrl || "/ArinJoshi.mp4"}
             ref={desktopVideoRef}
             className="hidden lg:block absolute inset-0 w-full h-full object-cover z-0 select-none pointer-events-none"
             loop
@@ -410,7 +412,7 @@ const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
             playsInline
             preload={ready ? "auto" : "none"}
           >
-            <source src="/ArinJoshi.mp4" type="video/mp4" />
+            <source src={personalInfo.videoUrl || "/ArinJoshi.mp4"} type="video/mp4" />
           </video>
           {/* Desktop 70% Opacity Dark Overlay */}
           <div className="hidden lg:block absolute inset-0 bg-black/70 z-10 pointer-events-none" />
@@ -476,7 +478,7 @@ const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
                 Hi, I'm{" "}
                 <span className="relative inline-block">
                   <span className={`relative z-10 text-transparent bg-clip-text bg-gradient-to-r ${nameColorGradients[nameColorIndex]} transition-all duration-1000`}>
-                    {PERSONAL_INFO.name}
+                    {personalInfo.name}
                   </span>
                   <span className={`absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r ${nameColorGradients[nameColorIndex]} rounded-full transform scale-x-0 group-hover:scale-x-100 transition-all duration-1000 origin-left`}></span>
                 </span>
@@ -503,7 +505,7 @@ const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
               <div className="absolute -inset-0.5 bg-gradient-to-r from-red-600 to-red-700 rounded-xl opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
               <div className="relative bg-white/95 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-xl border border-slate-200 shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none lg:bg-slate-950/40 lg:border-white/10 lg:backdrop-blur-md">
                 <p className="text-sm sm:text-base md:text-lg text-slate-700 lg:text-slate-200 leading-relaxed dark:text-slate-300">
-                  {PERSONAL_INFO.summary}
+                  {personalInfo.summary}
                 </p>
               </div>
             </div>
@@ -563,8 +565,9 @@ const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
                 </a>
 
                 <a
-                  href="/ArinJoshi.pdf"
-                  download="ArinJoshi.pdf"
+                  href={personalInfo.resumeUrl || "/ArinJoshi.pdf"}
+                  target="_blank"
+                  rel="noreferrer"
                   className="w-full sm:w-auto group px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-slate-100/90 backdrop-blur-sm hover:bg-slate-200/90 text-slate-900 font-semibold transition-all border border-slate-300 hover:border-red-400 flex items-center justify-center gap-2 text-sm sm:text-base dark:bg-slate-800/50 dark:hover:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-red-500/50"
                 >
                   <Download
@@ -599,7 +602,7 @@ const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
               </div>
 
               <div className="absolute -bottom-6 left-[10%] sm:left-[20%] z-20 animate-float" style={{ animationDelay: '3s', animationDuration: '6s' }}>
-                <a href={`mailto:${PERSONAL_INFO.email}`} className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-pink-500 text-pink-600 shadow-[0_0_20px_rgba(236,72,153,0.5)] hover:scale-110 transition-transform dark:bg-slate-900/90 dark:border-pink-500/80 dark:text-pink-400">
+                <a href={`mailto:${personalInfo.email}`} className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-pink-500 text-pink-600 shadow-[0_0_20px_rgba(236,72,153,0.5)] hover:scale-110 transition-transform dark:bg-slate-900/90 dark:border-pink-500/80 dark:text-pink-400">
                   <Mail size={18} className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span className="hidden sm:block text-xs sm:text-sm font-bold">Email</span>
                 </a>
@@ -627,6 +630,7 @@ const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
                   <div className="absolute inset-1 sm:inset-1.5 lg:inset-2 bg-slate-50 dark:bg-slate-950 rounded-xl sm:rounded-[1.3rem] lg:rounded-[1.7rem] overflow-hidden z-10 transition-transform duration-700">
                     {/* Profile Card Video (plays on both Desktop and Mobile) */}
                     <video
+                      key={personalInfo.videoUrl || "/ArinJoshi.mp4"}
                       ref={cardVideoRef}
                       loop
                       muted={isDesktop ? true : isMuted}
@@ -634,7 +638,7 @@ const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
                       preload={ready ? "auto" : "none"}
                       className="w-full h-full object-cover scale-[1.15] transition-transform duration-700 group-hover:scale-[1.2]"
                     >
-                      <source src="/ArinJoshi.mp4" type="video/mp4" />
+                      <source src={personalInfo.videoUrl || "/ArinJoshi.mp4"} type="video/mp4" />
                     </video>
 
                     {/* Location badge inside the glass card */}
@@ -651,7 +655,7 @@ const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
                               className="sm:w-3 sm:h-3 lg:w-3.5 lg:h-3.5 text-slate-500 dark:text-slate-400"
                             />
                             <span className="text-slate-900 font-bold truncate dark:text-white tracking-wide">
-                              {PERSONAL_INFO.location}
+                              {personalInfo.location}
                             </span>
                           </div>
                         </div>
@@ -710,8 +714,9 @@ const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
               </a>
 
               <a
-                href="/ArinJoshi.pdf"
-                download="ArinJoshi.pdf"
+                href={personalInfo.resumeUrl || "/ArinJoshi.pdf"}
+                target="_blank"
+                rel="noreferrer"
                 className="w-full sm:w-auto group px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-slate-100/90 backdrop-blur-sm hover:bg-slate-200/90 text-slate-900 font-semibold transition-all border border-slate-300 hover:border-red-400 flex items-center justify-center gap-2 text-sm sm:text-base dark:bg-slate-800/50 dark:hover:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-red-500/50"
               >
                 <Download

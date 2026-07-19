@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SKILLS, CERTIFICATIONS, EDUCATION } from '../constants';
+import { useData } from '../contexts/DataContext';
 import { useAudio } from '../contexts/AudioContext';
 import { 
   Award, GraduationCap, Code2, 
@@ -54,6 +54,7 @@ const categoryConfig: Record<string, CategoryStyle> = {
 
 const Skills: React.FC = () => {
   const { isMuted } = useAudio();
+  const { loading, skills, certifications, education } = useData();
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [hoverCoords, setHoverCoords] = useState<Record<string, { x: number; y: number }>>({});
   const [tiltStyle, setTiltStyle] = useState<Record<string, string>>({});
@@ -142,10 +143,10 @@ const Skills: React.FC = () => {
     }));
   };
 
-  const categories = ['all', ...new Set(SKILLS.map(s => s.category))];
+  const categories = ['all', ...new Set(skills.map(s => s.category))];
   const filteredSkills = activeCategory === 'all' 
-    ? SKILLS 
-    : SKILLS.filter(s => s.category === activeCategory);
+    ? skills 
+    : skills.filter(s => s.category === activeCategory);
 
   const getStyle = (category: string): CategoryStyle => {
     return categoryConfig[category] || { 
@@ -157,6 +158,29 @@ const Skills: React.FC = () => {
       categoryDesc: 'Software engineering skill depth.'
     };
   };
+
+  if (loading) {
+    return (
+      <section id="skills" className="relative py-28 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] opacity-60 pointer-events-none" />
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 z-10 animate-pulse">
+          {/* Header Skeleton */}
+          <div className="text-center mb-16 flex flex-col items-center">
+            <div className="w-14 h-14 bg-slate-200 dark:bg-slate-800 rounded-full mb-4" />
+            <div className="h-6 w-36 bg-slate-200 dark:bg-slate-800 rounded-full mb-3" />
+            <div className="h-10 w-64 bg-slate-200 dark:bg-slate-800 rounded-lg mb-4" />
+            <div className="h-4 w-96 bg-slate-200 dark:bg-slate-800 rounded-md" />
+          </div>
+          {/* Skills Grid Skeletons */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            {[1, 2, 3, 4].map(i => (
+              <div key={i} className="h-48 bg-slate-200 dark:bg-slate-800 rounded-3xl" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section 
@@ -280,7 +304,7 @@ const Skills: React.FC = () => {
             </div>
             
             <div className="space-y-4">
-              {CERTIFICATIONS.map((cert, index) => {
+              {certifications.map((cert, index) => {
                 const certId = `cert-${cert.id}`;
                 return (
                   <div
@@ -363,7 +387,7 @@ const Skills: React.FC = () => {
               {/* Thin vertical timeline connector track */}
               <div className="absolute left-3 top-2 bottom-6 w-[1px] bg-slate-200 dark:bg-slate-850"></div>
 
-              {EDUCATION.map((edu, index) => (
+              {education.map((edu, index) => (
                 <div key={edu.id} className="relative group/edu">
                   {/* Timeline circle node */}
                   <div className="absolute -left-6 top-1.5 transform -translate-x-1/2 w-3 h-3 rounded-full bg-slate-50 border border-slate-350 dark:bg-slate-950 dark:border-slate-750 flex items-center justify-center">

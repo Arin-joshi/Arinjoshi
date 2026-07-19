@@ -9,9 +9,11 @@ import SplashCursor from './components/SplashCursor';
 import SocialPopup from './components/SocialPopup';
 import AIAssistant from './components/AIAssistant';
 import LoadingScreen from './components/LoadingScreen';
+import AdminPanel from './components/AdminPanel';
 
 function App() {
   const [visitorName, setVisitorName] = useState<string | null>(null);
+  const [isAdminOpen, setIsAdminOpen] = useState(false);
 
   const handleLoadComplete = (name: string) => {
     setVisitorName(name);
@@ -29,7 +31,7 @@ function App() {
         className="transition-opacity duration-700"
         style={{ opacity: visitorName !== null ? 1 : 0, pointerEvents: visitorName !== null ? 'auto' : 'none' }}
       >
-        <Navbar />
+        <Navbar onAdminClick={() => setIsAdminOpen(true)} />
         <SocialPopup ready={visitorName !== null} />
         <AIAssistant />
         <main>
@@ -43,6 +45,9 @@ function App() {
           </div>
         </main>
       </div>
+
+      {/* Admin Panel Modal Overlay */}
+      <AdminPanel isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} />
     </div>
   );
 }
