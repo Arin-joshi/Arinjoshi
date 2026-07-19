@@ -102,7 +102,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
       setTimeout(() => setStatusMessage(null), 3000);
     } catch (err: any) {
       console.error(err);
-      setAuthError(err.message || 'Login failed. Please verify email and password.');
+      // Map Firebase error codes to friendly messages
+      const code = err?.code || '';
+      const friendlyErrors: Record<string, string> = {
+        'auth/invalid-credential': 'Incorrect email or password ',
+        'auth/wrong-password': 'Incorrect password ',
+        'auth/user-not-found': 'No account found with this email address.',
+        'auth/invalid-email': 'Please enter a valid email address.',
+        'auth/user-disabled': 'This account has been disabled. Contact support.',
+        'auth/too-many-requests': 'Too many failed attempts. Please wait a moment and try again.',
+        'auth/network-request-failed': 'Network error. Please check your internet connection.',
+        'auth/operation-not-allowed': 'Email/password sign-in is not enabled. Contact support.',
+        'auth/internal-error': 'An internal error occurred. Please try again.',
+      };
+      setAuthError(friendlyErrors[code] || 'Login failed. Please check your credentials and try again.');
     } finally {
       setAuthLoading(false);
     }
@@ -609,8 +622,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs font-semibold font-mono tracking-wide shrink-0 transition-all border ${activeTab === tab.id
-                    ? 'bg-red-500/10 border-red-500/30 text-red-400 shadow-sm'
-                    : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'
+                  ? 'bg-red-500/10 border-red-500/30 text-red-400 shadow-sm'
+                  : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'
                   }`}
               >
                 {tab.icon}
@@ -629,8 +642,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-semibold font-mono tracking-wide whitespace-nowrap shrink-0 transition-all border ${activeTab === tab.id
-                      ? 'bg-red-500/10 border-red-500/30 text-red-400'
-                      : 'bg-transparent border-slate-800 text-slate-400 hover:text-slate-200'
+                    ? 'bg-red-500/10 border-red-500/30 text-red-400'
+                    : 'bg-transparent border-slate-800 text-slate-400 hover:text-slate-200'
                     }`}
                 >
                   {tab.icon}
