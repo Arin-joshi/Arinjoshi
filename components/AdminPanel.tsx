@@ -40,8 +40,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
   const [authError, setAuthError] = useState('');
   const [resetSent, setResetSent] = useState(false);
 
-  // Email/Password caching & change states
-  const [rememberEmail, setRememberEmail] = useState(true);
+  // password change states
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordChangeLoading, setPasswordChangeLoading] = useState(false);
@@ -54,18 +53,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
   // Modal Editing States
   const [editingItem, setEditingItem] = useState<{ type: string; data: any } | null>(null);
 
-  // Load remembered email on mount
-  useEffect(() => {
-    const savedEmail = localStorage.getItem('admin_remember_email');
-    if (savedEmail) {
-      setEmail(savedEmail);
-      setRememberEmail(true);
-    }
-  }, []);
-
-  // Monitor auth state changes
+  // Monitor auth state changes & enforce sign-out on load
   useEffect(() => {
     if (!auth) return;
+
+    // Sign out on mount to guarantee fresh sessions on every page refresh
+    auth.signOut().catch(err => console.error("Sign-out on mount error:", err));
+
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       setUser(currentUser);
     });
@@ -77,12 +71,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
     setAuthLoading(true);
     setAuthError('');
 
-    // Handle "Remember Email" cache logic
-    if (rememberEmail) {
-      localStorage.setItem('admin_remember_email', email);
-    } else {
-      localStorage.removeItem('admin_remember_email');
-    }
+
 
     if (!auth) {
       setAuthError('Firebase Authentication is not initialized. Please verify your configurations.');
@@ -90,7 +79,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
       return;
     }
     try {
-      const { signInWithEmailAndPassword } = await import('firebase/auth');
+      const { signInWithEmailAndPassword, setPersistence, inMemoryPersistence } = await import('firebase/auth');
+      await setPersistence(auth, inMemoryPersistence);
       await signInWithEmailAndPassword(auth, email, password);
       setStatusMessage({ type: 'success', text: 'Welcome back, Admin!' });
       setTimeout(() => setStatusMessage(null), 3000);
@@ -465,19 +455,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              {/* Remember Email ID Checkbox */}
-              <div className="flex items-center gap-2 py-1 select-none">
-                <input
-                  type="checkbox"
-                  id="rememberEmail"
-                  checked={rememberEmail}
-                  onChange={(e) => setRememberEmail(e.target.checked)}
-                  className="rounded bg-slate-950 border-slate-800 text-red-500 focus:ring-0 focus:ring-offset-0 focus:outline-none w-3.5 h-3.5 cursor-pointer accent-red-600"
-                />
-                <label htmlFor="rememberEmail" className="text-[10px] text-slate-450 dark:text-slate-400 font-mono cursor-pointer hover:text-slate-200 transition-colors">
-                  Remember email ID 💾
-                </label>
-              </div>
+
 
               <button
                 type="submit"

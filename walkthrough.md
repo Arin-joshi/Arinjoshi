@@ -4,19 +4,18 @@ We have successfully integrated a dynamic, fully responsive Firebase Admin Panel
 
 ---
 
-## 🛡️ Enforced Production Security (Strict Firebase Auth)
+## 🛡️ Enforced Production Security & Stateless Clients (Zero Caching)
 
-We have **completely removed the insecure mock authentication bypasses, mock accounts, and local storage password storage** from the codebase. 
+As requested, we have **completely disabled and removed all local browser caching of data, logins, and session storage** to guarantee that refreshing the page clears everything:
 
-1. **Strict Firebase Authentication**:
-   - The login panel connects directly and securely to your **Firebase Authentication** console.
-   - Access is restricted exclusively to authenticated users added to your Firebase Auth settings (e.g. `thakararinjoshi@gmail.com`). There are no backdoor/mock administrator endpoints inside the frontend source code.
-2. **ID Remember Option**:
-   - Added a `Remember email ID 💾` checkbox in the login form. If enabled, it securely caches your admin email address in `localStorage`, so you don't need to retype it next time.
-   - The password field is **explicitly excluded from browser caching** to keep your admin credentials completely safe.
-3. **Dedicated Account Security Sidebar Tab**:
-   - Created a dedicated **Account Security 🔒** sidebar tab in the admin workspace.
-   - Designed it with a **glowing gradient-pulse border** special effect panel. You can update your account password at any time, which writes directly to Firebase Auth.
+1. **In-Memory Auth Persistence**:
+   - The login state is now strictly configured to use `inMemoryPersistence`. The login token is stored strictly inside active Javascript memory.
+   - **Page Reload Logout**: The moment the user refreshes their browser, closes the tab, or hits F5, the token is instantly cleared and the user is automatically logged out.
+   - Added a `signOut` enforcement on page initialization (`mount`) to ensure no lingering session token can survive a browser restart.
+   - **No Cached Email**: Completely removed the "Remember email ID" checkbox and deleted the local storage caching of the email ID.
+2. **Stateless Firestore Data Loading**:
+   - Removed any `localStorage` reading/writing for dynamic portfolio data (`portfolio_personal_info`, `portfolio_experience`, `portfolio_projects`, etc.).
+   - All page details are retrieved fresh from your **Cloud Firestore** database on page load. If Firestore is offline or not configured, the website uses the standard static constant values, but it **never** reads or writes to local browser storage cache.
 
 ---
 
@@ -39,14 +38,14 @@ We have **completely removed the insecure mock authentication bypasses, mock acc
 
 ### 2. Sleek Responsive UI Components
 - **[NEW] [AdminPanel.tsx](file:///c:/Users/ASUS/Desktop/Arinjoshi/components/AdminPanel.tsx)**:
-  - **Login Mode**: Glassmorphic dark card (`max-w-[360px]`) centered inside backdrop blur. Features the floating LookAtCursor robot mascot that looks at your mouse, emoji form labels, email-remember checkboxes, and forgot password controls.
+  - **Login Mode**: Glassmorphic dark card (`max-w-[360px]`) centered inside backdrop blur. Features the floating LookAtCursor robot mascot that looks at your mouse, emoji form labels, and forgot password controls.
   - **Dashboard Mode**: Mobile-friendly tabbed workspace. Includes the profile editor, asset media uploads, dynamic tab collections, and the new **Account Security** tab view with gradient conic glows.
 - **[MODIFY] [Navbar.tsx](file:///c:/Users/ASUS/Desktop/Arinjoshi/components/Navbar.tsx)**: Embedded a Lock icon button in both desktop and mobile layouts to toggle the Admin Panel modal.
 - **[MODIFY] [App.tsx](file:///c:/Users/ASUS/Desktop/Arinjoshi/App.tsx)**: Wrapped the app in `<AdminPanel>` modal controllers and mapped the navigation trigger.
 - **[MODIFY] [index.tsx](file:///c:/Users/ASUS/Desktop/Arinjoshi/index.tsx)**: Injected the `<DataProvider>` into the main rendering tree.
 
 ### 3. Dynamic Page Data Sourcing
-The following component files read data dynamically from `DataContext` with automatic static mock fallbacks and support responsive skeleton loading states:
+The following component files read data dynamically from `DataContext` and support responsive skeleton loading states:
 - **[MODIFY] [Hero.tsx](file:///c:/Users/ASUS/Desktop/Arinjoshi/components/Hero.tsx)**: Dynamic name, summary bio, location, dynamic background video URL/key, and dynamic PDF resume download.
 - **[MODIFY] [Experience.tsx](file:///c:/Users/ASUS/Desktop/Arinjoshi/components/Experience.tsx)**: Dynamic career timeline list. Displays custom pulsating timeline skeletons during fetch.
 - **[MODIFY] [Projects.tsx](file:///c:/Users/ASUS/Desktop/Arinjoshi/components/Projects.tsx)**: Dynamic projects list. Displays custom pulsating grids of project cards during fetch.
@@ -98,4 +97,4 @@ We compiled the application using Vite's production bundler:
 ```bash
 npm run build
 ```
-- **Result**: `✓ built in 3.74s` with zero errors. All TypeScript files compiled successfully, and code splitting worked correctly with dynamic Firebase loading chunks.
+- **Result**: `✓ built in 4.04s` with zero errors. All TypeScript files compiled successfully, and code splitting worked correctly with dynamic Firebase loading chunks.
