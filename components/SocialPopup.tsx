@@ -29,6 +29,18 @@ const SocialPopup: React.FC<{ ready?: boolean }> = ({ ready = false }) => {
     return () => clearTimeout(timer);
   }, [ready, isMuted]);
 
+  // Lock background scroll when popup is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   // Ascending major arpeggio chime sound for premium interaction feedback
   const playChime = () => {
     if (isMuted) return;

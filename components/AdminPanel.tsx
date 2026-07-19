@@ -49,9 +49,25 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState<'personal' | 'experience' | 'projects' | 'skills' | 'education' | 'certifications' | 'security'>('personal');
   const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
   const [uploadingFile, setUploadingFile] = useState<{ name: string, progress: number } | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveProgress, setSaveProgress] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Modal Editing States
   const [editingItem, setEditingItem] = useState<{ type: string; data: any } | null>(null);
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
+
+  // Lock background scroll when panel is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   // Monitor auth state changes & enforce sign-out on load
   useEffect(() => {
@@ -198,16 +214,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
 
     setUploadingFile({ name: file.name, progress: 0 });
 
-    uploadTask.on('state_changed', 
+    uploadTask.on('state_changed',
       (snapshot) => {
         const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
         setUploadingFile({ name: file.name, progress });
-      }, 
+      },
       (error) => {
         console.error(error);
         setStatusMessage({ type: 'error', text: 'File upload failed: ' + error.message });
         setUploadingFile(null);
-      }, 
+      },
       async () => {
         const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
         setUploadingFile(null);
@@ -228,6 +244,25 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
     );
   };
 
+  // Animated save helper: animates progress bar then fires the actual write
+  const withSaveAnimation = async (fn: () => Promise<void>) => {
+    setIsSaving(true);
+    setSaveProgress(0);
+    // Fake fast progress to 80%
+    const tick = setInterval(() => setSaveProgress(p => p < 80 ? p + 10 : p), 80);
+    try {
+      await fn();
+      clearInterval(tick);
+      setSaveProgress(100);
+      setTimeout(() => { setIsSaving(false); setSaveProgress(0); }, 600);
+    } catch (err) {
+      clearInterval(tick);
+      setIsSaving(false);
+      setSaveProgress(0);
+      throw err;
+    }
+  };
+
   // Save changes to personal details form
   const handleSavePersonalInfo = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -243,8 +278,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
       resumeUrl: formData.get('resumeUrl') as string || personalInfo.resumeUrl || '',
     };
     try {
-      await updatePersonalInfo(updated);
-      setStatusMessage({ type: 'success', text: 'Personal info updated successfully!' });
+      await withSaveAnimation(() => updatePersonalInfo(updated));
+      setStatusMessage({ type: 'success', text: '✅ Personal info saved to Firebase!' });
       setTimeout(() => setStatusMessage(null), 3000);
     } catch (err: any) {
       setStatusMessage({ type: 'error', text: 'Failed to update personal info: ' + err.message });
@@ -309,24 +344,29 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
 
   const handleSaveEdit = async () => {
     if (!editingItem) return;
+    setIsSavingEdit(true);
     try {
       const { type, data } = editingItem;
-      if (type === 'experience') {
-        await saveExperience(data);
-      } else if (type === 'project') {
-        await saveProject(data);
-      } else if (type === 'skill') {
-        await saveSkill(data, editingItem.data._oldName);
-      } else if (type === 'education') {
-        await saveEducation(data);
-      } else if (type === 'certification') {
-        await saveCertification(data);
-      }
-      setStatusMessage({ type: 'success', text: 'Saved successfully!' });
+      await withSaveAnimation(async () => {
+        if (type === 'experience') {
+          await saveExperience(data);
+        } else if (type === 'project') {
+          await saveProject(data);
+        } else if (type === 'skill') {
+          await saveSkill(data, editingItem.data._oldName);
+        } else if (type === 'education') {
+          await saveEducation(data);
+        } else if (type === 'certification') {
+          await saveCertification(data);
+        }
+      });
+      setStatusMessage({ type: 'success', text: '✅ Saved to Firebase successfully!' });
       setTimeout(() => setStatusMessage(null), 3000);
       setEditingItem(null);
     } catch (err: any) {
       setStatusMessage({ type: 'error', text: 'Failed to save: ' + err.message });
+    } finally {
+      setIsSavingEdit(false);
     }
   };
 
@@ -344,7 +384,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
 
         {/* Compact Login Modal Container */}
         <div className="relative w-full max-w-[320px] sm:max-w-[360px] bg-slate-900/90 border border-slate-800/80 rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-2xl backdrop-blur-xl transition-all duration-300 transform scale-100 opacity-100 translate-y-0 animate-fadeIn">
-          
+
           {/* Floating Robot Mascot at the top */}
           <div className="absolute -top-12 left-0 right-0 flex justify-center pointer-events-none select-none">
             <div className="transform scale-[1.1] hover:scale-[1.15] transition-transform duration-300">
@@ -411,7 +451,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                   <input
                     type="email"
                     required
-                    placeholder="thakararinjoshi@gmail.com"
+                    placeholder="xyz@gmail.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-9 pr-3 py-2 sm:py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 placeholder-slate-700 text-xs focus:border-red-500 focus:outline-none transition-colors"
@@ -478,567 +518,618 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
     );
   }
 
+  const TABS = [
+    { id: 'personal', name: 'Personal Details', icon: <User size={15} /> },
+    { id: 'experience', name: 'Experiences', icon: <Briefcase size={15} /> },
+    { id: 'projects', name: 'Projects', icon: <FolderGit2 size={15} /> },
+    { id: 'skills', name: 'Skills & Tech', icon: <Cpu size={15} /> },
+    { id: 'education', name: 'Education', icon: <GraduationCap size={15} /> },
+    { id: 'certifications', name: 'Certifications', icon: <Award size={15} /> },
+    { id: 'security', name: 'Account Security', icon: <Lock size={15} /> },
+  ];
+
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-lg p-4 overflow-y-auto">
-      
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-lg p-2 sm:p-4 overflow-y-auto">
+
       {/* Container Card */}
-      <div className="bg-slate-900 border border-slate-800 text-slate-100 rounded-3xl w-full max-w-5xl h-[90vh] flex flex-col shadow-2xl overflow-hidden relative animate-fadeIn">
-        
+      <div className="bg-slate-900 border border-slate-800 text-slate-100 rounded-2xl sm:rounded-3xl w-full max-w-5xl h-[95vh] sm:h-[90vh] flex flex-col shadow-2xl overflow-hidden relative animate-fadeIn">
+
+        {/* ── Global Save Progress Bar ── */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[3px] z-[200] transition-all duration-300 pointer-events-none"
+          style={{ opacity: isSaving ? 1 : 0 }}
+        >
+          <div
+            className="h-full bg-gradient-to-r from-red-500 via-rose-400 to-red-600 shadow-lg shadow-red-500/40 transition-all duration-200"
+            style={{ width: `${saveProgress}%` }}
+          />
+        </div>
+
         {/* Top Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-800/80 bg-slate-950/50">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-red-500/20 to-rose-600/20 border border-red-500/30">
-              <Lock size={18} className="text-red-400 animate-pulse" />
+        <div className="flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-800/80 bg-slate-950/50 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            {/* Mobile sidebar toggle */}
+            <button
+              onClick={() => setSidebarOpen(o => !o)}
+              className="md:hidden p-2 rounded-xl bg-slate-800/60 border border-slate-700 text-slate-300 hover:text-white transition-all shrink-0"
+            >
+              <ChevronDown size={15} className={`transition-transform ${sidebarOpen ? 'rotate-180' : ''}`} />
+            </button>
+            <div className="p-2 rounded-xl bg-gradient-to-br from-red-500/20 to-rose-600/20 border border-red-500/30 shrink-0">
+              <Lock size={16} className="text-red-400 animate-pulse" />
             </div>
-            <div>
-              <h2 className="text-lg sm:text-xl font-bold tracking-tight text-white flex items-center gap-1.5">
-                Portfolio Control Panel
-                <span className="text-[10px] bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded-full font-mono font-normal">ADMIN</span>
+            <div className="min-w-0">
+              <h2 className="text-sm sm:text-lg font-bold tracking-tight text-white flex flex-wrap items-center gap-1.5">
+                <span className="truncate">Portfolio Control Panel</span>
+                <span className="text-[9px] sm:text-[10px] bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded-full font-mono font-normal shrink-0">ADMIN</span>
               </h2>
-              <p className="text-[10px] sm:text-xs text-slate-400 font-mono">Firebase Realtime Sync Dashboard</p>
+              <p className="text-[9px] sm:text-xs text-slate-400 font-mono hidden sm:block">Firebase Realtime Sync Dashboard</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button 
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {isSaving && (
+              <span className="hidden sm:flex items-center gap-1.5 text-[10px] font-mono text-red-400 animate-pulse">
+                <span className="w-3 h-3 border-2 border-red-400/30 border-t-red-400 rounded-full animate-spin" />
+                Saving...
+              </span>
+            )}
+            <button
               onClick={handleLogout}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-850 hover:bg-red-950/30 hover:border-red-900 border border-slate-800 text-xs font-semibold text-slate-300 hover:text-red-400 transition-all font-mono"
+              className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 rounded-xl bg-slate-850 hover:bg-red-950/30 hover:border-red-900 border border-slate-800 text-[10px] sm:text-xs font-semibold text-slate-300 hover:text-red-400 transition-all font-mono"
             >
-              <LogOut size={13} />
-              LOGOUT
+              <LogOut size={12} />
+              <span className="hidden sm:inline">LOGOUT</span>
             </button>
-            <button 
+            <button
               onClick={onClose}
-              className="p-2 rounded-xl bg-slate-850 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white transition-all"
+              className="p-1.5 sm:p-2 rounded-xl bg-slate-850 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white transition-all"
             >
-              <X size={18} />
+              <X size={16} />
             </button>
           </div>
         </div>
 
         {/* Status Alerts banner */}
         {statusMessage && (
-          <div className={`p-4 text-xs font-mono flex items-center gap-2.5 transition-all animate-slideDown ${
-            statusMessage.type === 'success' ? 'bg-emerald-950/60 text-emerald-400 border-b border-emerald-900/60' : 'bg-red-950/60 text-red-400 border-b border-red-900/60'
-          }`}>
+          <div className={`px-4 py-3 text-xs font-mono flex items-center gap-2.5 transition-all animate-slideDown shrink-0 ${statusMessage.type === 'success' ? 'bg-emerald-950/60 text-emerald-400 border-b border-emerald-900/60' : 'bg-red-950/60 text-red-400 border-b border-red-900/60'
+            }`}>
             {statusMessage.type === 'success' ? <CheckCircle size={14} /> : <AlertCircle size={14} />}
             <span>{statusMessage.text}</span>
           </div>
         )}
+
         {/* Main Body */}
         <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-          
-          {/* Sidebar Tabs Selectors (Vertical on desktop, Horizontal scroll on mobile) */}
-          <div className="md:w-60 shrink-0 bg-slate-950/40 border-r border-slate-800/80 flex flex-row md:flex-col overflow-x-auto md:overflow-x-visible md:overflow-y-auto p-3 gap-1 md:gap-1.5">
-                {[
-                  { id: 'personal', name: 'Personal Details', icon: <User size={15} /> },
-                  { id: 'experience', name: 'Experiences', icon: <Briefcase size={15} /> },
-                  { id: 'projects', name: 'Projects', icon: <FolderGit2 size={15} /> },
-                  { id: 'skills', name: 'Skills & Tech', icon: <Cpu size={15} /> },
-                  { id: 'education', name: 'Education', icon: <GraduationCap size={15} /> },
-                  { id: 'certifications', name: 'Certifications', icon: <Award size={15} /> },
-                  { id: 'security', name: 'Account Security', icon: <Lock size={15} /> },
-                ].map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id as any)}
-                    className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs font-semibold font-mono tracking-wide shrink-0 transition-all border ${
-                      activeTab === tab.id 
-                        ? 'bg-red-500/10 border-red-500/30 text-red-400 shadow-sm' 
-                        : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'
+
+          {/* Sidebar — vertical on desktop */}
+          <div className="hidden md:flex md:w-56 shrink-0 bg-slate-950/40 border-r border-slate-800/80 flex-col overflow-y-auto p-3 gap-1">
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs font-semibold font-mono tracking-wide shrink-0 transition-all border ${activeTab === tab.id
+                    ? 'bg-red-500/10 border-red-500/30 text-red-400 shadow-sm'
+                    : 'bg-transparent border-transparent text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'
+                  }`}
+              >
+                {tab.icon}
+                <span>{tab.name}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Content area (holds mobile tab bar + scroll content) */}
+          <div className="flex-1 flex flex-col overflow-hidden">
+
+            {/* Mobile horizontal tab bar */}
+            <div className="md:hidden flex items-center gap-1.5 overflow-x-auto px-3 py-2.5 bg-slate-950/60 border-b border-slate-800/80 shrink-0 scrollbar-none">
+              {TABS.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-semibold font-mono tracking-wide whitespace-nowrap shrink-0 transition-all border ${activeTab === tab.id
+                      ? 'bg-red-500/10 border-red-500/30 text-red-400'
+                      : 'bg-transparent border-slate-800 text-slate-400 hover:text-slate-200'
                     }`}
-                  >
-                    {tab.icon}
-                    <span>{tab.name}</span>
-                  </button>
-                ))}
-              </div>
+                >
+                  {tab.icon}
+                  <span>{tab.name}</span>
+                </button>
+              ))}
+            </div>
 
-              {/* Main Content Area */}
-              <div className="flex-1 overflow-y-auto p-6 md:p-8 bg-[#0b0f19]">
-                
-                {/* 1. PERSONAL TAB */}
-                {activeTab === 'personal' && (
-                  <div className="max-w-2xl space-y-8 animate-fadeIn">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-xl font-bold text-white tracking-wide">Personal Details</h3>
-                        <p className="text-xs text-slate-400 mt-1">Modify header texts, contact links, summary and downloads</p>
-                      </div>
+            {/* Main Content Area */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 bg-[#0b0f19]">
+
+              {/* 1. PERSONAL TAB */}
+              {activeTab === 'personal' && (
+                <div className="max-w-2xl space-y-8 animate-fadeIn">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xl font-bold text-white tracking-wide">Personal Details</h3>
+                      <p className="text-xs text-slate-400 mt-1">Modify header texts, contact links, summary and downloads</p>
                     </div>
+                  </div>
 
-                    <form onSubmit={handleSavePersonalInfo} className="space-y-6">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div className="space-y-1.5">
-                          <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">Full Name</label>
-                          <input 
-                            type="text" 
-                            name="name" 
-                            defaultValue={personalInfo.name}
-                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">Profile Role</label>
-                          <input 
-                            type="text" 
-                            name="role" 
-                            defaultValue={personalInfo.role}
-                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">Email Address</label>
-                          <input 
-                            type="email" 
-                            name="email" 
-                            defaultValue={personalInfo.email}
-                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">Phone Number</label>
-                          <input 
-                            type="text" 
-                            name="phone" 
-                            defaultValue={personalInfo.phone}
-                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
-                          />
-                        </div>
-                        <div className="col-span-1 sm:col-span-2 space-y-1.5">
-                          <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">Location</label>
-                          <input 
-                            type="text" 
-                            name="location" 
-                            defaultValue={personalInfo.location}
-                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
-                          />
-                        </div>
-                      </div>
-
+                  <form onSubmit={handleSavePersonalInfo} className="space-y-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">About Summary Bio</label>
-                        <textarea 
-                          name="summary" 
-                          rows={4}
-                          defaultValue={personalInfo.summary}
-                          className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none resize-y"
+                        <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">Full Name</label>
+                        <input
+                          type="text"
+                          name="name"
+                          defaultValue={personalInfo.name}
+                          className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                         />
                       </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">Profile Role</label>
+                        <input
+                          type="text"
+                          name="role"
+                          defaultValue={personalInfo.role}
+                          className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">Email Address</label>
+                        <input
+                          type="email"
+                          name="email"
+                          defaultValue={personalInfo.email}
+                          className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">Phone Number</label>
+                        <input
+                          type="text"
+                          name="phone"
+                          defaultValue={personalInfo.phone}
+                          className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
+                        />
+                      </div>
+                      <div className="col-span-1 sm:col-span-2 space-y-1.5">
+                        <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">Location</label>
+                        <input
+                          type="text"
+                          name="location"
+                          defaultValue={personalInfo.location}
+                          className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
+                        />
+                      </div>
+                    </div>
 
-                      {/* File uploads section */}
-                      <div className="border-t border-slate-850 pt-6 space-y-5">
-                        <h4 className="text-xs font-mono tracking-wider text-slate-400 uppercase">Portfolio Asset Media</h4>
-                        
-                        {/* Direct URL Overwrites (Perfect for free plans) */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-3">
-                          <div className="space-y-1.5">
-                            <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">Background Video Link / Path 🔗</label>
-                            <input 
-                              type="text" 
-                              name="videoUrl" 
-                              defaultValue={personalInfo.videoUrl}
-                              placeholder="/ArinJoshi.mp4"
-                              className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
-                            />
-                          </div>
-                          <div className="space-y-1.5">
-                            <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">Resume PDF Link / Path 🔗</label>
-                            <input 
-                              type="text" 
-                              name="resumeUrl" 
-                              defaultValue={personalInfo.resumeUrl}
-                              placeholder="/ArinJoshi.pdf"
-                              className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
-                            />
-                          </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">About Summary Bio</label>
+                      <textarea
+                        name="summary"
+                        rows={4}
+                        defaultValue={personalInfo.summary}
+                        className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none resize-y"
+                      />
+                    </div>
+
+                    {/* File uploads section */}
+                    <div className="border-t border-slate-850 pt-6 space-y-5">
+                      <h4 className="text-xs font-mono tracking-wider text-slate-400 uppercase">Portfolio Asset Media</h4>
+
+                      {/* Direct URL Overwrites (Perfect for free plans) */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-3">
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">Background Video Link / Path 🔗</label>
+                          <input
+                            type="text"
+                            name="videoUrl"
+                            defaultValue={personalInfo.videoUrl}
+                            placeholder="/ArinJoshi.mp4"
+                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
+                          />
                         </div>
-
-                        {/* Background Video */}
-                        <div className="p-4 rounded-2xl bg-slate-950 border border-slate-850 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                          <div>
-                            <div className="text-xs font-bold text-white">Background Video (MP4)</div>
-                            <div className="text-[10px] text-slate-500 font-mono mt-0.5 truncate max-w-md">Url: {(personalInfo as any).videoUrl || '/ArinJoshi.mp4'}</div>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <label className="cursor-pointer flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 hover:text-white transition-all text-xs font-semibold font-mono">
-                              <Upload size={13} />
-                              UPLOAD FILE
-                              <input 
-                                type="file" 
-                                accept="video/mp4" 
-                                className="hidden" 
-                                onChange={(e) => handleFileUpload(e, 'video')}
-                              />
-                            </label>
-                          </div>
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">Resume PDF Link / Path 🔗</label>
+                          <input
+                            type="text"
+                            name="resumeUrl"
+                            defaultValue={personalInfo.resumeUrl}
+                            placeholder="/ArinJoshi.pdf"
+                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
+                          />
                         </div>
-
-                        {/* Resume PDF */}
-                        <div className="p-4 rounded-2xl bg-slate-950 border border-slate-850 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                          <div>
-                            <div className="text-xs font-bold text-white">Resume Document (PDF)</div>
-                            <div className="text-[10px] text-slate-500 font-mono mt-0.5 truncate max-w-md">Url: {(personalInfo as any).resumeUrl || '/ArinJoshi.pdf'}</div>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <label className="cursor-pointer flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 hover:text-white transition-all text-xs font-semibold font-mono">
-                              <Upload size={13} />
-                              UPLOAD FILE
-                              <input 
-                                type="file" 
-                                accept="application/pdf" 
-                                className="hidden" 
-                                onChange={(e) => handleFileUpload(e, 'pdf')}
-                              />
-                            </label>
-                          </div>
-                        </div>
-
-                        {uploadingFile && (
-                          <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl space-y-1.5 animate-pulse">
-                            <div className="flex justify-between text-[10px] font-mono text-red-400">
-                              <span className="truncate">Uploading: {uploadingFile.name}</span>
-                              <span>{uploadingFile.progress}%</span>
-                            </div>
-                            <div className="h-1 bg-slate-800 rounded-full overflow-hidden">
-                              <div className="h-full bg-red-500 transition-all duration-300" style={{ width: `${uploadingFile.progress}%` }}></div>
-                            </div>
-                          </div>
-                        )}
                       </div>
 
-                      <div className="pt-4">
+                      {/* Background Video */}
+                      <div className="p-4 rounded-2xl bg-slate-950 border border-slate-850 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div>
+                          <div className="text-xs font-bold text-white">Background Video (MP4)</div>
+                          <div className="text-[10px] text-slate-500 font-mono mt-0.5 truncate max-w-md">Url: {(personalInfo as any).videoUrl || '/ArinJoshi.mp4'}</div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <label className="cursor-pointer flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 hover:text-white transition-all text-xs font-semibold font-mono">
+                            <Upload size={13} />
+                            UPLOAD FILE
+                            <input
+                              type="file"
+                              accept="video/mp4"
+                              className="hidden"
+                              onChange={(e) => handleFileUpload(e, 'video')}
+                            />
+                          </label>
+                        </div>
+                      </div>
+
+                      {/* Resume PDF */}
+                      <div className="p-4 rounded-2xl bg-slate-950 border border-slate-850 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div>
+                          <div className="text-xs font-bold text-white">Resume Document (PDF)</div>
+                          <div className="text-[10px] text-slate-500 font-mono mt-0.5 truncate max-w-md">Url: {(personalInfo as any).resumeUrl || '/ArinJoshi.pdf'}</div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <label className="cursor-pointer flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 hover:text-white transition-all text-xs font-semibold font-mono">
+                            <Upload size={13} />
+                            UPLOAD FILE
+                            <input
+                              type="file"
+                              accept="application/pdf"
+                              className="hidden"
+                              onChange={(e) => handleFileUpload(e, 'pdf')}
+                            />
+                          </label>
+                        </div>
+                      </div>
+
+                      {uploadingFile && (
+                        <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl space-y-1.5 animate-pulse">
+                          <div className="flex justify-between text-[10px] font-mono text-red-400">
+                            <span className="truncate">Uploading: {uploadingFile.name}</span>
+                            <span>{uploadingFile.progress}%</span>
+                          </div>
+                          <div className="h-1 bg-slate-800 rounded-full overflow-hidden">
+                            <div className="h-full bg-red-500 transition-all duration-300" style={{ width: `${uploadingFile.progress}%` }}></div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="pt-4">
+                      <button
+                        type="submit"
+                        disabled={isSaving}
+                        className="flex items-center gap-2 px-6 py-3.5 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 disabled:opacity-60 disabled:cursor-not-allowed text-white font-bold rounded-xl text-xs font-mono tracking-wider uppercase shadow-md shadow-red-500/10 focus:outline-none transition-all hover:scale-[1.02] active:scale-[0.98]"
+                      >
+                        {isSaving ? (
+                          <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /><span>Saving to Firebase...</span></>
+                        ) : (
+                          <><CheckCircle size={13} /><span>Save Personal Details</span></>
+                        )}
+                      </button>
+                    </div>
+                  </form>
+
+
+
+                </div>
+              )}
+
+              {/* 2. EXPERIENCE TAB */}
+              {activeTab === 'experience' && (
+                <div className="space-y-6 animate-fadeIn">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xl font-bold text-white tracking-wide">Work Experience</h3>
+                      <p className="text-xs text-slate-400 mt-1">Add, edit or delete roles in your career timeline</p>
+                    </div>
+                    <button
+                      onClick={() => openEditModal('experience')}
+                      className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold text-white transition-all shadow-md shadow-red-600/15"
+                    >
+                      <Plus size={14} />
+                      ADD EXPERIENCE
+                    </button>
+                  </div>
+
+                  <div className="space-y-3.5">
+                    {experience.map((exp) => (
+                      <div key={exp.id} className="p-5 rounded-2xl bg-slate-900 border border-slate-850 hover:border-slate-800 flex items-start justify-between gap-4 transition-all">
+                        <div className="min-w-0">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h4 className="text-sm font-bold text-white">{exp.role}</h4>
+                            <span className="text-slate-500 text-xs">@</span>
+                            <span className="text-red-400 font-bold text-xs">{exp.company}</span>
+                          </div>
+                          <p className="text-[10px] text-slate-400 font-mono mt-1">{exp.period} | {exp.location || 'Remote'}</p>
+                          <ul className="mt-3 space-y-1.5">
+                            {exp.description.map((bullet, i) => (
+                              <li key={i} className="text-xs text-slate-400 leading-normal list-disc list-inside truncate">{bullet}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <button
+                            onClick={() => openEditModal('experience', exp)}
+                            className="p-2 rounded-xl bg-slate-850 hover:bg-slate-850 hover:text-white border border-slate-800 text-slate-400 transition-all"
+                          >
+                            <Edit2 size={13} />
+                          </button>
+                          <button
+                            onClick={() => { if (confirm('Delete role?')) deleteExperience(exp.id); }}
+                            className="p-2 rounded-xl bg-slate-850 hover:bg-red-950/30 hover:border-red-900 hover:text-red-400 border border-slate-800 text-slate-500 transition-all"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 3. PROJECTS TAB */}
+              {activeTab === 'projects' && (
+                <div className="space-y-6 animate-fadeIn">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xl font-bold text-white tracking-wide">Portfolio Projects</h3>
+                      <p className="text-xs text-slate-400 mt-1">Configure project categories, descriptions, URLs and cover photos</p>
+                    </div>
+                    <button
+                      onClick={() => openEditModal('project')}
+                      className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold text-white transition-all shadow-md shadow-red-600/15"
+                    >
+                      <Plus size={14} />
+                      ADD PROJECT
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {projects.map((proj) => (
+                      <div key={proj.id} className="p-4 rounded-2xl bg-slate-900 border border-slate-850 hover:border-slate-800 flex flex-col justify-between gap-4 transition-all">
+                        <div className="flex gap-3">
+                          <div className="w-16 h-16 rounded-xl bg-slate-950 overflow-hidden shrink-0 border border-slate-850">
+                            <img
+                              src={proj.imageUrl || 'https://via.placeholder.com/150'}
+                              alt={proj.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2">
+                              <h4 className="text-sm font-bold text-white truncate">{proj.title}</h4>
+                              <span className={`px-2 py-0.5 rounded text-[8px] font-mono uppercase font-bold border ${proj.category === 'Game' ? 'bg-red-500/10 text-red-400 border-red-500/20' : proj.category === 'Web' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
+                                }`}>
+                                {proj.category}
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-slate-500 font-mono mt-0.5 truncate">{proj.liveUrl || 'No Demo URL'}</p>
+                            <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">{proj.description[0]}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-end gap-1.5 border-t border-slate-850/60 pt-3">
+                          <button
+                            onClick={() => openEditModal('project', proj)}
+                            className="px-3 py-1.5 rounded-xl bg-slate-850 hover:bg-slate-850 hover:text-white border border-slate-800 text-xs font-semibold text-slate-400 flex items-center gap-1 transition-all font-mono"
+                          >
+                            <Edit2 size={11} />
+                            EDIT
+                          </button>
+                          <button
+                            onClick={() => { if (confirm('Delete project?')) deleteProject(proj.id); }}
+                            className="p-1.5 rounded-xl bg-slate-850 hover:bg-red-950/30 hover:border-red-900 hover:text-red-400 border border-slate-800 text-slate-500 transition-all"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 4. SKILLS TAB */}
+              {activeTab === 'skills' && (
+                <div className="space-y-6 animate-fadeIn">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xl font-bold text-white tracking-wide">Skills & Expertise</h3>
+                      <p className="text-xs text-slate-400 mt-1">Categorize technologies and skills under frontend, backend, core etc.</p>
+                    </div>
+                    <button
+                      onClick={() => openEditModal('skill')}
+                      className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold text-white transition-all shadow-md shadow-red-600/15"
+                    >
+                      <Plus size={14} />
+                      ADD SKILL
+                    </button>
+                  </div>
+
+                  <div className="flex flex-wrap gap-2.5">
+                    {skills.map((skill) => (
+                      <div key={skill.name} className="flex items-center gap-2 pl-3.5 pr-2 py-1.5 rounded-2xl bg-slate-900 border border-slate-850 hover:border-slate-800 transition-all text-xs">
+                        <span className="font-semibold text-slate-200">{skill.name}</span>
+                        <span className="text-[9px] bg-slate-950 border border-slate-855 text-slate-500 px-1.5 py-0.5 rounded font-mono uppercase">{skill.category}</span>
+                        <div className="flex items-center gap-0.5 ml-2 border-l border-slate-800/80 pl-1.5">
+                          <button
+                            onClick={() => openEditModal('skill', { ...skill, _oldName: skill.name })}
+                            className="p-1 text-slate-500 hover:text-white transition-colors"
+                          >
+                            <Edit2 size={10} />
+                          </button>
+                          <button
+                            onClick={() => { if (confirm('Delete skill?')) deleteSkill(skill.name); }}
+                            className="p-1 text-slate-550 hover:text-red-400 transition-colors"
+                          >
+                            <Trash2 size={10} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 5. EDUCATION TAB */}
+              {activeTab === 'education' && (
+                <div className="space-y-6 animate-fadeIn">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xl font-bold text-white tracking-wide">Academic Records</h3>
+                      <p className="text-xs text-slate-400 mt-1">Manage educational degrees, scores, and institutions</p>
+                    </div>
+                    <button
+                      onClick={() => openEditModal('education')}
+                      className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold text-white transition-all shadow-md shadow-red-600/15"
+                    >
+                      <Plus size={14} />
+                      ADD EDUCATION
+                    </button>
+                  </div>
+
+                  <div className="space-y-3">
+                    {education.map((edu) => (
+                      <div key={edu.id} className="p-4 rounded-2xl bg-slate-900 border border-slate-850 hover:border-slate-800 flex items-center justify-between gap-4 transition-all">
+                        <div>
+                          <div className="flex items-center gap-2.5">
+                            <h4 className="text-sm font-bold text-white">{edu.degree}</h4>
+                            {edu.score && <span className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-[9px] font-mono">{edu.score}</span>}
+                          </div>
+                          <p className="text-xs text-slate-400 mt-1">{edu.institution}</p>
+                          <p className="text-[10px] text-slate-500 font-mono mt-0.5">{edu.period}</p>
+                        </div>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <button
+                            onClick={() => openEditModal('education', edu)}
+                            className="p-2 rounded-xl bg-slate-850 hover:bg-slate-800 hover:text-white border border-slate-800 text-slate-400 transition-all"
+                          >
+                            <Edit2 size={13} />
+                          </button>
+                          <button
+                            onClick={() => { if (confirm('Delete education item?')) deleteEducation(edu.id); }}
+                            className="p-2 rounded-xl bg-slate-850 hover:bg-red-950/30 hover:border-red-900 hover:text-red-400 border border-slate-800 text-slate-500 transition-all"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 6. CERTIFICATIONS TAB */}
+              {activeTab === 'certifications' && (
+                <div className="space-y-6 animate-fadeIn">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-xl font-bold text-white tracking-wide">Professional Certifications</h3>
+                      <p className="text-xs text-slate-400 mt-1">Manage verifies credentials, badges and issuers</p>
+                    </div>
+                    <button
+                      onClick={() => openEditModal('certification')}
+                      className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold text-white transition-all shadow-md shadow-red-600/15"
+                    >
+                      <Plus size={14} />
+                      ADD CREDENTIAL
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    {certifications.map((cert) => (
+                      <div key={cert.id} className="p-4 rounded-2xl bg-slate-900 border border-slate-855 hover:border-slate-800 flex items-center justify-between gap-4 transition-all">
+                        <div>
+                          <h4 className="text-xs sm:text-sm font-bold text-white">{cert.name}</h4>
+                          <p className="text-[10px] text-slate-405 font-mono mt-0.5">Issuer: {cert.issuer}</p>
+                        </div>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <button
+                            onClick={() => openEditModal('certification', cert)}
+                            className="p-2 rounded-xl bg-slate-850 hover:bg-slate-800 hover:text-white border border-slate-800 text-slate-450 transition-all"
+                          >
+                            <Edit2 size={13} />
+                          </button>
+                          <button
+                            onClick={() => { if (confirm('Delete certification?')) deleteCertification(cert.id); }}
+                            className="p-2 rounded-xl bg-slate-850 hover:bg-red-950/30 hover:border-red-900 hover:text-red-400 border border-slate-800 text-slate-500 transition-all"
+                          >
+                            <Trash2 size={13} />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 7. SECURITY TAB */}
+              {activeTab === 'security' && (
+                <div className="max-w-md space-y-6 animate-fadeIn">
+                  <div>
+                    <h3 className="text-xl font-bold text-white tracking-wide">Account Security 🔒</h3>
+                    <p className="text-xs text-slate-400 mt-1">Change your portfolio admin portal credentials</p>
+                  </div>
+
+                  <div className="relative group p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl overflow-hidden">
+                    {/* Premium Conic Glow Border effect for the Security card! */}
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-red-500 via-rose-500 to-purple-600 rounded-3xl opacity-10 group-hover:opacity-20 transition duration-500 blur-sm pointer-events-none animate-pulse" />
+                    <div className="relative space-y-4">
+                      <form onSubmit={handleUpdatePassword} className="space-y-4">
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase select-none">New Password</label>
+                          <input
+                            type="password"
+                            required
+                            placeholder="Min 6 characters"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
+                          />
+                        </div>
+
+                        <div className="space-y-1.5">
+                          <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase select-none">Confirm New Password</label>
+                          <input
+                            type="password"
+                            required
+                            placeholder="Repeat new password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
+                          />
+                        </div>
+
                         <button
                           type="submit"
-                          className="px-6 py-3.5 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold rounded-xl text-xs font-mono tracking-wider uppercase shadow-md shadow-red-500/10 focus:outline-none"
+                          disabled={passwordChangeLoading}
+                          className="w-full mt-2 py-3 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-550 hover:to-rose-550 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-red-600/10 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-1.5 font-mono"
                         >
-                          Save Personal Details
+                          {passwordChangeLoading ? (
+                            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          ) : (
+                            <>
+                              <Key size={13} />
+                              <span>Update Password</span>
+                            </>
+                          )}
                         </button>
-                      </div>
-                    </form>
-
-
-
-                  </div>
-                )}
-
-                {/* 2. EXPERIENCE TAB */}
-                {activeTab === 'experience' && (
-                  <div className="space-y-6 animate-fadeIn">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-xl font-bold text-white tracking-wide">Work Experience</h3>
-                        <p className="text-xs text-slate-400 mt-1">Add, edit or delete roles in your career timeline</p>
-                      </div>
-                      <button 
-                        onClick={() => openEditModal('experience')}
-                        className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold text-white transition-all shadow-md shadow-red-600/15"
-                      >
-                        <Plus size={14} />
-                        ADD EXPERIENCE
-                      </button>
-                    </div>
-
-                    <div className="space-y-3.5">
-                      {experience.map((exp) => (
-                        <div key={exp.id} className="p-5 rounded-2xl bg-slate-900 border border-slate-850 hover:border-slate-800 flex items-start justify-between gap-4 transition-all">
-                          <div className="min-w-0">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <h4 className="text-sm font-bold text-white">{exp.role}</h4>
-                              <span className="text-slate-500 text-xs">@</span>
-                              <span className="text-red-400 font-bold text-xs">{exp.company}</span>
-                            </div>
-                            <p className="text-[10px] text-slate-400 font-mono mt-1">{exp.period} | {exp.location || 'Remote'}</p>
-                            <ul className="mt-3 space-y-1.5">
-                              {exp.description.map((bullet, i) => (
-                                <li key={i} className="text-xs text-slate-400 leading-normal list-disc list-inside truncate">{bullet}</li>
-                              ))}
-                            </ul>
-                          </div>
-                          <div className="flex items-center gap-1.5 shrink-0">
-                            <button 
-                              onClick={() => openEditModal('experience', exp)}
-                              className="p-2 rounded-xl bg-slate-850 hover:bg-slate-850 hover:text-white border border-slate-800 text-slate-400 transition-all"
-                            >
-                              <Edit2 size={13} />
-                            </button>
-                            <button 
-                              onClick={() => { if (confirm('Delete role?')) deleteExperience(exp.id); }}
-                              className="p-2 rounded-xl bg-slate-850 hover:bg-red-950/30 hover:border-red-900 hover:text-red-400 border border-slate-800 text-slate-500 transition-all"
-                            >
-                              <Trash2 size={13} />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
+                      </form>
                     </div>
                   </div>
-                )}
+                </div>
+              )}
 
-                {/* 3. PROJECTS TAB */}
-                {activeTab === 'projects' && (
-                  <div className="space-y-6 animate-fadeIn">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-xl font-bold text-white tracking-wide">Portfolio Projects</h3>
-                        <p className="text-xs text-slate-400 mt-1">Configure project categories, descriptions, URLs and cover photos</p>
-                      </div>
-                      <button 
-                        onClick={() => openEditModal('project')}
-                        className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold text-white transition-all shadow-md shadow-red-600/15"
-                      >
-                        <Plus size={14} />
-                        ADD PROJECT
-                      </button>
-                    </div>
+            </div>{/* end main content area */}
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {projects.map((proj) => (
-                        <div key={proj.id} className="p-4 rounded-2xl bg-slate-900 border border-slate-850 hover:border-slate-800 flex flex-col justify-between gap-4 transition-all">
-                          <div className="flex gap-3">
-                            <div className="w-16 h-16 rounded-xl bg-slate-950 overflow-hidden shrink-0 border border-slate-850">
-                              <img 
-                                src={proj.imageUrl || 'https://via.placeholder.com/150'} 
-                                alt={proj.title} 
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-2">
-                                <h4 className="text-sm font-bold text-white truncate">{proj.title}</h4>
-                                <span className={`px-2 py-0.5 rounded text-[8px] font-mono uppercase font-bold border ${
-                                  proj.category === 'Game' ? 'bg-red-500/10 text-red-400 border-red-500/20' : proj.category === 'Web' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                                }`}>
-                                  {proj.category}
-                                </span>
-                              </div>
-                              <p className="text-[10px] text-slate-500 font-mono mt-0.5 truncate">{proj.liveUrl || 'No Demo URL'}</p>
-                              <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed">{proj.description[0]}</p>
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-center justify-end gap-1.5 border-t border-slate-850/60 pt-3">
-                            <button 
-                              onClick={() => openEditModal('project', proj)}
-                              className="px-3 py-1.5 rounded-xl bg-slate-850 hover:bg-slate-850 hover:text-white border border-slate-800 text-xs font-semibold text-slate-400 flex items-center gap-1 transition-all font-mono"
-                            >
-                              <Edit2 size={11} />
-                              EDIT
-                            </button>
-                            <button 
-                              onClick={() => { if (confirm('Delete project?')) deleteProject(proj.id); }}
-                              className="p-1.5 rounded-xl bg-slate-850 hover:bg-red-950/30 hover:border-red-900 hover:text-red-400 border border-slate-800 text-slate-500 transition-all"
-                            >
-                              <Trash2 size={13} />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+          </div>{/* end content wrapper */}
 
-                {/* 4. SKILLS TAB */}
-                {activeTab === 'skills' && (
-                  <div className="space-y-6 animate-fadeIn">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-xl font-bold text-white tracking-wide">Skills & Expertise</h3>
-                        <p className="text-xs text-slate-400 mt-1">Categorize technologies and skills under frontend, backend, core etc.</p>
-                      </div>
-                      <button 
-                        onClick={() => openEditModal('skill')}
-                        className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold text-white transition-all shadow-md shadow-red-600/15"
-                      >
-                        <Plus size={14} />
-                        ADD SKILL
-                      </button>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2.5">
-                      {skills.map((skill) => (
-                        <div key={skill.name} className="flex items-center gap-2 pl-3.5 pr-2 py-1.5 rounded-2xl bg-slate-900 border border-slate-850 hover:border-slate-800 transition-all text-xs">
-                          <span className="font-semibold text-slate-200">{skill.name}</span>
-                          <span className="text-[9px] bg-slate-950 border border-slate-855 text-slate-500 px-1.5 py-0.5 rounded font-mono uppercase">{skill.category}</span>
-                          <div className="flex items-center gap-0.5 ml-2 border-l border-slate-800/80 pl-1.5">
-                            <button 
-                              onClick={() => openEditModal('skill', { ...skill, _oldName: skill.name })}
-                              className="p-1 text-slate-500 hover:text-white transition-colors"
-                            >
-                              <Edit2 size={10} />
-                            </button>
-                            <button 
-                              onClick={() => { if (confirm('Delete skill?')) deleteSkill(skill.name); }}
-                              className="p-1 text-slate-550 hover:text-red-400 transition-colors"
-                            >
-                              <Trash2 size={10} />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* 5. EDUCATION TAB */}
-                {activeTab === 'education' && (
-                  <div className="space-y-6 animate-fadeIn">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-xl font-bold text-white tracking-wide">Academic Records</h3>
-                        <p className="text-xs text-slate-400 mt-1">Manage educational degrees, scores, and institutions</p>
-                      </div>
-                      <button 
-                        onClick={() => openEditModal('education')}
-                        className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold text-white transition-all shadow-md shadow-red-600/15"
-                      >
-                        <Plus size={14} />
-                        ADD EDUCATION
-                      </button>
-                    </div>
-
-                    <div className="space-y-3">
-                      {education.map((edu) => (
-                        <div key={edu.id} className="p-4 rounded-2xl bg-slate-900 border border-slate-850 hover:border-slate-800 flex items-center justify-between gap-4 transition-all">
-                          <div>
-                            <div className="flex items-center gap-2.5">
-                              <h4 className="text-sm font-bold text-white">{edu.degree}</h4>
-                              {edu.score && <span className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-[9px] font-mono">{edu.score}</span>}
-                            </div>
-                            <p className="text-xs text-slate-400 mt-1">{edu.institution}</p>
-                            <p className="text-[10px] text-slate-500 font-mono mt-0.5">{edu.period}</p>
-                          </div>
-                          <div className="flex items-center gap-1.5 shrink-0">
-                            <button 
-                              onClick={() => openEditModal('education', edu)}
-                              className="p-2 rounded-xl bg-slate-850 hover:bg-slate-800 hover:text-white border border-slate-800 text-slate-400 transition-all"
-                            >
-                              <Edit2 size={13} />
-                            </button>
-                            <button 
-                              onClick={() => { if (confirm('Delete education item?')) deleteEducation(edu.id); }}
-                              className="p-2 rounded-xl bg-slate-850 hover:bg-red-950/30 hover:border-red-900 hover:text-red-400 border border-slate-800 text-slate-500 transition-all"
-                            >
-                              <Trash2 size={13} />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* 6. CERTIFICATIONS TAB */}
-                {activeTab === 'certifications' && (
-                  <div className="space-y-6 animate-fadeIn">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-xl font-bold text-white tracking-wide">Professional Certifications</h3>
-                        <p className="text-xs text-slate-400 mt-1">Manage verifies credentials, badges and issuers</p>
-                      </div>
-                      <button 
-                        onClick={() => openEditModal('certification')}
-                        className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold text-white transition-all shadow-md shadow-red-600/15"
-                      >
-                        <Plus size={14} />
-                        ADD CREDENTIAL
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                      {certifications.map((cert) => (
-                        <div key={cert.id} className="p-4 rounded-2xl bg-slate-900 border border-slate-855 hover:border-slate-800 flex items-center justify-between gap-4 transition-all">
-                          <div>
-                            <h4 className="text-xs sm:text-sm font-bold text-white">{cert.name}</h4>
-                            <p className="text-[10px] text-slate-405 font-mono mt-0.5">Issuer: {cert.issuer}</p>
-                          </div>
-                          <div className="flex items-center gap-1.5 shrink-0">
-                            <button 
-                              onClick={() => openEditModal('certification', cert)}
-                              className="p-2 rounded-xl bg-slate-850 hover:bg-slate-800 hover:text-white border border-slate-800 text-slate-450 transition-all"
-                            >
-                              <Edit2 size={13} />
-                            </button>
-                            <button 
-                              onClick={() => { if (confirm('Delete certification?')) deleteCertification(cert.id); }}
-                              className="p-2 rounded-xl bg-slate-850 hover:bg-red-950/30 hover:border-red-900 hover:text-red-400 border border-slate-800 text-slate-500 transition-all"
-                            >
-                              <Trash2 size={13} />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* 7. SECURITY TAB */}
-                {activeTab === 'security' && (
-                  <div className="max-w-md space-y-6 animate-fadeIn">
-                    <div>
-                      <h3 className="text-xl font-bold text-white tracking-wide">Account Security 🔒</h3>
-                      <p className="text-xs text-slate-400 mt-1">Change your portfolio admin portal credentials</p>
-                    </div>
-
-                    <div className="relative group p-6 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl overflow-hidden">
-                      {/* Premium Conic Glow Border effect for the Security card! */}
-                      <div className="absolute -inset-0.5 bg-gradient-to-r from-red-500 via-rose-500 to-purple-600 rounded-3xl opacity-10 group-hover:opacity-20 transition duration-500 blur-sm pointer-events-none animate-pulse" />
-                      <div className="relative space-y-4">
-                        <form onSubmit={handleUpdatePassword} className="space-y-4">
-                          <div className="space-y-1.5">
-                            <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase select-none">New Password</label>
-                            <input 
-                              type="password"
-                              required
-                              placeholder="Min 6 characters"
-                              value={newPassword}
-                              onChange={(e) => setNewPassword(e.target.value)}
-                              className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
-                            />
-                          </div>
-
-                          <div className="space-y-1.5">
-                            <label className="text-[10px] font-mono tracking-wider text-slate-400 uppercase select-none">Confirm New Password</label>
-                            <input 
-                              type="password"
-                              required
-                              placeholder="Repeat new password"
-                              value={confirmPassword}
-                              onChange={(e) => setConfirmPassword(e.target.value)}
-                              className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
-                            />
-                          </div>
-
-                          <button
-                            type="submit"
-                            disabled={passwordChangeLoading}
-                            className="w-full mt-2 py-3 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-550 hover:to-rose-550 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-red-600/10 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-1.5 font-mono"
-                          >
-                            {passwordChangeLoading ? (
-                              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                            ) : (
-                              <>
-                                <Key size={13} />
-                                <span>Update Password</span>
-                              </>
-                            )}
-                          </button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-              </div>
-
-        </div>
-      </div>
+        </div>{/* end main body flex row */}
+      </div>{/* end container card */}
 
       {/* Editing Dialog Modal Overlay */}
       {editingItem && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-950/90 backdrop-blur-md p-4 overflow-y-auto">
           <div className="bg-slate-900 border border-slate-800 text-slate-100 rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl relative">
-            <button 
+            <button
               onClick={() => setEditingItem(null)}
               className="absolute top-6 right-6 p-2 rounded-xl bg-slate-850 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white transition-all"
             >
@@ -1050,24 +1141,24 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
             </h3>
 
             <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-1">
-              
+
               {/* Experience Forms */}
               {editingItem.type === 'experience' && (
                 <>
                   <div className="space-y-1">
                     <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase">Company Name</label>
-                    <input 
-                      type="text" 
-                      value={editingItem.data.company} 
+                    <input
+                      type="text"
+                      value={editingItem.data.company}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, company: e.target.value } })}
                       className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                     />
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase">Role Title</label>
-                    <input 
-                      type="text" 
-                      value={editingItem.data.role} 
+                    <input
+                      type="text"
+                      value={editingItem.data.role}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, role: e.target.value } })}
                       className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                     />
@@ -1075,18 +1166,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1">
                       <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase">Period (e.g. Feb 2026 - Present)</label>
-                      <input 
-                        type="text" 
-                        value={editingItem.data.period} 
+                      <input
+                        type="text"
+                        value={editingItem.data.period}
                         onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, period: e.target.value } })}
                         className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                       />
                     </div>
                     <div className="space-y-1">
                       <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase">Location</label>
-                      <input 
-                        type="text" 
-                        value={editingItem.data.location || ''} 
+                      <input
+                        type="text"
+                        value={editingItem.data.location || ''}
                         onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, location: e.target.value } })}
                         className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                       />
@@ -1095,7 +1186,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                   <div className="space-y-1.5">
                     <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase flex items-center justify-between">
                       Description Points
-                      <button 
+                      <button
                         onClick={() => {
                           const desc = [...editingItem.data.description, ''];
                           setEditingItem({ ...editingItem, data: { ...editingItem.data, description: desc } });
@@ -1107,9 +1198,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                     </label>
                     {editingItem.data.description.map((bullet: string, i: number) => (
                       <div key={i} className="flex gap-2">
-                        <input 
-                          type="text" 
-                          value={bullet} 
+                        <input
+                          type="text"
+                          value={bullet}
                           onChange={(e) => {
                             const desc = [...editingItem.data.description];
                             desc[i] = e.target.value;
@@ -1117,7 +1208,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                           }}
                           className="flex-1 px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-xs focus:border-red-500 focus:outline-none"
                         />
-                        <button 
+                        <button
                           onClick={() => {
                             const desc = editingItem.data.description.filter((_: any, idx: number) => idx !== i);
                             setEditingItem({ ...editingItem, data: { ...editingItem.data, description: desc } });
@@ -1137,9 +1228,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                 <>
                   <div className="space-y-1">
                     <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase">Project Title</label>
-                    <input 
-                      type="text" 
-                      value={editingItem.data.title} 
+                    <input
+                      type="text"
+                      value={editingItem.data.title}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, title: e.target.value } })}
                       className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                     />
@@ -1147,8 +1238,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1">
                       <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase">Category</label>
-                      <select 
-                        value={editingItem.data.category} 
+                      <select
+                        value={editingItem.data.category}
                         onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, category: e.target.value } })}
                         className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                       >
@@ -1159,9 +1250,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                     </div>
                     <div className="space-y-1">
                       <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase">Live Demo URL</label>
-                      <input 
-                        type="text" 
-                        value={editingItem.data.liveUrl || ''} 
+                      <input
+                        type="text"
+                        value={editingItem.data.liveUrl || ''}
                         onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, liveUrl: e.target.value } })}
                         className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                       />
@@ -1177,20 +1268,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                           <img src={editingItem.data.imageUrl} className="w-full h-full object-cover" />
                         </div>
                       )}
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         placeholder="Image path or external URL"
-                        value={editingItem.data.imageUrl} 
+                        value={editingItem.data.imageUrl}
                         onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, imageUrl: e.target.value } })}
                         className="flex-1 px-3 py-2 bg-slate-900 border border-slate-800 rounded-xl text-slate-200 text-xs focus:border-red-500 focus:outline-none"
                       />
                       <label className="cursor-pointer px-3 py-2 bg-slate-850 border border-slate-800 text-slate-300 hover:text-white rounded-xl text-[10px] font-mono font-bold flex items-center gap-1 shrink-0">
                         <Upload size={11} />
                         UPLOAD
-                        <input 
-                          type="file" 
-                          accept="image/*" 
-                          className="hidden" 
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
                           onChange={(e) => handleFileUpload(e, 'project-image', editingItem.data.id)}
                         />
                       </label>
@@ -1200,7 +1291,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                   <div className="space-y-1.5">
                     <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase flex items-center justify-between">
                       Description Points
-                      <button 
+                      <button
                         onClick={() => {
                           const desc = [...editingItem.data.description, ''];
                           setEditingItem({ ...editingItem, data: { ...editingItem.data, description: desc } });
@@ -1212,9 +1303,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                     </label>
                     {editingItem.data.description.map((bullet: string, i: number) => (
                       <div key={i} className="flex gap-2">
-                        <input 
-                          type="text" 
-                          value={bullet} 
+                        <input
+                          type="text"
+                          value={bullet}
                           onChange={(e) => {
                             const desc = [...editingItem.data.description];
                             desc[i] = e.target.value;
@@ -1222,7 +1313,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                           }}
                           className="flex-1 px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-xs focus:border-red-500 focus:outline-none"
                         />
-                        <button 
+                        <button
                           onClick={() => {
                             const desc = editingItem.data.description.filter((_: any, idx: number) => idx !== i);
                             setEditingItem({ ...editingItem, data: { ...editingItem.data, description: desc } });
@@ -1242,17 +1333,17 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                 <>
                   <div className="space-y-1">
                     <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase">Skill/Tech Name (e.g. React.js)</label>
-                    <input 
-                      type="text" 
-                      value={editingItem.data.name} 
+                    <input
+                      type="text"
+                      value={editingItem.data.name}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, name: e.target.value } })}
                       className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                     />
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase">Skill Category</label>
-                    <select 
-                      value={editingItem.data.category} 
+                    <select
+                      value={editingItem.data.category}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, category: e.target.value } })}
                       className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                     >
@@ -1270,18 +1361,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                 <>
                   <div className="space-y-1">
                     <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase">Degree/Study Field</label>
-                    <input 
-                      type="text" 
-                      value={editingItem.data.degree} 
+                    <input
+                      type="text"
+                      value={editingItem.data.degree}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, degree: e.target.value } })}
                       className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                     />
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase">Institution</label>
-                    <input 
-                      type="text" 
-                      value={editingItem.data.institution} 
+                    <input
+                      type="text"
+                      value={editingItem.data.institution}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, institution: e.target.value } })}
                       className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                     />
@@ -1289,18 +1380,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1">
                       <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase">Period (e.g. 2020 - 2024)</label>
-                      <input 
-                        type="text" 
-                        value={editingItem.data.period} 
+                      <input
+                        type="text"
+                        value={editingItem.data.period}
                         onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, period: e.target.value } })}
                         className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                       />
                     </div>
                     <div className="space-y-1">
                       <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase">Score (e.g. 7.53 CGPA or 68%)</label>
-                      <input 
-                        type="text" 
-                        value={editingItem.data.score || ''} 
+                      <input
+                        type="text"
+                        value={editingItem.data.score || ''}
                         onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, score: e.target.value } })}
                         className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                       />
@@ -1314,18 +1405,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
                 <>
                   <div className="space-y-1">
                     <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase">Certification Name</label>
-                    <input 
-                      type="text" 
-                      value={editingItem.data.name} 
+                    <input
+                      type="text"
+                      value={editingItem.data.name}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, name: e.target.value } })}
                       className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                     />
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] font-mono tracking-wider text-slate-400 uppercase">Issuer/Organization</label>
-                    <input 
-                      type="text" 
-                      value={editingItem.data.issuer} 
+                    <input
+                      type="text"
+                      value={editingItem.data.issuer}
                       onChange={(e) => setEditingItem({ ...editingItem, data: { ...editingItem.data, issuer: e.target.value } })}
                       className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-slate-200 text-sm focus:border-red-500 focus:outline-none"
                     />
@@ -1338,15 +1429,21 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
             <div className="flex items-center justify-end gap-3 mt-8 border-t border-slate-850 pt-4">
               <button
                 onClick={() => setEditingItem(null)}
-                className="px-5 py-2.5 rounded-xl border border-slate-800 bg-transparent hover:bg-slate-850 hover:text-white text-slate-400 text-xs font-mono font-bold tracking-wide transition-colors"
+                disabled={isSavingEdit}
+                className="px-5 py-2.5 rounded-xl border border-slate-800 bg-transparent hover:bg-slate-850 hover:text-white text-slate-400 text-xs font-mono font-bold tracking-wide transition-colors disabled:opacity-50"
               >
                 CANCEL
               </button>
               <button
                 onClick={handleSaveEdit}
-                className="px-5 py-2.5 rounded-xl bg-red-600 hover:bg-red-550 text-white text-xs font-mono font-bold tracking-wide shadow-md shadow-red-600/10 transition-colors"
+                disabled={isSavingEdit}
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 disabled:opacity-60 disabled:cursor-not-allowed text-white text-xs font-mono font-bold tracking-wide shadow-md shadow-red-600/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                SAVE CHANGES
+                {isSavingEdit ? (
+                  <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /><span>Saving...</span></>
+                ) : (
+                  <><CheckCircle size={13} /><span>SAVE CHANGES</span></>
+                )}
               </button>
             </div>
           </div>
@@ -1363,12 +1460,18 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose }) => {
           from { transform: translateY(-100%); opacity: 0; }
           to { transform: translateY(0); opacity: 1; }
         }
+        @keyframes progressShine {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
         .animate-fadeIn {
           animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
         .animate-slideDown {
           animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
+        .scrollbar-none::-webkit-scrollbar { display: none; }
+        .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
     </div>
