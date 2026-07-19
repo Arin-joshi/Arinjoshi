@@ -179,8 +179,17 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updatePersonalInfo = async (data: typeof PERSONAL_INFO) => {
     setPersonalInfo(data);
     if (isFirebaseConfigured && db) {
-      const { doc, setDoc } = await getFirestoreHelpers();
-      await setDoc(doc(db, 'portfolio_config', 'personal_info'), data);
+      try {
+        console.log('[Firebase] Saving personal info to Firestore...', data);
+        const { doc, setDoc } = await getFirestoreHelpers();
+        await setDoc(doc(db, 'portfolio_config', 'personal_info'), data);
+        console.log('[Firebase] ✅ Personal info saved successfully!');
+      } catch (err) {
+        console.error('[Firebase] ❌ FAILED to save personal info:', err);
+        throw err;
+      }
+    } else {
+      console.warn('[Firebase] ⚠️ Not configured — data saved to local state only (will reset on refresh).');
     }
   };
 
