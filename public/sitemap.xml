@@ -3,12 +3,13 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
    <url>
       <loc>https://arinjoshi.vercel.app/</loc>
-      <lastmod>2026-06-21</lastmod>
-      <changefreq>weekly</changefreq>
+      <lastmod>2026-07-19</lastmod>
+      <changefreq>monthly</changefreq>
       <priority>1.0</priority>
       <image:image>
          <image:loc>https://arinjoshi.vercel.app/profile.PNG</image:loc>
-         <image:title>Arin Joshi Profile</image:title>
+         <image:title>Arin Joshi - Software Engineer Profile</image:title>
+         <image:caption>Arin Joshi - Software Engineer &amp; React Developer Portfolio</image:caption>
       </image:image>
    </url>
 </urlset>

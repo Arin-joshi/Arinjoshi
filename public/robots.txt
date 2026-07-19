@@ -4,17 +4,29 @@ Disallow: /node_modules/
 Disallow: /.env
 Disallow: /.env.local
 
-# Crawl delay for respectful crawling
+# Crawl delay for respectful crawling by generic bots
 Crawl-delay: 1
 
 # Sitemaps
 Sitemap: https://arinjoshi.vercel.app/sitemap.xml
 
-# Allow specific search engines for better indexing
+# Allow search engines and AI crawlers for AI Search rankings (ChatGPT, Gemini, Claude, etc.)
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 0
 
 User-agent: Bingbot
 Allow: /
-Crawl-delay: 1
+Crawl-delay: 0
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
