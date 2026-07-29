@@ -27,7 +27,7 @@ interface HeroProps {
   ready?: boolean;
 }
 
-const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
+const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = false }) => {
   const { isMuted } = useAudio();
   const { personalInfo } = useData();
   const [typedText, setTypedText] = useState("");
@@ -46,7 +46,7 @@ const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
       setIsDesktop(window.innerWidth >= 1024);
     };
     checkViewport();
-    window.addEventListener("resize", checkViewport);
+    window.addEventListener("resize", checkViewport, { passive: true });
     return () => window.removeEventListener("resize", checkViewport);
   }, []);
 
@@ -810,6 +810,6 @@ const Hero: React.FC<HeroProps> = ({ visitorName, ready = false }) => {
       `}</style>
     </section>
   );
-};
+});
 
 export default Hero;

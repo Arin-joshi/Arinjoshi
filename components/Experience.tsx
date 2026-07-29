@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useData } from '../contexts/DataContext';
 import { useAudio } from '../contexts/AudioContext';
 import { 
@@ -63,9 +63,9 @@ const companyMetaMap: Record<string, CompanyMeta> = {
   }
 };
 
-const Experience: React.FC = () => {
+const Experience: React.FC = React.memo(() => {
   const { isMuted } = useAudio();
-  const { loading, experience } = useData();
+  const { experience } = useData();
   const [selectedExpId, setSelectedExpId] = useState<string>('');
   const [activeTabId, setActiveTabId] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -212,38 +212,7 @@ const Experience: React.FC = () => {
   const activeConfig = getCompanyConfig(activeExp.id);
   const pendingConfig = getCompanyConfig(activeTabId);
 
-  if (loading) {
-    return (
-      <section id="experience" className="relative py-28 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] opacity-60 pointer-events-none" />
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 z-10 animate-pulse">
-          {/* Header Skeleton */}
-          <div className="text-center mb-16 flex flex-col items-center">
-            <div className="w-14 h-14 bg-slate-200 dark:bg-slate-800 rounded-full mb-4" />
-            <div className="h-6 w-36 bg-slate-200 dark:bg-slate-800 rounded-full mb-3" />
-            <div className="h-10 w-64 bg-slate-200 dark:bg-slate-800 rounded-lg mb-4" />
-            <div className="h-4 w-96 bg-slate-200 dark:bg-slate-800 rounded-md" />
-          </div>
-          {/* Stats Skeletons */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-20 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
-            ))}
-          </div>
-          {/* Interactive Area Skeletons */}
-          <div className="grid lg:grid-cols-12 gap-8 items-start min-h-[500px]">
-            <div className="lg:col-span-4 flex flex-col gap-3">
-              <div className="h-4 w-28 bg-slate-200 dark:bg-slate-800 rounded mb-2" />
-              {[1, 2, 3].map(i => (
-                <div key={i} className="h-24 bg-slate-200 dark:bg-slate-800 rounded-2xl" />
-              ))}
-            </div>
-            <div className="lg:col-span-8 h-[400px] bg-slate-200 dark:bg-slate-800 rounded-3xl" />
-          </div>
-        </div>
-      </section>
-    );
-  }
+
 
   return (
     <section 
@@ -485,6 +454,6 @@ const Experience: React.FC = () => {
       </div>
     </section>
   );
-};
+});
 
 export default Experience;

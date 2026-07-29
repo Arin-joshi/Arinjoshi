@@ -1,50 +1,61 @@
-import React, { useState, useEffect } from "react";
-import { Menu, X, Code2, ChevronDown, Home, Briefcase, FolderGit2, Cpu, GraduationCap, Mail, Lock } from "lucide-react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { Menu, X, Home, Briefcase, FolderGit2, Cpu, GraduationCap, Mail } from "lucide-react";
 import ThemeToggle from "./ThemeToggle";
 import AudioToggle from "./AudioToggle";
 
-interface NavbarProps {
-  onAdminClick?: () => void;
-}
+interface NavbarProps {}
 
-const Navbar: React.FC<NavbarProps> = ({ onAdminClick }) => {
+const Navbar: React.FC<NavbarProps> = React.memo(() => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeLink, setActiveLink] = useState("about");
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+  const navLinks = useMemo(() => [
+    { name: "About", href: "#about", icon: <Home size={16} /> },
+    { name: "Experience", href: "#experience", icon: <Briefcase size={16} /> },
+    { name: "Projects", href: "#projects", icon: <FolderGit2 size={16} /> },
+    { name: "Skills", href: "#skills", icon: <Cpu size={16} /> },
+    { name: "Education", href: "#education", icon: <GraduationCap size={16} /> },
+    { name: "Contact", href: "#contact", icon: <Mail size={16} />, highlight: true },
+  ], []);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-      
-      // Update active link based on scroll position
-      const sections = navLinks.map(link => link.href.substring(1));
-      const currentSection = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-      if (currentSection) {
-        setActiveLink(currentSection);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 20);
+          
+          const sections = navLinks.map(link => link.href.substring(1));
+          const currentSection = sections.find(section => {
+            const element = document.getElementById(section);
+            if (element) {
+              const rect = element.getBoundingClientRect();
+              return rect.top <= 100 && rect.bottom >= 100;
+            }
+            return false;
+          });
+          if (currentSection) {
+            setActiveLink(currentSection);
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
     
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [navLinks]);
 
   // Close mobile menu on resize (if screen becomes larger)
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768) {
         setIsOpen(false);
-        setShowMobileMenu(false);
       }
     };
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -60,17 +71,8 @@ const Navbar: React.FC<NavbarProps> = ({ onAdminClick }) => {
     };
   }, [isOpen]);
 
-  const navLinks = [
-    { name: "About", href: "#about", icon: <Home size={16} /> },
-    { name: "Experience", href: "#experience", icon: <Briefcase size={16} /> },
-    { name: "Projects", href: "#projects", icon: <FolderGit2 size={16} /> },
-    { name: "Skills", href: "#skills", icon: <Cpu size={16} /> },
-    { name: "Education", href: "#education", icon: <GraduationCap size={16} /> },
-    { name: "Contact", href: "#contact", icon: <Mail size={16} />, highlight: true },
-  ];
-
   // Handle smooth scroll
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleNavClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const element = document.querySelector(href);
     if (element) {
@@ -83,7 +85,7 @@ const Navbar: React.FC<NavbarProps> = ({ onAdminClick }) => {
       });
       setIsOpen(false);
     }
-  };
+  }, []);
 
   return (
     <>
@@ -191,16 +193,6 @@ const Navbar: React.FC<NavbarProps> = ({ onAdminClick }) => {
               </div>
               <AudioToggle />
               <ThemeToggle />
-              <button
-                onClick={onAdminClick}
-                className="relative w-10 h-10 rounded-lg border border-slate-200 bg-white/90 text-slate-800 hover:border-red-400 transition-all duration-300 flex items-center justify-center group dark:bg-slate-800/80 dark:border-slate-700 dark:text-white dark:hover:border-red-500/50"
-                title="Admin Control Panel"
-              >
-                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-red-600/20 to-red-700/20 opacity-0 group-hover:opacity-100 blur transition-opacity"></div>
-                <div className="relative transition-transform duration-300 group-hover:scale-110">
-                  <Lock size={16} />
-                </div>
-              </button>
             </div>
 
             {/* Mobile: theme + menu */}
@@ -279,23 +271,6 @@ const Navbar: React.FC<NavbarProps> = ({ onAdminClick }) => {
                 )}
               </a>
             ))}
-
-            {/* Admin Panel button — bottom of mobile menu */}
-            <div className="border-t border-slate-200/60 dark:border-slate-700/60 mt-1 pt-2">
-              <button
-                onClick={() => { onAdminClick?.(); setIsOpen(false); }}
-                className="w-full group relative px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center gap-3 bg-gradient-to-r from-red-600/10 to-rose-600/10 hover:from-red-600/20 hover:to-rose-600/20 border border-red-500/20 hover:border-red-500/40 text-red-500 dark:text-red-400"
-                style={{
-                  transitionDelay: isOpen ? `${navLinks.length * 50 + 50}ms` : '0ms',
-                  opacity: isOpen ? 1 : 0,
-                  transform: isOpen ? 'translateX(0)' : 'translateX(10px)'
-                }}
-              >
-                <Lock size={15} className="text-red-500 dark:text-red-400" />
-                <span className="flex-1 text-left">Admin Panel</span>
-                <span className="text-[9px] font-mono bg-red-500/15 border border-red-500/25 text-red-400 px-1.5 py-0.5 rounded tracking-wider">CTRL</span>
-              </button>
-            </div>
           </div>
         </div>
       </nav>
@@ -314,6 +289,6 @@ const Navbar: React.FC<NavbarProps> = ({ onAdminClick }) => {
       `}</style>
     </>
   );
-};
+});
 
 export default Navbar;

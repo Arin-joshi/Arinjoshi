@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useData } from '../contexts/DataContext';
 import { useAudio } from '../contexts/AudioContext';
 import { ExternalLink, Gamepad2, Globe, Sparkles, Code2, Zap } from 'lucide-react';
@@ -28,20 +28,26 @@ const projectMetaMap: Record<string, ProjectMeta> = {
   }
 };
 
-const Projects: React.FC = () => {
+const Projects: React.FC = React.memo(() => {
   const { isMuted } = useAudio();
-  const { loading, projects } = useData();
+  const { projects } = useData();
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [hoverCoords, setHoverCoords] = useState<Record<string, { x: number; y: number }>>({});
   const [tiltStyle, setTiltStyle] = useState<Record<string, string>>({});
   const [animateGrid, setAnimateGrid] = useState<boolean>(true);
   
+  const filteredProjects = useMemo(() => {
+    return activeCategory === 'All'
+      ? projects
+      : projects.filter(p => p.category === activeCategory);
+  }, [projects, activeCategory]);
+
   // Instantaneous filter change
-  const handleFilterChange = (category: string) => {
+  const handleFilterChange = useCallback((category: string) => {
     if (category === activeCategory) return;
     playAudioCue('select');
     setActiveCategory(category);
-  };
+  }, [activeCategory]);
 
   // Synthesizer audio engine
   const playAudioCue = (type: 'hover' | 'click' | 'select') => {
@@ -145,39 +151,6 @@ const Projects: React.FC = () => {
     }
   };
 
-  const filteredProjects = activeCategory === 'All'
-    ? projects
-    : projects.filter(p => p.category === activeCategory);
-
-  if (loading) {
-    return (
-      <section id="projects" className="relative py-28 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] opacity-65 pointer-events-none" />
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 z-10 animate-pulse">
-          {/* Header Skeleton */}
-          <div className="text-center mb-16 flex flex-col items-center">
-            <div className="w-14 h-14 bg-slate-200 dark:bg-slate-800 rounded-full mb-4" />
-            <div className="h-6 w-36 bg-slate-200 dark:bg-slate-800 rounded-full mb-3" />
-            <div className="h-10 w-64 bg-slate-200 dark:bg-slate-800 rounded-lg mb-4" />
-            <div className="h-4 w-96 bg-slate-200 dark:bg-slate-800 rounded-md" />
-          </div>
-          {/* Category Filter Skeletons */}
-          <div className="flex justify-center gap-3 mb-12">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-10 w-24 bg-slate-200 dark:bg-slate-800 rounded-full" />
-            ))}
-          </div>
-          {/* Grid Skeletons */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="h-96 bg-slate-200 dark:bg-slate-800 rounded-3xl" />
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section 
       id="projects" 
@@ -275,6 +248,8 @@ const Projects: React.FC = () => {
                         <img
                           src={project.imageUrl}
                           alt={project.title}
+                          loading="lazy"
+                          decoding="async"
                           className="w-full h-full object-cover transition-transform duration-500 group-hover/img-link:scale-105"
                           onError={(e) => {
                             e.currentTarget.src = 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80';
@@ -364,6 +339,6 @@ const Projects: React.FC = () => {
       </div>
     </section>
   );
-};
+});
 
 export default Projects;

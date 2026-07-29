@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useData } from '../contexts/DataContext';
 import { useAudio } from '../contexts/AudioContext';
 import LookAtCursor from './LookAtCursor';
@@ -19,7 +19,7 @@ import {
   Heart
 } from 'lucide-react';
 
-const Contact: React.FC = () => {
+const Contact: React.FC = React.memo(() => {
   const { isMuted } = useAudio();
   const { personalInfo } = useData();
   const [isOpen, setIsOpen] = useState(false);
@@ -27,12 +27,20 @@ const Contact: React.FC = () => {
   const [success, setSuccess] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [hoverCoords, setHoverCoords] = useState<Record<string, { x: number; y: number }>>({});
+  
   // Track scroll depth for the back-to-top button
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setShowScrollTop(window.scrollY > 400);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -511,6 +519,6 @@ const Contact: React.FC = () => {
       )}
     </>
   );
-};
+});
 
 export default Contact;

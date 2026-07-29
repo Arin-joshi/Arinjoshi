@@ -2,7 +2,7 @@ import React from "react";
 import { Volume2, VolumeX } from "lucide-react";
 import { useAudio } from "../contexts/AudioContext";
 
-const AudioToggle: React.FC = () => {
+const AudioToggle: React.FC = React.memo(() => {
   const { isMuted, toggleMute } = useAudio();
 
   return (
@@ -20,6 +20,6 @@ const AudioToggle: React.FC = () => {
       )}
     </button>
   );
-};
+});
 
 export default AudioToggle;

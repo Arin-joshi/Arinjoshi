@@ -1,43 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense, useCallback } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Skills from './components/Skills';
 import Contact from './components/Contact';
-import SplashCursor from './components/SplashCursor';
 import SocialPopup from './components/SocialPopup';
-import AIAssistant from './components/AIAssistant';
 import LoadingScreen from './components/LoadingScreen';
-import AdminPanel from './components/AdminPanel';
+
+// Dynamic lazy imports for non-critical heavy modules (WebGL canvas & Chat Assistant)
+const SplashCursor = lazy(() => import('./components/SplashCursor'));
+const AIAssistant = lazy(() => import('./components/AIAssistant'));
 
 function App() {
   const [visitorName, setVisitorName] = useState<string | null>(null);
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
 
-  const handleLoadComplete = (name: string) => {
+  const handleLoadComplete = useCallback((name: string) => {
     setVisitorName(name);
-  };
+  }, []);
+
+  const isAppReady = visitorName !== null;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-red-500/20 selection:text-red-900 dark:bg-dark dark:text-slate-300 dark:selection:bg-red-500/30 dark:selection:text-red-200">
       {/* Loading Gate - renders until video + UI are ready */}
-      {visitorName === null && (
+      {!isAppReady && (
         <LoadingScreen onComplete={handleLoadComplete} />
       )}
 
-      {/* Main app - always rendered in DOM (so video preloads) but visually gated */}
+      {/* Main app - rendered in DOM for smooth transition */}
       <div
         className="transition-opacity duration-700"
-        style={{ opacity: visitorName !== null ? 1 : 0, pointerEvents: visitorName !== null ? 'auto' : 'none' }}
+        style={{ opacity: isAppReady ? 1 : 0, pointerEvents: isAppReady ? 'auto' : 'none' }}
       >
-        <Navbar onAdminClick={() => setIsAdminOpen(true)} />
-        <SocialPopup ready={visitorName !== null} />
-        <AIAssistant />
+        <Navbar />
+        <SocialPopup ready={isAppReady} />
+        
+        <Suspense fallback={null}>
+          <AIAssistant />
+        </Suspense>
+
         <main>
-          <Hero visitorName={visitorName ?? ''} ready={visitorName !== null} />
+          <Hero visitorName={visitorName ?? ''} ready={isAppReady} />
           <div className="relative overflow-hidden">
-            <SplashCursor />
+            <Suspense fallback={null}>
+              <SplashCursor />
+            </Suspense>
             <Experience />
             <Projects />
             <Skills />
@@ -45,9 +53,6 @@ function App() {
           </div>
         </main>
       </div>
-
-      {/* Admin Panel Modal Overlay */}
-      <AdminPanel isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} />
     </div>
   );
 }
