@@ -3,7 +3,7 @@ import { useData } from '../contexts/DataContext';
 import { useAudio } from '../contexts/AudioContext';
 import { 
   Award, GraduationCap, Code2, 
-  Sparkles, Zap, Cpu, Brain, Trophy,
+  Zap, Cpu, Brain, Trophy,
   ExternalLink, Calendar, MapPin, Star
 } from 'lucide-react';
 import LookAtCursor from './LookAtCursor';
@@ -171,7 +171,7 @@ const Skills: React.FC = React.memo(() => {
   return (
     <section 
       id="skills" 
-      className="relative py-28 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 overflow-hidden"
+      className="relative pt-10 pb-16 sm:py-20 lg:py-28 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 overflow-hidden"
     >
       <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] opacity-60 pointer-events-none"></div>
       
@@ -180,33 +180,29 @@ const Skills: React.FC = React.memo(() => {
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         
-        <div className="text-center mb-16 flex flex-col items-center">
-          <LookAtCursor type="duck" />
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 mb-4 mt-2">
-            <Sparkles size={13} className="text-red-400 animate-pulse" />
-            <span className="text-[10px] font-mono tracking-widest text-slate-500 dark:text-slate-400 uppercase">TECHNICAL EXPERTISE</span>
-          </div>
+        <div className="text-center mb-8 sm:mb-16 flex flex-col items-center">
+          <LookAtCursor type="duck" className="mx-auto scale-75 sm:scale-90 lg:scale-100" />
           
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4 dark:text-white">
+          <h2 className="text-xl sm:text-3xl lg:text-5xl font-bold text-slate-900 tracking-tight mb-2 sm:mb-4 dark:text-white px-1 mt-2 sm:mt-3">
             Engineering{' '}
             <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent dark:from-white dark:via-slate-200 dark:to-slate-400">
               Excellence
             </span>
           </h2>
           
-          <p className="text-slate-500 max-w-xl mx-auto text-sm sm:text-base dark:text-slate-400">
+          <p className="text-slate-500 max-w-xl mx-auto text-xs sm:text-sm lg:text-base dark:text-slate-400 px-2">
             A matrix of programming languages, framework state machines, and system logic libraries.
           </p>
 
           {/* Category Switchers */}
-          <div className="flex flex-wrap justify-center gap-3 mt-8">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-6 sm:mt-8">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => handleFilterChange(cat)}
                 onMouseEnter={() => playAudioCue('hover')}
                 className={`
-                  px-4 py-1.5 rounded-xl text-xs font-mono tracking-wider transition-all duration-200 border
+                  px-3 sm:px-4 py-1 sm:py-1.5 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-medium tracking-wide transition-all duration-200 border
                   ${activeCategory === cat 
                     ? 'bg-slate-900 border-slate-900 text-white shadow-md dark:bg-white dark:border-white dark:text-slate-900' 
                     : 'bg-white/80 border-slate-200 text-slate-600 hover:text-slate-900 dark:bg-slate-900/50 dark:border-slate-800 dark:text-slate-400 dark:hover:text-white'
@@ -220,8 +216,8 @@ const Skills: React.FC = React.memo(() => {
         </div>
 
         {/* Skills Grid Section */}
-        <div className="relative min-h-[220px] mb-24">
-          <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 transition-all duration-300 ${
+        <div className="relative min-h-[180px] sm:min-h-[220px] mb-16 sm:mb-24">
+          <div className={`grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-6 transition-all duration-300 ${
             animateSkills ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
           }`}>
             {filteredSkills.map((skill, index) => {
@@ -231,7 +227,7 @@ const Skills: React.FC = React.memo(() => {
               return (
                 <div
                   key={index}
-                  className="group relative transition-all duration-200 rounded-2xl"
+                  className="group relative transition-all duration-200 rounded-xl sm:rounded-2xl"
                   onMouseMove={(e) => handleMouseMove(e, cardId)}
                   onMouseLeave={() => handleMouseLeave(cardId)}
                   style={{ 
@@ -240,28 +236,28 @@ const Skills: React.FC = React.memo(() => {
                   }}
                 >
                   <div 
-                    className="relative p-[1px] rounded-2xl bg-slate-200 dark:bg-slate-800 transition-all duration-300"
+                    className="relative p-[1px] rounded-xl sm:rounded-2xl bg-slate-200 dark:bg-slate-800 transition-all duration-300 h-full"
                     style={{
                       background: hoverCoords[cardId]
                         ? `radial-gradient(160px circle at ${hoverCoords[cardId].x}px ${hoverCoords[cardId].y}px, ${cfg.accentColor}, rgba(226, 232, 240, 0.4) 70%)`
                         : undefined
                     }}
                   >
-                    <div className="bg-white dark:bg-slate-950 rounded-[15px] p-5 relative min-h-[130px] flex flex-col justify-between">
+                    <div className="bg-white dark:bg-slate-950 rounded-[11px] sm:rounded-[15px] p-3 sm:p-5 relative min-h-[108px] sm:min-h-[130px] h-full flex flex-col justify-between">
                       <div>
-                        <div className="flex items-center justify-between mb-3">
-                          <div className={`p-2 rounded-lg ${cfg.bg} ${cfg.text}`}>
+                        <div className="flex items-center justify-between mb-2 sm:mb-3">
+                          <div className={`p-1.5 sm:p-2 rounded-md sm:rounded-lg ${cfg.bg} ${cfg.text}`}>
                             {cfg.icon}
                           </div>
-                          <span className={`text-[9px] font-mono tracking-wider ${cfg.text}`}>
+                          <span className={`text-[8px] sm:text-[9px] font-medium tracking-wide ${cfg.text}`}>
                             {skill.category}
                           </span>
                         </div>
-                        <h4 className="text-sm font-bold text-slate-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-slate-900 group-hover:to-slate-700 transition-all dark:text-white dark:group-hover:from-white dark:group-hover:to-slate-350">
+                        <h4 className="text-xs sm:text-sm font-bold text-slate-900 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-slate-900 group-hover:to-slate-700 transition-all dark:text-white dark:group-hover:from-white dark:group-hover:to-slate-350 leading-tight">
                           {skill.name}
                         </h4>
                       </div>
-                      <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-2 font-mono leading-normal select-none">
+                      <p className="text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 mt-1.5 sm:mt-2 font-medium leading-snug select-none line-clamp-2 sm:line-clamp-none">
                         {cfg.categoryDesc}
                       </p>
                     </div>
@@ -275,27 +271,27 @@ const Skills: React.FC = React.memo(() => {
         </div>
 
         {/* Certifications & Education Split Grid */}
-        <div className="grid lg:grid-cols-2 gap-12" id="education">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12" id="education">
           
           {/* Certifications Panel */}
           <div>
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-2.5 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
-                <Trophy size={18} className="text-red-500 dark:text-red-400" />
+            <div className="flex items-center gap-2.5 sm:gap-3 mb-5 sm:mb-8">
+              <div className="p-2 sm:p-2.5 bg-slate-100 dark:bg-slate-900 rounded-lg sm:rounded-xl border border-slate-200 dark:border-slate-800 shrink-0">
+                <Trophy size={16} className="sm:w-[18px] sm:h-[18px] text-red-500 dark:text-red-400" />
               </div>
-              <div>
-                <h3 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">Certifications</h3>
-                <p className="text-slate-500 text-xs font-mono">Academic achievements & coursework</p>
+              <div className="min-w-0">
+                <h3 className="text-base sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">Certifications</h3>
+                <p className="text-[10px] sm:text-xs text-slate-500 font-medium truncate">Academic achievements & coursework</p>
               </div>
             </div>
             
-            <div className="space-y-4">
-              {certifications.map((cert, index) => {
+            <div className="space-y-2.5 sm:space-y-4">
+              {certifications.map((cert) => {
                 const certId = `cert-${cert.id}`;
                 return (
                   <div
                     key={cert.id}
-                    className="group relative transition-all duration-200 rounded-2xl"
+                    className="group relative transition-all duration-200 rounded-xl sm:rounded-2xl"
                     onMouseMove={(e) => handleMouseMove(e, certId)}
                     onMouseLeave={() => handleMouseLeave(certId)}
                     style={{ 
@@ -304,47 +300,40 @@ const Skills: React.FC = React.memo(() => {
                     }}
                   >
                     <div 
-                      className="relative p-[1px] rounded-2xl bg-slate-200 dark:bg-slate-800 transition-all duration-300"
+                      className="relative p-[1px] rounded-xl sm:rounded-2xl bg-slate-200 dark:bg-slate-800 transition-all duration-300"
                       style={{
                         background: hoverCoords[certId]
                           ? `radial-gradient(180px circle at ${hoverCoords[certId].x}px ${hoverCoords[certId].y}px, #ef4444, rgba(226, 232, 240, 0.4) 70%)`
                           : undefined
                       }}
                     >
-                      <div className="bg-white/95 dark:bg-slate-950 p-5 rounded-[15px] relative">
-                        <div className="flex items-start gap-4">
-                          <div className="p-2.5 rounded-lg bg-red-500/10 text-red-500">
+                      <div className="bg-white/95 dark:bg-slate-950 p-3.5 sm:p-5 rounded-[11px] sm:rounded-[15px] relative overflow-hidden">
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-red-400 to-rose-500 sm:hidden" />
+                        <div className="flex items-start gap-3 sm:gap-4 pl-1.5 sm:pl-0">
+                          <div className="hidden sm:flex p-2.5 rounded-lg bg-red-500/10 text-red-500 shrink-0">
                             <Award size={18} />
                           </div>
                           
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start justify-between gap-2">
-                              <div>
-                                <h4 className="text-sm font-bold text-slate-900 dark:text-white leading-snug">
+                              <div className="min-w-0">
+                                <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-snug">
                                   {cert.name}
                                 </h4>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                                  Issuer: {cert.issuer}
+                                <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">
+                                  {cert.issuer}
                                 </p>
                               </div>
-                              <span className="text-[9px] font-mono text-slate-500 dark:text-slate-500 bg-slate-50 dark:bg-slate-900 px-2 py-0.5 rounded">
+                              <span className="hidden sm:inline text-[9px] font-mono font-medium text-slate-500 dark:text-slate-500 bg-slate-50 dark:bg-slate-900 px-2 py-0.5 rounded shrink-0">
                                 ID: #{cert.id.split('-')[1]}
                               </span>
                             </div>
                             
-                            <div className="flex flex-wrap gap-1.5 mt-3">
-                              {['Software', 'Engineering', 'Verified'].map((tag, i) => (
-                                <span key={i} className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-slate-50 text-slate-650 border border-slate-150 dark:bg-slate-900 dark:text-slate-400 dark:border-slate-850">
-                                  {tag}
-                                </span>
-                              ))}
-                            </div>
-                            
                             <button 
                               onClick={() => playAudioCue('click')}
-                              className="mt-4 text-xs font-mono text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white flex items-center gap-1 group/btn"
+                              className="mt-2.5 sm:mt-4 text-[10px] sm:text-xs font-medium text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 flex items-center gap-1 group/btn"
                             >
-                              Launch Verification
+                              View credential
                               <ExternalLink size={10} className="group-hover/btn:translate-x-0.5 transition-transform" />
                             </button>
                           </div>
@@ -359,53 +348,61 @@ const Skills: React.FC = React.memo(() => {
 
           {/* Education Panel */}
           <div>
-            <div className="flex items-center gap-3 mb-8">
-              <div className="p-2.5 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
-                <GraduationCap size={18} className="text-emerald-500 dark:text-emerald-400" />
+            <div className="flex items-center gap-2.5 sm:gap-3 mb-5 sm:mb-8">
+              <div className="p-2 sm:p-2.5 bg-slate-100 dark:bg-slate-900 rounded-lg sm:rounded-xl border border-slate-200 dark:border-slate-800 shrink-0">
+                <GraduationCap size={16} className="sm:w-[18px] sm:h-[18px] text-emerald-500 dark:text-emerald-400" />
               </div>
-              <div>
-                <h3 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">Education</h3>
-                <p className="text-slate-500 text-xs font-mono">Academic background records</p>
+              <div className="min-w-0">
+                <h3 className="text-base sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">Education</h3>
+                <p className="text-[10px] sm:text-xs text-slate-500 font-medium">Academic background records</p>
               </div>
             </div>
 
-            <div className="space-y-6 relative pl-6">
-              {/* Thin vertical timeline connector track */}
-              <div className="absolute left-3 top-2 bottom-6 w-[1px] bg-slate-200 dark:bg-slate-850"></div>
+            <div className="space-y-2.5 sm:space-y-4 md:space-y-6 relative">
+              {/* Timeline track — desktop/tablet only */}
+              <div className="hidden md:block absolute left-3 top-3 bottom-3 w-px bg-slate-200 dark:bg-slate-800" />
 
-              {education.map((edu, index) => (
-                <div key={edu.id} className="relative group/edu">
-                  {/* Timeline circle node */}
-                  <div className="absolute -left-6 top-1.5 transform -translate-x-1/2 w-3 h-3 rounded-full bg-slate-50 border border-slate-350 dark:bg-slate-950 dark:border-slate-750 flex items-center justify-center">
-                    <div className="w-1 h-1 rounded-full bg-emerald-500 group-hover/edu:scale-125 transition-transform duration-300"></div>
+              {education.map((edu) => (
+                <div key={edu.id} className="relative group/edu md:flex md:items-start md:gap-4">
+                  {/* Timeline node — desktop/tablet only */}
+                  <div className="hidden md:flex w-6 shrink-0 justify-center pt-4">
+                    <div className="relative z-10 w-3 h-3 rounded-full bg-slate-50 border border-slate-300 dark:bg-slate-950 dark:border-slate-700 flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 group-hover/edu:scale-125 transition-transform duration-300" />
+                    </div>
                   </div>
                   
-                  {/* Card wrapper */}
-                  <div className="bg-white/95 dark:bg-slate-900/40 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-200 hover:border-emerald-500/40 dark:hover:border-emerald-500/30">
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                      <h4 className="text-sm font-bold text-slate-950 dark:text-white leading-snug">
-                        {edu.degree}
-                      </h4>
-                      {edu.score && (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-500 border border-emerald-500/25">
-                          {edu.score}
+                  <div className="relative flex-1 overflow-hidden rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white/95 dark:bg-slate-900/50 backdrop-blur-sm p-3.5 sm:p-5 transition-all duration-200 hover:border-emerald-500/30 dark:hover:border-emerald-500/25">
+                    {/* Mobile accent stripe */}
+                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-emerald-400 to-teal-500 md:hidden" />
+
+                    <div className="pl-2 md:pl-0">
+                      <div className="flex items-start justify-between gap-2 mb-1.5">
+                        <h4 className="text-xs sm:text-sm font-bold text-slate-950 dark:text-white leading-snug pr-1">
+                          {edu.degree}
+                        </h4>
+                        {edu.score && (
+                          <span className="shrink-0 px-1.5 sm:px-2 py-0.5 rounded-md text-[9px] sm:text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 whitespace-nowrap">
+                            {edu.score}
+                          </span>
+                        )}
+                      </div>
+                      
+                      <p className="text-[11px] sm:text-xs font-medium text-slate-600 dark:text-slate-300 mb-2 leading-snug">
+                        {edu.institution}
+                      </p>
+                      
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] sm:text-[10px] text-slate-500 dark:text-slate-400">
+                        <span className="inline-flex items-center gap-1">
+                          <Calendar size={11} className="shrink-0 text-emerald-500/80" />
+                          {edu.period}
                         </span>
-                      )}
-                    </div>
-                    
-                    <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">{edu.institution}</p>
-                    
-                    <div className="flex items-center gap-3 text-[10px] font-mono text-slate-400">
-                      <span className="flex items-center gap-1">
-                        <Calendar size={12} />
-                        {edu.period}
-                      </span>
-                      {edu.id === 'edu-1' && (
-                        <span className="flex items-center gap-1 text-yellow-500">
-                          <Star size={12} className="fill-yellow-500/10" />
-                          Outstanding CGPA
-                        </span>
-                      )}
+                        {edu.id === 'edu-1' && (
+                          <span className="inline-flex items-center gap-1 text-amber-500 dark:text-amber-400">
+                            <Star size={11} className="fill-amber-400/30 shrink-0" />
+                            Outstanding CGPA
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>

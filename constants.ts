@@ -52,7 +52,7 @@ export const PROJECTS: Project[] = [
     id: "proj-1",
     title: "CoinFlip Game",
     category: "Game",
-    imageUrl: "/Coinflip.webp",
+    imageUrl: "/Project%20Image/CoinFlip.png",
     description: [
       "Real-time multiplayer coin betting game built with React.js and WebSockets.",
       "Two play modes: Multiply Mode & Instant Mode.",
@@ -63,7 +63,7 @@ export const PROJECTS: Project[] = [
     id: "proj-2",
     title: "More or Less Game",
     category: "Game",
-    imageUrl: "/MORE-OR-LESS.png",
+    imageUrl: "/Project%20Image/More%20or%20Less.png",
     description: [
       "Interactive number prediction game with multiple difficulty levels.",
       "Real-time result calculation with instant UI updates.",
@@ -74,7 +74,7 @@ export const PROJECTS: Project[] = [
     id: "proj-3",
     title: "Triple Game",
     category: "Game",
-    imageUrl: "/1755781092430_Triple 1.webp",
+    imageUrl: "/Project%20Image/Triple%20Game.png",
     description: [
       "Fast-paced tile matching game with real-time scoring logic.",
       "Multiplier-based reward system for higher engagement.",
@@ -85,7 +85,7 @@ export const PROJECTS: Project[] = [
     id: "proj-4",
     title: "Company Website",
     category: "Web",
-    imageUrl: "/kotibox.png",
+    imageUrl: "/Project%20Image/Company%20Website.png",
     liveUrl: "https://kotiboxglobaltech.com/",
     description: [
       "Fully responsive corporate website built using the MERN stack.",
@@ -97,7 +97,7 @@ export const PROJECTS: Project[] = [
     id: "proj-5",
     title: "QR Generator App",
     category: "Web",
-    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRga_81_yes26w0xhPbMdioLGZBOe7indIx8g&s",
+    imageUrl: "/Project%20Image/QR%20Generator.png",
     liveUrl: "https://arin-qr.netlify.app/",
     description: [
       "Web-based QR code generator built with React.js.",
@@ -109,7 +109,7 @@ export const PROJECTS: Project[] = [
     id: "proj-6",
     title: "Astrology App",
     category: "Web",
-    imageUrl: "https://i.ibb.co/M5pr8RVT/Screenshot-2026-02-22-182356.png",
+    imageUrl: "/Project%20Image/Astrology%20App.png",
     liveUrl: "https://nkjoshi.netlify.app/",
     description: [
       "Modern astrology web application with dynamic horoscope features.",
@@ -121,7 +121,7 @@ export const PROJECTS: Project[] = [
     id: "proj-7",
     title: "Resume Maker",
     category: "Web",
-    imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStBLRtAcfURzwJzkeWUt-oPHhKJ29h-Dc88w&s",
+    imageUrl: "/Project%20Image/Resume%20Maker.png",
     liveUrl: "https://arinresumemaker.netlify.app/",
     description: [
       "Interactive resume builder with customizable templates.",
@@ -133,7 +133,7 @@ export const PROJECTS: Project[] = [
     id: "proj-8",
     title: "JSX & TSX Converter",
     category: "Web",
-    imageUrl: "https://miro.medium.com/1*A-rgbVaUSwF8xrwJfUSBEQ.png",
+    imageUrl: "/Project%20Image/JSX%20to%20TSX.png",
     liveUrl: "https://arinjsxconverter.netlify.app/",
     description: [
       "Developer utility tool to convert JSX code to TSX format.",
@@ -145,7 +145,7 @@ export const PROJECTS: Project[] = [
     id: "proj-9",
     title: "Spine Animation Viewer",
     category: "Web",
-    imageUrl: "https://esotericsoftware.com/img/skeleton-viewer.jpg",
+    imageUrl: "/Project%20Image/Spine%20Viewer.png",
     liveUrl: "https://spine-viewer-arin.netlify.app/",
     description: [
       "Web-based Spine animation preview tool.",
@@ -157,7 +157,7 @@ export const PROJECTS: Project[] = [
     id: "proj-10",
     title: "Legiit Course Service Provider App",
     category: "App",
-    imageUrl: "Legiit.png",
+    imageUrl: "/Project%20Image/Legiit.png",
     liveUrl: "https://legiit.com/sign-in",
     description: [
       "Authentication and account flows for the Legiit marketplace platform.",

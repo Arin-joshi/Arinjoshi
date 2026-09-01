@@ -8,18 +8,12 @@ import {
   Linkedin,
   Mail,
   Code2,
-  Sparkles,
   MapPin,
   ChevronDown,
-  Terminal,
-  Cpu,
-  Globe,
   Zap,
   Award,
   Users,
   Star,
-  Shield,
-  Braces,
 } from "lucide-react";
 
 interface HeroProps {
@@ -27,7 +21,7 @@ interface HeroProps {
   ready?: boolean;
 }
 
-const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = false }) => {
+const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = true }) => {
   const { isMuted } = useAudio();
   const { personalInfo } = useData();
   const [typedText, setTypedText] = useState("");
@@ -220,31 +214,10 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = false }) =>
     "from-pink-400 via-pink-500 to-pink-600",
   ];
 
-  // Card color gradients (darker for better visibility on cards)
-  const cardColorGradients = [
-    "from-red-600 via-red-700 to-red-800",
-    "from-orange-600 via-orange-700 to-orange-800",
-    "from-yellow-600 via-yellow-700 to-yellow-800",
-    "from-green-600 via-green-700 to-green-800",
-    "from-cyan-600 via-cyan-700 to-cyan-800",
-    "from-blue-600 via-blue-700 to-blue-800",
-    "from-purple-600 via-purple-700 to-purple-800",
-    "from-pink-600 via-pink-700 to-pink-800",
-  ];
-
   // Cycle through name colors every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setNameColorIndex((prev) => (prev + 1) % nameColorGradients.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Cycle through card colors every 5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCardColorIndex((prev) => (prev + 1) % cardColorGradients.length);
     }, 5000);
 
     return () => clearInterval(interval);
@@ -312,55 +285,11 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = false }) =>
     };
   }, []);
 
-  // Tech stack for floating icons
-  const techStack = [
-    {
-      icon: <Code2 size={18} />,
-      name: "React",
-      color: "from-cyan-400 to-blue-500",
-    },
-    {
-      icon: <Terminal size={18} />,
-      name: "Node.js",
-      color: "from-green-400 to-emerald-500",
-    },
-    {
-      icon: <Cpu size={18} />,
-      name: "TypeScript",
-      color: "from-blue-400 to-indigo-500",
-    },
-    {
-      icon: <Braces size={18} />,
-      name: "JavaScript",
-      color: "from-red-400 to-red-500",
-    },
-    {
-      icon: <Globe size={18} />,
-      name: "MongoDB",
-      color: "from-green-400 to-teal-500",
-    },
-  ];
-
-  // Custom icons for title
-  const TitleIcons = () => (
-    <div className="flex items-center gap-2 mb-2 justify-center lg:justify-start">
-      <div className="p-1.5 rounded-lg bg-gradient-to-br from-red-500/20 to-red-600/20 border border-red-500/30">
-        <Code2 size={14} className="text-red-400" />
-      </div>
-      <div className="p-1.5 rounded-lg bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30">
-        <Braces size={14} className="text-cyan-400" />
-      </div>
-      <div className="p-1.5 rounded-lg bg-gradient-to-br from-emerald-500/20 to-green-500/20 border border-emerald-500/30">
-        <Shield size={14} className="text-emerald-400" />
-      </div>
-    </div>
-  );
-
   return (
     <section
       id="about"
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center pt-32 sm:pt-36 lg:pt-40 pb-20 overflow-hidden bg-gradient-to-b from-slate-100 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 lg:bg-slate-950 lg:dark:bg-slate-950"
+      className="relative lg:min-h-screen flex items-start lg:flex-col lg:justify-end justify-center pt-24 sm:pt-28 md:pt-28 lg:pt-28 pb-20 sm:pb-10 md:pb-10 lg:pb-12 overflow-hidden bg-gradient-to-b from-slate-100 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 lg:bg-slate-950 lg:dark:bg-slate-950"
     >
       {/* ── Personalized welcome banner ── */}
       {visitorName && (
@@ -380,7 +309,7 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = false }) =>
             <span className="text-xs sm:text-sm" style={{ animation: 'hero-wave 1.5s 0.5s ease-in-out 3' }}>👋</span>
             <span className="text-white/80">Welcome,&nbsp;</span>
             <span
-              className="font-extrabold"
+              className="font-bold"
               style={{ background: 'linear-gradient(90deg,#fb7185,#a78bfa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
             >
               {visitorName}
@@ -426,93 +355,49 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = false }) =>
       <div className="absolute top-20 left-10 w-72 h-72 bg-red-500/15 rounded-full blur-3xl animate-pulse will-change-transform dark:bg-red-600/20 lg:hidden"></div>
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-red-600/15 rounded-full blur-3xl animate-pulse delay-1000 will-change-transform dark:bg-red-700/20 lg:hidden"></div>
 
-      {/* Floating tech icons - reduced count for performance */}
-      <div className="hidden lg:block absolute inset-0 overflow-hidden pointer-events-none">
-        {techStack.map((tech, i) => (
-          <div
-            key={i}
-            className="absolute animate-float will-change-transform"
-            style={{
-              top: `${15 + i * 12}%`,
-              left: `${5 + i * 18}%`,
-              animationDelay: `${i * 1}s`,
-              animationDuration: `${20 + i * 2}s`,
-            }}
-          >
-            <div className="p-2.5 rounded-xl bg-white/90 backdrop-blur-sm border border-slate-200/80 shadow-sm dark:bg-slate-900/80 dark:border-slate-700/50 dark:shadow-none">
-              <div
-                className={`text-transparent bg-clip-text bg-gradient-to-r ${tech.color}`}
-              >
-                {tech.icon}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 z-20">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          {/* Left Content */}
-          <div className="text-center lg:text-left order-2 lg:order-1 -translate-y-16 sm:-translate-y-20 lg:translate-y-0">
-            {/* Title Icons */}
-            <TitleIcons />
-
-            {/* Status badge with glow */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/20 mb-4 sm:mb-6 backdrop-blur-sm hover:scale-105 transition-transform cursor-default">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              <span className="text-xs sm:text-sm font-medium text-emerald-600 dark:text-emerald-300 lg:text-emerald-300">
-                Open for opportunities
-              </span>
-              <Sparkles
-                size={12}
-                className="sm:w-3.5 sm:h-3.5 text-emerald-400"
-              />
-            </div>
-
-            {/* Name with gradient */}
-            <div className="mb-3 sm:mb-4">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-slate-900 tracking-tight dark:text-white lg:text-white">
-                Hi, I'm{" "}
-                <span className="relative inline-block">
-                  <span className={`relative z-10 text-transparent bg-clip-text bg-gradient-to-r ${nameColorGradients[nameColorIndex]} transition-all duration-1000`}>
-                    {personalInfo.name}
+      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-0 z-20">
+        <div className="flex flex-col">
+          <div className="text-center md:text-left order-2 md:order-none mt-2 sm:mt-0 md:mt-0 md:pt-0 w-full">
+            {/* Top: Name + Role */}
+            <div className="md:shrink-0">
+              <div className="mb-1 sm:mb-2 md:mb-1">
+                <h1 className="text-3xl sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-900 tracking-tight dark:text-white lg:text-white">
+                  Hi, I'm{" "}
+                  <span className="relative inline-block">
+                    <span className={`relative z-10 text-transparent bg-clip-text bg-gradient-to-r ${nameColorGradients[nameColorIndex]} transition-all duration-1000`}>
+                      {personalInfo.name}
+                    </span>
+                    <span className={`absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r ${nameColorGradients[nameColorIndex]} rounded-full transform scale-x-0 group-hover:scale-x-100 transition-all duration-1000 origin-left`}></span>
                   </span>
-                  <span className={`absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r ${nameColorGradients[nameColorIndex]} rounded-full transform scale-x-0 group-hover:scale-x-100 transition-all duration-1000 origin-left`}></span>
-                </span>
-              </h1>
-            </div>
-
-            {/* Typing animation with role icons */}
-            <div className="min-h-[32px] sm:min-h-[40px] mb-3 sm:mb-4">
-              <div className="flex items-center justify-center lg:justify-start gap-2">
-                <div className="hidden sm:block p-1.5 rounded-lg bg-red-500/10 border border-red-500/30">
-                  <Code2 size={16} className="text-red-400" />
-                </div>
-                <h2 className="text-xl sm:text-2xl lg:text-3xl text-slate-600 lg:text-slate-300 font-medium dark:text-slate-400">
-                  <span className="text-slate-900 lg:text-white dark:text-white">{typedText}</span>
-                  <span
-                    className={`ml-1 inline-block w-0.5 h-5 sm:h-6 lg:h-8 bg-gradient-to-b from-red-400 to-red-600 ${cursorVisible ? "opacity-100" : "opacity-0"}`}
-                  ></span>
-                </h2>
+                </h1>
               </div>
+
+              <div className="min-h-[28px] sm:min-h-[40px] mb-2 sm:mb-3 md:mb-0 md:min-h-0">
+                <div className="flex items-center justify-center md:justify-start gap-2">
+                  <h2 className="text-lg sm:text-2xl md:text-xl lg:text-2xl text-slate-600 lg:text-slate-300 font-medium dark:text-slate-400">
+                    <span className="text-slate-900 lg:text-white dark:text-white">{typedText}</span>
+                    <span
+                      className={`ml-1 inline-block w-0.5 h-5 sm:h-6 lg:h-7 bg-gradient-to-b from-red-400 to-red-600 ${cursorVisible ? "opacity-100" : "opacity-0"}`}
+                    ></span>
+                  </h2>
+                </div>
+              </div>
+
             </div>
 
-            {/* Description with animated border */}
-            <div className="relative group mb-6 sm:mb-8">
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-red-600 to-red-700 rounded-xl opacity-0 group-hover:opacity-100 blur transition duration-500"></div>
-              <div className="relative bg-white/95 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-xl border border-slate-200 shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none lg:bg-slate-950/40 lg:border-white/10 lg:backdrop-blur-md">
-                <p className="text-sm sm:text-base md:text-lg text-slate-700 lg:text-slate-200 leading-relaxed dark:text-slate-300">
+            {/* Middle: Description */}
+            <div className="relative group mb-4 sm:mb-6 md:mb-0 md:mt-2 lg:mt-3 w-full">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-red-600 to-red-700 rounded-xl opacity-0 group-hover:opacity-100 blur transition duration-500 md:hidden"></div>
+              <div className="relative w-full bg-white/95 backdrop-blur-sm p-3 sm:p-5 md:p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none lg:bg-slate-950/50 lg:border-white/10 lg:backdrop-blur-md">
+                <p className="text-xs sm:text-base md:text-[15px] lg:text-base text-slate-700 lg:text-slate-200 leading-relaxed dark:text-slate-300 md:text-left line-clamp-4 sm:line-clamp-none">
                   {personalInfo.summary}
                 </p>
               </div>
             </div>
 
-            {/* Quick stats - responsive grid (mobile/tablet only) */}
-            {!isDesktop && (
-              <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4 mb-6 sm:mb-8">
+            {/* Quick stats — mobile only */}
+            <div className="md:hidden">
+              <div className="grid grid-cols-3 gap-1.5 sm:gap-3 md:gap-4 mb-4 sm:mb-6">
                 {[
                   {
                     icon: <Award size={14} className="sm:w-4 sm:h-4" />,
@@ -532,7 +417,7 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = false }) =>
                 ].map((stat, index) => (
                   <div
                     key={index}
-                    className="text-center p-2 sm:p-3 rounded-xl bg-white/80 border border-slate-200 hover:border-red-400/60 transition-all group dark:bg-slate-900/50 dark:border-slate-800 dark:hover:border-red-500/50"
+                    className="text-center p-1.5 sm:p-3 rounded-lg sm:rounded-xl bg-white/80 border border-slate-200 hover:border-red-400/60 transition-all group dark:bg-slate-900/50 dark:border-slate-800 dark:hover:border-red-500/50"
                   >
                     <div className="text-red-600 mb-1 group-hover:scale-110 transition-transform dark:text-red-400">
                       {stat.icon}
@@ -546,14 +431,14 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = false }) =>
                   </div>
                 ))}
               </div>
-            )}
+            </div>
 
-            {/* CTA Buttons - Mobile/Tablet only inside Left Content */}
-            {!isDesktop && (
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 mb-6 sm:mb-8">
+            {/* CTA Buttons — mobile only */}
+            <div className="md:hidden">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-4 mb-0">
                 <a
                   href="#projects"
-                  className="w-full sm:w-auto group relative px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold transition-all hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] overflow-hidden text-sm sm:text-base"
+                  className="w-full sm:w-auto group relative px-5 sm:px-8 py-2.5 sm:py-4 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold transition-all hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] overflow-hidden text-sm sm:text-base"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     View My Work
@@ -568,7 +453,7 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = false }) =>
                   href={personalInfo.resumeUrl || "/ArinJoshi.pdf"}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full sm:w-auto group px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-slate-100/90 backdrop-blur-sm hover:bg-slate-200/90 text-slate-900 font-semibold transition-all border border-slate-300 hover:border-red-400 flex items-center justify-center gap-2 text-sm sm:text-base dark:bg-slate-800/50 dark:hover:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-red-500/50"
+                  className="w-full sm:w-auto group px-5 sm:px-8 py-2.5 sm:py-4 rounded-xl bg-slate-100/90 backdrop-blur-sm hover:bg-slate-200/90 text-slate-900 font-semibold transition-all border border-slate-300 hover:border-red-400 flex items-center justify-center gap-2 text-sm sm:text-base dark:bg-slate-800/50 dark:hover:bg-slate-700 dark:text-white dark:border-slate-700 dark:hover:border-red-500/50"
                 >
                   <Download
                     size={16}
@@ -577,41 +462,36 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = false }) =>
                   Download Resume
                 </a>
               </div>
-            )}
-
-            {/* Social links have been moved to float around the image */}
+            </div>
           </div>
 
-          {/* Right Content - Profile Card */}
-          <div className="relative order-1 lg:order-2 mb-6 lg:mb-0">
-            {/* Animated background rings - simplified for performance */}
-            <div className="relative w-full max-w-[320px] sm:max-w-[400px] md:max-w-[480px] lg:max-w-[540px] aspect-video mx-auto -translate-y-10 lg:-translate-y-20">
-              {/* Floating Badges */}
-              <div className="absolute top-[10%] -left-6 sm:-left-12 lg:-left-16 z-20 animate-float" style={{ animationDelay: '0s', animationDuration: '4s' }}>
-                <a href="https://www.linkedin.com/in/arinjoshi/" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-blue-500 text-blue-600 shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-110 transition-transform dark:bg-slate-900/90 dark:border-blue-500/80 dark:text-blue-400">
-                  <Linkedin size={18} className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="hidden sm:block text-xs sm:text-sm font-bold">LinkedIn</span>
+          {/* Profile Card — mobile only */}
+          <div className="relative order-1 md:hidden mb-1 sm:mb-3">
+            <div className="relative w-full max-w-[280px] sm:max-w-[400px] aspect-video mx-auto">
+              {/* Floating Badges — tablet only */}
+              <div className="hidden sm:block absolute top-[10%] -left-12 lg:-left-16 z-20 animate-float" style={{ animationDelay: '0s', animationDuration: '4s' }}>
+                <a href="https://www.linkedin.com/in/arinjoshi/" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-blue-500 text-blue-600 shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-110 transition-transform dark:bg-slate-900/90 dark:border-blue-500/80 dark:text-blue-400">
+                  <Linkedin size={18} className="w-5 h-5" />
+                  <span className="text-xs sm:text-sm font-bold">LinkedIn</span>
                 </a>
               </div>
 
-              <div className="absolute top-[60%] -right-6 sm:-right-12 lg:-right-16 z-20 animate-float" style={{ animationDelay: '1.5s', animationDuration: '5s' }}>
-                <a href="https://github.com/Arin-joshi" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-purple-500 text-purple-600 shadow-[0_0_20px_rgba(168,85,247,0.5)] hover:scale-110 transition-transform dark:bg-slate-900/90 dark:border-purple-500/80 dark:text-purple-400">
-                  <Github size={18} className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="hidden sm:block text-xs sm:text-sm font-bold">GitHub</span>
+              <div className="hidden sm:block absolute top-[60%] -right-12 lg:-right-16 z-20 animate-float" style={{ animationDelay: '1.5s', animationDuration: '5s' }}>
+                <a href="https://github.com/Arin-joshi" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-purple-500 text-purple-600 shadow-[0_0_20px_rgba(168,85,247,0.5)] hover:scale-110 transition-transform dark:bg-slate-900/90 dark:border-purple-500/80 dark:text-purple-400">
+                  <Github size={18} className="w-5 h-5" />
+                  <span className="text-xs sm:text-sm font-bold">GitHub</span>
                 </a>
               </div>
 
-              <div className="absolute -bottom-6 left-[10%] sm:left-[20%] z-20 animate-float" style={{ animationDelay: '3s', animationDuration: '6s' }}>
-                <a href={`mailto:${personalInfo.email}`} className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-pink-500 text-pink-600 shadow-[0_0_20px_rgba(236,72,153,0.5)] hover:scale-110 transition-transform dark:bg-slate-900/90 dark:border-pink-500/80 dark:text-pink-400">
-                  <Mail size={18} className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="hidden sm:block text-xs sm:text-sm font-bold">Email</span>
+              <div className="hidden sm:block absolute -bottom-6 left-[20%] z-20 animate-float" style={{ animationDelay: '3s', animationDuration: '6s' }}>
+                <a href={`mailto:${personalInfo.email}`} className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-pink-500 text-pink-600 shadow-[0_0_20px_rgba(236,72,153,0.5)] hover:scale-110 transition-transform dark:bg-slate-900/90 dark:border-pink-500/80 dark:text-pink-400">
+                  <Mail size={18} className="w-5 h-5" />
+                  <span className="text-xs sm:text-sm font-bold">Email</span>
                 </a>
               </div>
-              
 
-
-              {/* Premium Background Glow Orbs */}
-              <div className="absolute inset-0 pointer-events-none">
+              {/* Premium Background Glow Orbs — sm+ only */}
+              <div className="hidden sm:block absolute inset-0 pointer-events-none">
                 <div className="absolute top-0 right-0 w-[150px] h-[150px] sm:w-[200px] sm:h-[200px] lg:w-[250px] lg:h-[250px] bg-red-500/30 dark:bg-red-600/30 rounded-full blur-[40px] animate-pulse mix-blend-multiply dark:mix-blend-lighten"></div>
                 <div className="absolute bottom-0 left-0 w-[150px] h-[150px] sm:w-[200px] sm:h-[200px] lg:w-[250px] lg:h-[250px] bg-orange-500/30 dark:bg-orange-600/30 rounded-full blur-[40px] animate-pulse delay-1000 mix-blend-multiply dark:mix-blend-lighten"></div>
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150px] h-[150px] sm:w-[200px] sm:h-[200px] lg:w-[250px] lg:h-[250px] bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-[40px] animate-pulse delay-700 mix-blend-multiply dark:mix-blend-lighten"></div>
@@ -642,19 +522,19 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = false }) =>
                     </video>
 
                     {/* Location badge inside the glass card */}
-                    <div className="absolute bottom-3 sm:bottom-4 lg:bottom-6 left-3 sm:left-4 lg:left-6 right-3 sm:right-4 lg:right-6">
-                      <div className="bg-white/95 backdrop-blur-xl p-2 sm:p-3 lg:p-4 rounded-lg sm:rounded-xl border border-white/50 shadow-lg transform transition-all group-hover:-translate-y-1 group-hover:shadow-xl dark:bg-slate-900/90 dark:border-slate-700/80">
-                        <div className="flex items-center gap-2 sm:gap-3">
-                          <div className="relative">
-                            <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 lg:w-3 lg:h-3 rounded-full bg-green-500"></div>
+                    <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 right-2 sm:right-4">
+                      <div className="bg-white/95 backdrop-blur-xl px-2 py-1.5 sm:p-3 rounded-lg sm:rounded-xl border border-white/50 shadow-lg dark:bg-slate-900/90 dark:border-slate-700/80">
+                        <div className="flex items-center gap-1.5 sm:gap-3">
+                          <div className="relative shrink-0">
+                            <div className="w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full bg-green-500"></div>
                             <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75"></div>
                           </div>
-                          <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+                          <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm min-w-0">
                             <MapPin
-                              size={12}
-                              className="sm:w-3 sm:h-3 lg:w-3.5 lg:h-3.5 text-slate-500 dark:text-slate-400"
+                              size={10}
+                              className="sm:w-3 sm:h-3 shrink-0 text-slate-500 dark:text-slate-400"
                             />
-                            <span className="text-slate-900 font-bold truncate dark:text-white tracking-wide">
+                            <span className="text-slate-900 font-semibold truncate dark:text-white">
                               {personalInfo.location}
                             </span>
                           </div>
@@ -684,22 +564,50 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = false }) =>
                 </div>
               </div>
             </div>
+
+            {/* Mobile social links — clean row below video */}
+            <div className="flex sm:hidden items-center justify-center gap-2.5 mt-3">
+              <a
+                href="https://www.linkedin.com/in/arinjoshi/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="LinkedIn"
+                className="flex items-center justify-center w-9 h-9 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-500 hover:bg-blue-500/20 transition-colors"
+              >
+                <Linkedin size={16} />
+              </a>
+              <a
+                href="https://github.com/Arin-joshi"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+                className="flex items-center justify-center w-9 h-9 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-500 hover:bg-purple-500/20 transition-colors"
+              >
+                <Github size={16} />
+              </a>
+              <a
+                href={`mailto:${personalInfo.email}`}
+                aria-label="Email"
+                className="flex items-center justify-center w-9 h-9 rounded-full bg-pink-500/10 border border-pink-500/30 text-pink-500 hover:bg-pink-500/20 transition-colors"
+              >
+                <Mail size={16} />
+              </a>
+            </div>
           </div>
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 sm:gap-2 animate-bounce hidden xs:flex">
+        <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-1 sm:gap-2 animate-bounce hidden xs:flex md:hidden">
           <span className="text-[10px] sm:text-xs text-slate-600 lg:text-white/70 uppercase tracking-wider dark:text-slate-500">
             Scroll
           </span>
           <ChevronDown size={16} className="sm:w-5 sm:h-5 text-slate-600 lg:text-white/70 dark:text-slate-500" />
         </div>
 
-        {/* Desktop Bottom Row: CTA Buttons + Stats Cards */}
-        {isDesktop && (
-          <div className="relative z-30 flex justify-between items-center mt-6 lg:mt-10 w-full">
+        {/* Tablet + Laptop Bottom Row: CTA Buttons + Stats */}
+        <div className="relative z-30 hidden md:flex justify-between items-end mt-2 lg:mt-3 w-full gap-4 lg:gap-6">
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
+            <div className="flex flex-row items-center gap-3 sm:gap-4">
               <a
                 href="#projects"
                 className="w-full sm:w-auto group relative px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold transition-all hover:shadow-[0_0_30px_rgba(220,38,38,0.5)] overflow-hidden text-sm sm:text-base"
@@ -748,22 +656,21 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = false }) =>
               ].map((stat, index) => (
                 <div
                   key={index}
-                  className="text-center p-2.5 sm:p-3.5 rounded-xl border transition-all group bg-slate-950/40 border-white/10 backdrop-blur-md hover:border-red-500/50 w-24 sm:w-28 lg:w-32"
+                  className="text-center p-2.5 sm:p-3.5 rounded-xl border transition-all group w-24 sm:w-28 lg:w-32 bg-white/90 border-slate-200 backdrop-blur-md hover:border-red-400/60 dark:bg-slate-900/70 dark:border-slate-700 lg:bg-slate-950/40 lg:border-white/10 lg:hover:border-red-500/50"
                 >
-                  <div className="text-red-400 mb-1 group-hover:scale-110 transition-transform">
+                  <div className="text-red-600 lg:text-red-400 mb-1 group-hover:scale-110 transition-transform dark:text-red-400">
                     {stat.icon}
                   </div>
-                  <div className="text-white font-bold text-xs sm:text-sm lg:text-base">
+                  <div className="text-slate-900 lg:text-white font-bold text-xs sm:text-sm lg:text-base dark:text-white">
                     {stat.value}
                   </div>
-                  <div className="text-[9px] sm:text-[10px] lg:text-xs text-slate-300">
+                  <div className="text-[9px] sm:text-[10px] lg:text-xs text-slate-500 lg:text-slate-300 dark:text-slate-400">
                     {stat.label}
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-        )}
+        </div>
       </div>
 
       <style>{`

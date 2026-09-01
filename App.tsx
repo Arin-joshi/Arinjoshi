@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense, useCallback } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Experience from './components/Experience';
@@ -6,42 +6,61 @@ import Projects from './components/Projects';
 import Skills from './components/Skills';
 import Contact from './components/Contact';
 import SocialPopup from './components/SocialPopup';
-import LoadingScreen from './components/LoadingScreen';
+import AppSkeleton from './components/AppSkeleton';
 
-// Dynamic lazy imports for non-critical heavy modules (WebGL canvas & Chat Assistant)
 const SplashCursor = lazy(() => import('./components/SplashCursor'));
 const AIAssistant = lazy(() => import('./components/AIAssistant'));
 
-function App() {
-  const [visitorName, setVisitorName] = useState<string | null>(null);
+const MIN_SKELETON_MS = 450;
+const MAX_SKELETON_MS = 4000;
 
-  const handleLoadComplete = useCallback((name: string) => {
-    setVisitorName(name);
+function App() {
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const start = performance.now();
+    let finished = false;
+    let revealTimer: ReturnType<typeof setTimeout>;
+
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      const remaining = Math.max(0, MIN_SKELETON_MS - (performance.now() - start));
+      revealTimer = setTimeout(() => setIsReady(true), remaining);
+    };
+
+    if (document.readyState === 'complete') {
+      finish();
+    } else {
+      window.addEventListener('load', finish, { once: true });
+    }
+
+    const maxTimer = setTimeout(finish, MAX_SKELETON_MS);
+
+    return () => {
+      clearTimeout(revealTimer);
+      clearTimeout(maxTimer);
+      window.removeEventListener('load', finish);
+    };
   }, []);
 
-  const isAppReady = visitorName !== null;
-
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-red-500/20 selection:text-red-900 dark:bg-dark dark:text-slate-300 dark:selection:bg-red-500/30 dark:selection:text-red-200">
-      {/* Loading Gate - renders until video + UI are ready */}
-      {!isAppReady && (
-        <LoadingScreen onComplete={handleLoadComplete} />
-      )}
+    <div className="min-h-screen font-sans bg-slate-50 text-slate-900 selection:bg-red-500/20 selection:text-red-900 dark:bg-dark dark:text-slate-300 dark:selection:bg-red-500/30 dark:selection:text-red-200 antialiased">
+      {!isReady && <AppSkeleton />}
 
-      {/* Main app - rendered in DOM for smooth transition */}
       <div
-        className="transition-opacity duration-700"
-        style={{ opacity: isAppReady ? 1 : 0, pointerEvents: isAppReady ? 'auto' : 'none' }}
+        className={`transition-opacity duration-500 ${isReady ? 'opacity-100' : 'opacity-0'}`}
+        aria-hidden={!isReady}
       >
         <Navbar />
-        <SocialPopup ready={isAppReady} />
-        
+        <SocialPopup ready={isReady} />
+
         <Suspense fallback={null}>
           <AIAssistant />
         </Suspense>
 
         <main>
-          <Hero visitorName={visitorName ?? ''} ready={isAppReady} />
+          <Hero ready={isReady} />
           <div className="relative overflow-hidden">
             <Suspense fallback={null}>
               <SplashCursor />

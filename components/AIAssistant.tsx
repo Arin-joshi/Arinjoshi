@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bot, Send, X, Youtube, Linkedin, Instagram, Sparkles } from 'lucide-react';
+import { Bot, Send, X, Youtube, Linkedin, Instagram } from 'lucide-react';
 import { useAudio } from '../contexts/AudioContext';
 import LookAtCursor from './LookAtCursor';
 
@@ -293,8 +293,8 @@ const AIAssistant: React.FC = () => {
             </div>
 
             <div className="pl-14 flex flex-col">
-              <span className="text-xs font-extrabold tracking-tight">Arina ✨</span>
-              <span className="text-[9px] font-mono opacity-80 flex items-center gap-1">
+              <span className="text-xs font-bold tracking-tight">Arina ✨</span>
+              <span className="text-[9px] font-medium opacity-80 flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                 Arin's AI · Online
               </span>
@@ -333,7 +333,7 @@ const AIAssistant: React.FC = () => {
                           target="_blank" 
                           rel="noopener noreferrer"
                           onClick={() => playAudio('click')}
-                          className="flex-1 p-2 rounded-lg bg-blue-500/10 hover:bg-blue-500/15 border border-blue-500/20 text-blue-500 flex items-center justify-center gap-1.5 transition-colors font-mono text-[9px]"
+                          className="flex-1 p-2 rounded-lg bg-blue-500/10 hover:bg-blue-500/15 border border-blue-500/20 text-blue-500 flex items-center justify-center gap-1.5 transition-colors font-medium text-[9px]"
                         >
                           <Linkedin size={10} /> LinkedIn
                         </a>
@@ -342,7 +342,7 @@ const AIAssistant: React.FC = () => {
                           target="_blank" 
                           rel="noopener noreferrer"
                           onClick={() => playAudio('click')}
-                          className="flex-1 p-2 rounded-lg bg-red-500/10 hover:bg-red-500/15 border border-red-500/20 text-red-500 flex items-center justify-center gap-1.5 transition-colors font-mono text-[9px]"
+                          className="flex-1 p-2 rounded-lg bg-red-500/10 hover:bg-red-500/15 border border-red-500/20 text-red-500 flex items-center justify-center gap-1.5 transition-colors font-medium text-[9px]"
                         >
                           <Youtube size={10} /> YouTube
                         </a>
@@ -352,7 +352,7 @@ const AIAssistant: React.FC = () => {
                         target="_blank" 
                         rel="noopener noreferrer"
                         onClick={() => playAudio('click')}
-                        className="p-2 rounded-lg bg-pink-500/10 hover:bg-pink-500/15 border border-pink-500/20 text-pink-500 flex items-center justify-center gap-1.5 transition-colors font-mono text-[9px] w-full"
+                        className="p-2 rounded-lg bg-pink-500/10 hover:bg-pink-500/15 border border-pink-500/20 text-pink-500 flex items-center justify-center gap-1.5 transition-colors font-medium text-[9px] w-full"
                       >
                         <Instagram size={10} /> Instagram Handle
                       </a>
