@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useData } from "../contexts/DataContext";
-import { useAudio } from "../contexts/AudioContext";
 import {
   ArrowRight,
   Download,
@@ -10,10 +9,8 @@ import {
   Code2,
   MapPin,
   ChevronDown,
-  Zap,
   Award,
   Users,
-  Star,
 } from "lucide-react";
 
 interface HeroProps {
@@ -22,185 +19,15 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = true }) => {
-  const { isMuted } = useAudio();
   const { personalInfo } = useData();
   const [typedText, setTypedText] = useState("");
   const [cursorVisible, setCursorVisible] = useState(true);
   const [nameColorIndex, setNameColorIndex] = useState(0);
-  const [isDesktop, setIsDesktop] = useState(true);
+  const [summaryExpanded, setSummaryExpanded] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
-  const desktopVideoRef = useRef<HTMLVideoElement>(null);
-  const cardVideoRef = useRef<HTMLVideoElement>(null);
-  const isIntersectingRef = useRef(false);
-
-  // Monitor viewport width to prevent dual-video rendering/audio conflicts
-  useEffect(() => {
-    const checkViewport = () => {
-      setIsDesktop(window.innerWidth >= 1024);
-    };
-    checkViewport();
-    window.addEventListener("resize", checkViewport, { passive: true });
-    return () => window.removeEventListener("resize", checkViewport);
-  }, []);
-
-  // Play/pause background videos based on viewport visibility and handle autoplay policies
-  useEffect(() => {
-    // Only set up video playback after loading is complete
-    if (!ready) return;
-
-    const observerOptions = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.1,
-    };
-
-    const playVideo = (video: HTMLVideoElement) => {
-      video.play().catch(() => {
-        // Fallback to muted autoplay if browser blocks audio autoplay
-        video.muted = true;
-        video.play().catch(() => {});
-      });
-    };
-
-    const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        isIntersectingRef.current = entry.isIntersecting;
-        const desktopVideo = desktopVideoRef.current;
-        const cardVideo = cardVideoRef.current;
-
-        if (entry.isIntersecting && !document.hidden) {
-          if (desktopVideo) playVideo(desktopVideo);
-          if (cardVideo) playVideo(cardVideo);
-        } else {
-          if (desktopVideo) desktopVideo.pause();
-          if (cardVideo) cardVideo.pause();
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(handleIntersection, observerOptions);
-    if (heroRef.current) {
-      observer.observe(heroRef.current);
-    }
-
-    // Pause/play when switching browser tabs (Page Visibility API)
-    const handleVisibilityChange = () => {
-      const desktopVideo = desktopVideoRef.current;
-      const cardVideo = cardVideoRef.current;
-
-      if (document.hidden) {
-        if (desktopVideo) desktopVideo.pause();
-        if (cardVideo) cardVideo.pause();
-      } else {
-        // Resume only if the Hero section is currently in view
-        if (isIntersectingRef.current) {
-          if (desktopVideo) playVideo(desktopVideo);
-          if (cardVideo) playVideo(cardVideo);
-        }
-      }
-    };
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    // Unmute/play video on first user interaction if isMuted is false
-    const enableSoundOnInteraction = () => {
-      const desktopVideo = desktopVideoRef.current;
-      const cardVideo = cardVideoRef.current;
-      
-      if (desktopVideo) {
-        desktopVideo.muted = isMuted;
-        desktopVideo.play().catch(() => {});
-      }
-      if (cardVideo) {
-        cardVideo.muted = isDesktop ? true : isMuted;
-        cardVideo.play().catch(() => {});
-      }
-      
-      // Remove all listeners after first interaction
-      window.removeEventListener("click", enableSoundOnInteraction);
-      window.removeEventListener("touchstart", enableSoundOnInteraction);
-      window.removeEventListener("mousedown", enableSoundOnInteraction);
-      window.removeEventListener("pointerdown", enableSoundOnInteraction);
-      window.removeEventListener("keydown", enableSoundOnInteraction);
-    };
-
-    window.addEventListener("click", enableSoundOnInteraction);
-    window.addEventListener("touchstart", enableSoundOnInteraction);
-    window.addEventListener("mousedown", enableSoundOnInteraction);
-    window.addEventListener("pointerdown", enableSoundOnInteraction);
-    window.addEventListener("keydown", enableSoundOnInteraction);
-
-    return () => {
-      observer.disconnect();
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("click", enableSoundOnInteraction);
-      window.removeEventListener("touchstart", enableSoundOnInteraction);
-      window.removeEventListener("mousedown", enableSoundOnInteraction);
-      window.removeEventListener("pointerdown", enableSoundOnInteraction);
-      window.removeEventListener("keydown", enableSoundOnInteraction);
-    };
-  }, [isMuted, isDesktop, ready]);
-
-  // Dynamically sync video muted state with isMuted state
-  useEffect(() => {
-    const desktopVideo = desktopVideoRef.current;
-    const cardVideo = cardVideoRef.current;
-
-    if (desktopVideo) {
-      desktopVideo.muted = isMuted;
-    }
-    if (cardVideo) {
-      cardVideo.muted = isDesktop ? true : isMuted;
-    }
-  }, [isMuted, isDesktop]);
-
-  // Synchronize desktop background video and card video playback state and time
-  useEffect(() => {
-    const desktopVideo = desktopVideoRef.current;
-    const cardVideo = cardVideoRef.current;
-
-    if (!desktopVideo || !cardVideo || !isDesktop) return;
-
-    const syncPlay = () => {
-      if (cardVideo.paused) {
-        cardVideo.play().catch(() => {});
-      }
-    };
-
-    const syncPause = () => {
-      if (!cardVideo.paused) {
-        cardVideo.pause();
-      }
-    };
-
-    const syncTime = () => {
-      // Keep them within 0.15 seconds of each other to ensure seamless visual synchronization
-      if (Math.abs(desktopVideo.currentTime - cardVideo.currentTime) > 0.15) {
-        cardVideo.currentTime = desktopVideo.currentTime;
-      }
-    };
-
-    desktopVideo.addEventListener("play", syncPlay);
-    desktopVideo.addEventListener("pause", syncPause);
-    desktopVideo.addEventListener("timeupdate", syncTime);
-    desktopVideo.addEventListener("seeking", syncTime);
-
-    // Initial sync
-    cardVideo.currentTime = desktopVideo.currentTime;
-    if (desktopVideo.paused) {
-      cardVideo.pause();
-    } else {
-      cardVideo.play().catch(() => {});
-    }
-
-    return () => {
-      desktopVideo.removeEventListener("play", syncPlay);
-      desktopVideo.removeEventListener("pause", syncPause);
-      desktopVideo.removeEventListener("timeupdate", syncTime);
-      desktopVideo.removeEventListener("seeking", syncTime);
-    };
-  }, [isDesktop]);
+  const heroBackground =
+    personalInfo.heroBackgroundImage || "/ArinJoshiBackgroundImg.webp";
 
   // Color gradients that work well in both light and dark themes
   const nameColorGradients = [
@@ -289,6 +116,7 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = true }) => 
     <section
       id="about"
       ref={heroRef}
+      aria-labelledby="hero-heading"
       className="relative lg:min-h-screen flex items-start lg:flex-col lg:justify-end justify-center pt-24 sm:pt-28 md:pt-28 lg:pt-28 pb-20 sm:pb-10 md:pb-10 lg:pb-12 overflow-hidden bg-gradient-to-b from-slate-100 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 lg:bg-slate-950 lg:dark:bg-slate-950"
     >
       {/* ── Personalized welcome banner ── */}
@@ -329,31 +157,16 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = true }) => 
           75%       { transform: rotate(-10deg); }
       `}</style>
 
-      {/* Desktop Full-Screen Background Video */}
-      {isDesktop && (
-        <>
-          <video
-            key={personalInfo.videoUrl || "/ArinJoshi.mp4"}
-            ref={desktopVideoRef}
-            className="hidden lg:block absolute inset-0 w-full h-full object-cover z-0 select-none pointer-events-none"
-            loop
-            muted={isMuted}
-            playsInline
-            preload={ready ? "auto" : "none"}
-          >
-            <source src={personalInfo.videoUrl || "/ArinJoshi.mp4"} type="video/mp4" />
-          </video>
-          {/* Desktop 70% Opacity Dark Overlay */}
-          <div className="hidden lg:block absolute inset-0 bg-black/70 z-10 pointer-events-none" />
-        </>
-      )}
-
-      {/* Animated background grid - mobile only */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(15,23,42,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(15,23,42,0.07)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] dark:bg-[linear-gradient(to_right,#4f4f4f1a_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f1a_1px,transparent_1px)] lg:hidden"></div>
-
-      {/* Gradient orbs - mobile only */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-red-500/15 rounded-full blur-3xl animate-pulse will-change-transform dark:bg-red-600/20 lg:hidden"></div>
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-red-600/15 rounded-full blur-3xl animate-pulse delay-1000 will-change-transform dark:bg-red-700/20 lg:hidden"></div>
+      {/* Desktop full-screen background image */}
+      <img
+        src={heroBackground}
+        alt=""
+        aria-hidden="true"
+        decoding="async"
+        fetchPriority="high"
+        className={`hidden lg:block absolute inset-0 w-full h-full object-cover z-0 select-none pointer-events-none transition-opacity duration-500 ${ready ? "opacity-100" : "opacity-0"}`}
+      />
+      <div className="hidden lg:block absolute inset-0 bg-black/70 z-10 pointer-events-none" />
 
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-0 z-20">
         <div className="flex flex-col">
@@ -361,7 +174,7 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = true }) => 
             {/* Top: Name + Role */}
             <div className="md:shrink-0">
               <div className="mb-1 sm:mb-2 md:mb-1">
-                <h1 className="text-3xl sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-900 tracking-tight dark:text-white lg:text-white">
+                <h1 id="hero-heading" className="text-3xl sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-slate-900 tracking-tight dark:text-white lg:text-white">
                   Hi, I'm{" "}
                   <span className="relative inline-block">
                     <span className={`relative z-10 text-transparent bg-clip-text bg-gradient-to-r ${nameColorGradients[nameColorIndex]} transition-all duration-1000`}>
@@ -388,10 +201,26 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = true }) => 
             {/* Middle: Description */}
             <div className="relative group mb-4 sm:mb-6 md:mb-0 md:mt-2 lg:mt-3 w-full">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-red-600 to-red-700 rounded-xl opacity-0 group-hover:opacity-100 blur transition duration-500 md:hidden"></div>
-              <div className="relative w-full bg-white/95 backdrop-blur-sm p-3 sm:p-5 md:p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none lg:bg-slate-950/50 lg:border-white/10 lg:backdrop-blur-md">
-                <p className="text-xs sm:text-base md:text-[15px] lg:text-base text-slate-700 lg:text-slate-200 leading-relaxed dark:text-slate-300 md:text-left line-clamp-4 sm:line-clamp-none">
+              <div className="relative w-full bg-white/95 p-3 sm:p-5 md:p-4 lg:p-5 rounded-xl border border-slate-200 shadow-sm dark:bg-slate-900/90 dark:border-slate-800 dark:shadow-none lg:bg-slate-950/50 lg:border-white/10 lg:backdrop-blur-md">
+                <p
+                  className={`text-xs sm:text-base md:text-[15px] lg:text-base text-slate-700 lg:text-slate-200 leading-relaxed dark:text-slate-300 md:text-left md:line-clamp-none ${
+                    summaryExpanded ? "line-clamp-none" : "line-clamp-4"
+                  }`}
+                >
                   {personalInfo.summary}
                 </p>
+                <button
+                  type="button"
+                  onClick={() => setSummaryExpanded((prev) => !prev)}
+                  className="md:hidden mt-2 inline-flex items-center gap-1 text-xs sm:text-sm font-semibold text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 transition-colors"
+                  aria-expanded={summaryExpanded}
+                >
+                  {summaryExpanded ? "Show less" : "Read more"}
+                  <ChevronDown
+                    size={14}
+                    className={`transition-transform duration-200 ${summaryExpanded ? "rotate-180" : ""}`}
+                  />
+                </button>
               </div>
             </div>
 
@@ -465,108 +294,32 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = true }) => 
             </div>
           </div>
 
-          {/* Profile Card — mobile only */}
-          <div className="relative order-1 md:hidden mb-1 sm:mb-3">
-            <div className="relative w-full max-w-[280px] sm:max-w-[400px] aspect-video mx-auto">
-              {/* Floating Badges — tablet only */}
-              <div className="hidden sm:block absolute top-[10%] -left-12 lg:-left-16 z-20 animate-float" style={{ animationDelay: '0s', animationDuration: '4s' }}>
-                <a href="https://www.linkedin.com/in/arinjoshi/" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-blue-500 text-blue-600 shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-110 transition-transform dark:bg-slate-900/90 dark:border-blue-500/80 dark:text-blue-400">
-                  <Linkedin size={18} className="w-5 h-5" />
-                  <span className="text-xs sm:text-sm font-bold">LinkedIn</span>
-                </a>
-              </div>
-
-              <div className="hidden sm:block absolute top-[60%] -right-12 lg:-right-16 z-20 animate-float" style={{ animationDelay: '1.5s', animationDuration: '5s' }}>
-                <a href="https://github.com/Arin-joshi" target="_blank" rel="noreferrer" className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-purple-500 text-purple-600 shadow-[0_0_20px_rgba(168,85,247,0.5)] hover:scale-110 transition-transform dark:bg-slate-900/90 dark:border-purple-500/80 dark:text-purple-400">
-                  <Github size={18} className="w-5 h-5" />
-                  <span className="text-xs sm:text-sm font-bold">GitHub</span>
-                </a>
-              </div>
-
-              <div className="hidden sm:block absolute -bottom-6 left-[20%] z-20 animate-float" style={{ animationDelay: '3s', animationDuration: '6s' }}>
-                <a href={`mailto:${personalInfo.email}`} className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/90 backdrop-blur-md border-2 border-pink-500 text-pink-600 shadow-[0_0_20px_rgba(236,72,153,0.5)] hover:scale-110 transition-transform dark:bg-slate-900/90 dark:border-pink-500/80 dark:text-pink-400">
-                  <Mail size={18} className="w-5 h-5" />
-                  <span className="text-xs sm:text-sm font-bold">Email</span>
-                </a>
-              </div>
-
-              {/* Premium Background Glow Orbs — sm+ only */}
-              <div className="hidden sm:block absolute inset-0 pointer-events-none">
-                <div className="absolute top-0 right-0 w-[150px] h-[150px] sm:w-[200px] sm:h-[200px] lg:w-[250px] lg:h-[250px] bg-red-500/30 dark:bg-red-600/30 rounded-full blur-[40px] animate-pulse mix-blend-multiply dark:mix-blend-lighten"></div>
-                <div className="absolute bottom-0 left-0 w-[150px] h-[150px] sm:w-[200px] sm:h-[200px] lg:w-[250px] lg:h-[250px] bg-orange-500/30 dark:bg-orange-600/30 rounded-full blur-[40px] animate-pulse delay-1000 mix-blend-multiply dark:mix-blend-lighten"></div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150px] h-[150px] sm:w-[200px] sm:h-[200px] lg:w-[250px] lg:h-[250px] bg-purple-500/20 dark:bg-purple-600/20 rounded-full blur-[40px] animate-pulse delay-700 mix-blend-multiply dark:mix-blend-lighten"></div>
-              </div>
-
-              {/* Main profile card with Glassmorphism and Animated Border */}
-              <div className="relative group perspective w-full h-full z-10 transition-transform duration-700 sm:hover:rotate-y-3 sm:hover:rotate-x-3 sm:hover:scale-[1.02]">
-                {/* Outer Wrapper for masking the rotating border */}
-                <div className="absolute inset-0 rounded-2xl sm:rounded-3xl lg:rounded-[2rem] overflow-hidden shadow-[0_0_40px_rgba(239,68,68,0.1)] dark:shadow-[0_0_40px_rgba(239,68,68,0.2)] bg-white/10 dark:bg-slate-900/40 backdrop-blur-md border border-white/40 dark:border-slate-700/50 group-hover:shadow-[0_0_60px_rgba(239,68,68,0.3)] transition-all duration-700">
-                  
-                  {/* Rotating Conic Gradient Borders */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250%] h-[250%] opacity-60 dark:opacity-80 group-hover:opacity-100 animate-[spin_4s_linear_infinite] transition-opacity duration-700 pointer-events-none" style={{ backgroundImage: 'conic-gradient(from 0deg, transparent 0%, transparent 60%, rgba(239, 68, 68, 0.8) 90%, rgba(249, 115, 22, 1) 100%)' }}></div>
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250%] h-[250%] opacity-40 dark:opacity-60 group-hover:opacity-100 animate-[spin_3s_linear_infinite_reverse] transition-opacity duration-700 pointer-events-none" style={{ backgroundImage: 'conic-gradient(from 180deg, transparent 0%, transparent 60%, rgba(168, 85, 247, 0.8) 90%, rgba(236, 72, 153, 1) 100%)' }}></div>
-                  
-                  {/* Inner Content Container (slightly smaller to reveal the border) */}
-                  <div className="absolute inset-1 sm:inset-1.5 lg:inset-2 bg-slate-50 dark:bg-slate-950 rounded-xl sm:rounded-[1.3rem] lg:rounded-[1.7rem] overflow-hidden z-10 transition-transform duration-700">
-                    {/* Profile Card Video (plays on both Desktop and Mobile) */}
-                    <video
-                      key={personalInfo.videoUrl || "/ArinJoshi.mp4"}
-                      ref={cardVideoRef}
-                      loop
-                      muted={isDesktop ? true : isMuted}
-                      playsInline
-                      preload={ready ? "auto" : "none"}
-                      className="w-full h-full object-cover scale-[1.15] transition-transform duration-700 group-hover:scale-[1.2]"
-                    >
-                      <source src={personalInfo.videoUrl || "/ArinJoshi.mp4"} type="video/mp4" />
-                    </video>
-
-                    {/* Location badge inside the glass card */}
-                    <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 right-2 sm:right-4">
-                      <div className="bg-white/95 backdrop-blur-xl px-2 py-1.5 sm:p-3 rounded-lg sm:rounded-xl border border-white/50 shadow-lg dark:bg-slate-900/90 dark:border-slate-700/80">
-                        <div className="flex items-center gap-1.5 sm:gap-3">
-                          <div className="relative shrink-0">
-                            <div className="w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full bg-green-500"></div>
-                            <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75"></div>
-                          </div>
-                          <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-sm min-w-0">
-                            <MapPin
-                              size={10}
-                              className="sm:w-3 sm:h-3 shrink-0 text-slate-500 dark:text-slate-400"
-                            />
-                            <span className="text-slate-900 font-semibold truncate dark:text-white">
-                              {personalInfo.location}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+          {/* Mobile / tablet full-width hero image */}
+          <div className="relative order-1 lg:hidden -mx-4 sm:-mx-6 mb-4 sm:mb-5">
+            <div className="relative w-full min-h-[52vw] sm:min-h-[340px] max-h-[420px]">
+              <img
+                src={heroBackground}
+                alt={personalInfo.name}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent pointer-events-none" />
+              <div className="absolute bottom-3 left-4 right-4 sm:bottom-4 sm:left-6 sm:right-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/80 border border-white/10">
+                  <div className="relative shrink-0">
+                    <div className="w-2 h-2 rounded-full bg-green-500" />
                   </div>
-                </div>
-              </div>
-
-              {/* Floating badges - hidden on mobile */}
-              <div className="hidden sm:block absolute -bottom-5 lg:-bottom-10 -left-5 lg:-left-10 bg-white/95 backdrop-blur-sm p-2 lg:p-4 rounded-lg lg:rounded-xl border border-slate-200 shadow-lg animate-float dark:bg-slate-900/90 dark:border-slate-700 dark:shadow-none">
-                <div className="flex items-center gap-1.5 lg:gap-2">
-                  <Star size={12} className="lg:w-4 lg:h-4 text-yellow-500" />
-                  <span className="text-xs lg:text-base text-slate-900 font-semibold dark:text-white">
-                    Top Rated
-                  </span>
-                </div>
-              </div>
-
-              <div className="hidden sm:block absolute -top-5 lg:-top-10 -right-5 lg:-right-10 bg-white/95 backdrop-blur-sm p-2 lg:p-4 rounded-lg lg:rounded-xl border border-slate-200 shadow-lg animate-float animation-delay-2000 dark:bg-slate-900/90 dark:border-slate-700 dark:shadow-none">
-                <div className="flex items-center gap-1.5 lg:gap-2">
-                  <Zap size={12} className="lg:w-4 lg:h-4 text-red-500" />
-                  <span className="text-xs lg:text-base text-slate-900 font-semibold dark:text-white">
-                    MERN Expert
+                  <MapPin size={12} className="shrink-0 text-slate-300" />
+                  <span className="text-sm font-semibold text-white truncate">
+                    {personalInfo.location}
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Mobile social links — clean row below video */}
-            <div className="flex sm:hidden items-center justify-center gap-2.5 mt-3">
+            <div className="flex items-center justify-center gap-2.5 mt-3 px-4 sm:px-0">
               <a
                 href="https://www.linkedin.com/in/arinjoshi/"
                 target="_blank"

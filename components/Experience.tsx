@@ -6,6 +6,7 @@ import {
   Clock, Users, ChevronRight, Globe, Activity
 } from 'lucide-react';
 import LookAtCursor from './LookAtCursor';
+import { useRafTilt } from '../hooks/useRafTilt';
 
 interface CompanyMeta {
   color: string;
@@ -89,10 +90,8 @@ const Experience: React.FC = React.memo(() => {
     }
   }, [experience, selectedExpId]);
   
-  // Hover and tilt coordinate states for the card spotlight borders
-  const [hoverCoords, setHoverCoords] = useState<Record<string, { x: number; y: number }>>({});
-  const [tiltStyle, setTiltStyle] = useState<Record<string, string>>({});
-  
+  const { hoverCoords, tiltStyle, handleMouseMove, handleMouseLeave } = useRafTilt();
+
   // Tab transition state for the details panel content
   const [animateCard, setAnimateCard] = useState<boolean>(true);
 
@@ -172,41 +171,6 @@ const Experience: React.FC = React.memo(() => {
     }
   };
 
-  // Cursor spotlight calculations
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, id: string) => {
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    setHoverCoords(prev => ({
-      ...prev,
-      [id]: { x, y }
-    }));
-    
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((centerY - y) / centerY) * 3; 
-    const rotateY = ((x - centerX) / centerX) * 3;
-    
-    setTiltStyle(prev => ({
-      ...prev,
-      [id]: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.008, 1.008, 1.008)`
-    }));
-  };
-
-  const handleMouseLeave = (id: string) => {
-    setHoverCoords(prev => {
-      const updated = { ...prev };
-      delete updated[id];
-      return updated;
-    });
-    setTiltStyle(prev => ({
-      ...prev,
-      [id]: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)'
-    }));
-  };
-
   const getCompanyConfig = (id: string): CompanyMeta => {
     return companyMetaMap[id] || {
       color: 'from-slate-700 to-slate-800',
@@ -227,8 +191,9 @@ const Experience: React.FC = React.memo(() => {
 
 
   return (
-    <section 
-      id="experience" 
+    <section
+      id="experience"
+      aria-labelledby="experience-heading"
       className="relative pt-8 pb-16 sm:pt-12 sm:pb-20 lg:py-28 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 overflow-hidden"
     >
       {/* Background Micro-Grid & Soft Ambient Illumination */}
@@ -243,7 +208,7 @@ const Experience: React.FC = React.memo(() => {
         <div className="text-center mb-5 sm:mb-10 lg:mb-16 flex flex-col items-center">
           <LookAtCursor type="robot" className="mx-auto scale-75 sm:scale-90 lg:scale-100" />
           
-          <h2 className="text-xl sm:text-3xl lg:text-5xl font-bold text-slate-900 tracking-tight mb-2 sm:mb-4 dark:text-white px-1 mt-2 sm:mt-3">
+          <h2 id="experience-heading" className="text-xl sm:text-3xl lg:text-5xl font-bold text-slate-900 tracking-tight mb-2 sm:mb-4 dark:text-white px-1 mt-2 sm:mt-3">
             Work{' '}
             <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent dark:from-white dark:via-slate-200 dark:to-slate-400">
               Experience

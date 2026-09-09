@@ -1,21 +1,36 @@
 import React, { useEffect, useState, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import Experience from './components/Experience';
-import Projects from './components/Projects';
-import Skills from './components/Skills';
-import Contact from './components/Contact';
-import SocialPopup from './components/SocialPopup';
 import AppSkeleton from './components/AppSkeleton';
+import SectionLazy from './components/SectionLazy';
 
 const SplashCursor = lazy(() => import('./components/SplashCursor'));
 const AIAssistant = lazy(() => import('./components/AIAssistant'));
+const Experience = lazy(() => import('./components/Experience'));
+const Projects = lazy(() => import('./components/Projects'));
+const Skills = lazy(() => import('./components/Skills'));
+const Contact = lazy(() => import('./components/Contact'));
 
-const MIN_SKELETON_MS = 450;
-const MAX_SKELETON_MS = 4000;
+const MIN_SKELETON_MS = 0;
+const MAX_SKELETON_MS = 2500;
+
+function useSplashCursorEnabled() {
+  const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobileOrTablet = window.matchMedia('(max-width: 1023px)').matches;
+    const lowEnd = typeof navigator.hardwareConcurrency === 'number' && navigator.hardwareConcurrency < 6;
+    setEnabled(!reducedMotion && !isMobileOrTablet && !lowEnd);
+  }, []);
+
+  return enabled;
+}
 
 function App() {
   const [isReady, setIsReady] = useState(false);
+  const [showAssistant, setShowAssistant] = useState(false);
+  const splashEnabled = useSplashCursorEnabled();
 
   useEffect(() => {
     const start = performance.now();
@@ -29,10 +44,10 @@ function App() {
       revealTimer = setTimeout(() => setIsReady(true), remaining);
     };
 
-    if (document.readyState === 'complete') {
+    if (document.readyState === 'interactive' || document.readyState === 'complete') {
       finish();
     } else {
-      window.addEventListener('load', finish, { once: true });
+      document.addEventListener('DOMContentLoaded', finish, { once: true });
     }
 
     const maxTimer = setTimeout(finish, MAX_SKELETON_MS);
@@ -40,9 +55,29 @@ function App() {
     return () => {
       clearTimeout(revealTimer);
       clearTimeout(maxTimer);
-      window.removeEventListener('load', finish);
+      document.removeEventListener('DOMContentLoaded', finish);
     };
   }, []);
+
+  useEffect(() => {
+    if (!isReady) return;
+
+    const idleTimer = setTimeout(() => setShowAssistant(true), 3000);
+    const onInteraction = () => {
+      setShowAssistant(true);
+      window.removeEventListener('pointerdown', onInteraction);
+      window.removeEventListener('keydown', onInteraction);
+    };
+
+    window.addEventListener('pointerdown', onInteraction, { once: true });
+    window.addEventListener('keydown', onInteraction, { once: true });
+
+    return () => {
+      clearTimeout(idleTimer);
+      window.removeEventListener('pointerdown', onInteraction);
+      window.removeEventListener('keydown', onInteraction);
+    };
+  }, [isReady]);
 
   return (
     <div className="min-h-screen font-sans bg-slate-50 text-slate-900 selection:bg-red-500/20 selection:text-red-900 dark:bg-dark dark:text-slate-300 dark:selection:bg-red-500/30 dark:selection:text-red-200 antialiased">
@@ -53,22 +88,33 @@ function App() {
         aria-hidden={!isReady}
       >
         <Navbar />
-        <SocialPopup ready={isReady} />
 
-        <Suspense fallback={null}>
-          <AIAssistant />
-        </Suspense>
+        {showAssistant && (
+          <Suspense fallback={null}>
+            <AIAssistant />
+          </Suspense>
+        )}
 
         <main>
           <Hero ready={isReady} />
           <div className="relative overflow-hidden">
-            <Suspense fallback={null}>
-              <SplashCursor />
-            </Suspense>
-            <Experience />
-            <Projects />
-            <Skills />
-            <Contact />
+            {splashEnabled && (
+              <Suspense fallback={null}>
+                <SplashCursor SIM_RESOLUTION={128} DYE_RESOLUTION={512} />
+              </Suspense>
+            )}
+            <SectionLazy minHeight="400px">
+              <Experience />
+            </SectionLazy>
+            <SectionLazy minHeight="500px">
+              <Projects />
+            </SectionLazy>
+            <SectionLazy minHeight="400px">
+              <Skills />
+            </SectionLazy>
+            <SectionLazy minHeight="400px">
+              <Contact />
+            </SectionLazy>
           </div>
         </main>
       </div>

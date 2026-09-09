@@ -3,6 +3,7 @@ import { useData } from '../contexts/DataContext';
 import { useAudio } from '../contexts/AudioContext';
 import { ExternalLink, Gamepad2, Globe, Code2, Zap } from 'lucide-react';
 import LookAtCursor from './LookAtCursor';
+import { useRafTilt } from '../hooks/useRafTilt';
 
 interface ProjectMeta {
   accentColor: string;
@@ -72,8 +73,7 @@ const Projects: React.FC = React.memo(() => {
   const { isMuted } = useAudio();
   const { projects } = useData();
   const [activeCategory, setActiveCategory] = useState<string>('All');
-  const [hoverCoords, setHoverCoords] = useState<Record<string, { x: number; y: number }>>({});
-  const [tiltStyle, setTiltStyle] = useState<Record<string, string>>({});
+  const { hoverCoords, tiltStyle, handleMouseMove, handleMouseLeave } = useRafTilt();
   const [animateGrid, setAnimateGrid] = useState<boolean>(true);
   
   const filteredProjects = useMemo(() => {
@@ -134,37 +134,6 @@ const Projects: React.FC = React.memo(() => {
     }
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, id: string) => {
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    setHoverCoords(prev => ({ ...prev, [id]: { x, y } }));
-    
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((centerY - y) / centerY) * 3; 
-    const rotateY = ((x - centerX) / centerX) * 3;
-    
-    setTiltStyle(prev => ({
-      ...prev,
-      [id]: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`
-    }));
-  };
-
-  const handleMouseLeave = (id: string) => {
-    setHoverCoords(prev => {
-      const updated = { ...prev };
-      delete updated[id];
-      return updated;
-    });
-    setTiltStyle(prev => ({
-      ...prev,
-      [id]: 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)'
-    }));
-  };
-
   const getMeta = (category: string): ProjectMeta => {
     return projectMetaMap[category] || {
       accentColor: '#ef4444',
@@ -192,8 +161,9 @@ const Projects: React.FC = React.memo(() => {
   };
 
   return (
-    <section 
-      id="projects" 
+    <section
+      id="projects"
+      aria-labelledby="projects-heading"
       className="relative pt-8 pb-6 sm:pt-12 sm:pb-20 lg:py-28 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 overflow-hidden"
     >
       <div className="absolute inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] dark:bg-[radial-gradient(#1e293b_1px,transparent_1px)] opacity-60 pointer-events-none"></div>
@@ -206,7 +176,7 @@ const Projects: React.FC = React.memo(() => {
         <div className="text-center mb-6 sm:mb-12 lg:mb-16 flex flex-col items-center">
           <LookAtCursor type="cat" className="mx-auto scale-75 sm:scale-90 lg:scale-100" />
           
-          <h2 className="text-xl sm:text-3xl lg:text-5xl font-bold text-slate-900 tracking-tight mb-2 sm:mb-4 dark:text-white px-1 mt-2 sm:mt-3">
+          <h2 id="projects-heading" className="text-xl sm:text-3xl lg:text-5xl font-bold text-slate-900 tracking-tight mb-2 sm:mb-4 dark:text-white px-1 mt-2 sm:mt-3">
             Crafting{' '}
             <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 bg-clip-text text-transparent dark:from-white dark:via-slate-200 dark:to-slate-400">
               Interactive Experiences

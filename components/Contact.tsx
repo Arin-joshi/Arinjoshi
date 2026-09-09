@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useData } from '../contexts/DataContext';
 import { useAudio } from '../contexts/AudioContext';
 import LookAtCursor from './LookAtCursor';
+import { useRafHover } from '../hooks/useRafHover';
 import {
   Mail,
   Phone,
@@ -25,8 +26,8 @@ const Contact: React.FC = React.memo(() => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [hoverCoords, setHoverCoords] = useState<Record<string, { x: number; y: number }>>({});
-  
+  const { hoverCoords, handleMouseMove, handleMouseLeave } = useRafHover();
+
   // Track scroll depth for the back-to-top button
   useEffect(() => {
     let ticking = false;
@@ -97,22 +98,6 @@ const Contact: React.FC = React.memo(() => {
     } catch (e) {
       // Audio fallback
     }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement | HTMLDivElement>, id: string) => {
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    setHoverCoords(prev => ({ ...prev, [id]: { x, y } }));
-  };
-
-  const handleMouseLeave = (id: string) => {
-    setHoverCoords(prev => {
-      const updated = { ...prev };
-      delete updated[id];
-      return updated;
-    });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -187,6 +172,7 @@ const Contact: React.FC = React.memo(() => {
     <>
       <footer
         id="contact"
+        aria-labelledby="contact-heading"
         className="relative bg-slate-50 dark:bg-slate-950 border-t border-slate-200/60 dark:border-slate-800/40 pt-10 sm:pt-16 lg:pt-20 pb-20 sm:pb-8 overflow-hidden transition-colors duration-300"
       >
         {/* Background micro-dots */}
@@ -203,7 +189,7 @@ const Contact: React.FC = React.memo(() => {
             <div className="space-y-3 sm:space-y-5 lg:space-y-6">
               <LookAtCursor type="robot" className="mx-auto lg:mx-0 mb-1 sm:mb-4 scale-75 sm:scale-100" />
 
-              <h2 className="text-xl sm:text-3xl lg:text-5xl font-bold text-slate-900 leading-tight dark:text-white tracking-tight">
+              <h2 id="contact-heading" className="text-xl sm:text-3xl lg:text-5xl font-bold text-slate-900 leading-tight dark:text-white tracking-tight">
                 Let's create something{' '}
                 <span className="block bg-gradient-to-r from-red-500 via-rose-500 to-purple-600 bg-clip-text text-transparent">
                   amazing together

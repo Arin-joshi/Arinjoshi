@@ -25,11 +25,21 @@
   <meta name="keywords"
     content="Arin Joshi, Arin Kumar Joshi, Software Engineer, React Developer, MERN Stack Developer, TypeScript, Frontend Developer, Web Developer Ahmedabad, JavaScript Developer, Node.js, MongoDB, Express, Game Development, Portfolio" />
   <meta name="author" content="Arin Kumar Joshi" />
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1, nocache" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="language" content="English" />
-  <meta name="revisit-after" content="7 days" />
+  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="bingbot" content="index, follow" />
   <link rel="canonical" href="https://arinjoshi.vercel.app/" />
   <link rel="alternate" hreflang="en" href="https://arinjoshi.vercel.app/" />
+  <link rel="alternate" hreflang="x-default" href="https://arinjoshi.vercel.app/" />
+  <meta name="geo.region" content="IN-GJ" />
+  <meta name="geo.placename" content="Ahmedabad, Gujarat, India" />
+  <meta name="geo.position" content="23.0225;72.5714" />
+  <meta name="ICBM" content="23.0225, 72.5714" />
+  <link rel="me" href="https://www.linkedin.com/in/arinjoshi/" />
+  <link rel="me" href="https://github.com/Arin-joshi" />
+  <link rel="me" href="https://www.youtube.com/@ArinJoshi" />
+  <link rel="me" href="https://www.instagram.com/click_by_arin/" />
   
   <!-- Additional SEO Meta Tags -->
   <meta name="theme-color" content="#050810" />
@@ -43,22 +53,14 @@
   <meta http-equiv="content-language" content="en-us" />
   <meta name="format-detection" content="telephone=no" />
   
-  <!-- Preconnect to external resources -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com" />
-  
-  <!-- Preload critical resources (CSS font) -->
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" as="style" />
-  
+  <link rel="preload" href="/ArinJoshiBackgroundImg.webp" as="image" type="image/webp" />
+
   <!-- Favicons -->
-  <link rel="icon" type="image/png" sizes="48x48" href="/favicon.png" />
-  <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
-  <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
-  <link rel="icon" type="image/png" sizes="384x384" href="/favicon-384x384.png" />
-  <link rel="icon" type="image/png" sizes="480x480" href="/favicon-480x480.png" />
-  <link rel="apple-touch-icon" sizes="192x192" href="/favicon-192x192.png" />
-  <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+  <link rel="icon" type="image/webp" sizes="48x48" href="/favicon.webp" />
+  <link rel="icon" type="image/webp" sizes="96x96" href="/favicon-96x96.webp" />
+  <link rel="icon" type="image/webp" sizes="192x192" href="/favicon-192x192.webp" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/favicon-192x192.webp" />
+  <link rel="shortcut icon" href="/favicon.webp" type="image/webp" />
   <link rel="manifest" href="/manifest.json" />
 
   <!-- Open Graph (Social Sharing) -->
@@ -67,10 +69,10 @@
     content="Software Engineer with 3+ years of experience building high-performance web applications using React, TypeScript, and the MERN stack." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://arinjoshi.vercel.app/" />
-  <meta property="og:image" content="https://arinjoshi.vercel.app/profile.PNG" />
-  <meta property="og:image:alt" content="Arin Joshi - Software Engineer Portfolio" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
+  <meta property="og:image" content="https://arinjoshi.vercel.app/ArinJoshiBackgroundImg.webp" />
+  <meta property="og:image:secure_url" content="https://arinjoshi.vercel.app/ArinJoshiBackgroundImg.webp" />
+  <meta property="og:image:type" content="image/webp" />
+  <meta property="og:image:alt" content="Arin Joshi - Software Engineer and React Developer portfolio" />
   <meta property="og:site_name" content="Arin Joshi - Portfolio" />
   <meta property="og:locale" content="en_US" />
 
@@ -80,280 +82,18 @@
   <meta name="twitter:title" content="Arin Joshi | Software Engineer &amp; React Developer" />
   <meta name="twitter:description"
     content="Software Engineer with 3+ years of experience building high-performance web applications using React, TypeScript, and the MERN stack." />
-  <meta name="twitter:image" content="https://arinjoshi.vercel.app/profile.PNG" />
-  <meta name="twitter:image:alt" content="Arin Joshi - Software Engineer" />
+  <meta name="twitter:creator" content="@ArinJoshi" />
+  <meta name="twitter:image" content="https://arinjoshi.vercel.app/ArinJoshiBackgroundImg.webp" />
+  <meta name="twitter:image:alt" content="Arin Joshi - Software Engineer Portfolio" />
 
-  <!-- Structured Data for Google -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "ProfilePage",
-        "@id": "https://arinjoshi.vercel.app/#webpage",
-        "url": "https://arinjoshi.vercel.app/",
-        "name": "Arin Joshi - Software Engineer Portfolio",
-        "isPartOf": {
-          "@id": "https://arinjoshi.vercel.app/#website"
-        },
-        "mainEntity": {
-          "@id": "https://arinjoshi.vercel.app/#person"
-        },
-        "inLanguage": "en-US",
-        "datePublished": "2023-05-28",
-        "dateModified": "2026-07-19"
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://arinjoshi.vercel.app/#website",
-        "url": "https://arinjoshi.vercel.app",
-        "name": "Arin Joshi - Software Engineer Portfolio",
-        "description": "Portfolio of Arin Kumar Joshi, Software Engineer with 3+ years experience",
-        "inLanguage": "en-US",
-        "publisher": {
-          "@id": "https://arinjoshi.vercel.app/#person"
-        }
-      },
-      {
-        "@type": "Person",
-        "@id": "https://arinjoshi.vercel.app/#person",
-        "name": "Arin Kumar Joshi",
-        "alternateName": "Arin Joshi",
-        "givenName": "Arin",
-        "familyName": "Joshi",
-        "jobTitle": "Software Engineer",
-        "url": "https://arinjoshi.vercel.app/",
-        "image": {
-          "@type": "ImageObject",
-          "url": "https://arinjoshi.vercel.app/profile.PNG",
-          "width": "400",
-          "height": "400"
-        },
-        "email": "thakararinjoshi@gmail.com",
-        "telephone": "+91 8290279001",
-        "birthDate": "",
-        "description": "Software Engineer with 3+ years of experience building scalable web applications using React.js, TypeScript, JavaScript, and the MERN stack. Specialized in real-time systems, high-performance frontend architecture, REST APIs, and accessible UI development. Strong in Data Structures & Algorithms, System Design, and modern Agile workflows.",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "",
-          "addressLocality": "Ahmedabad",
-          "addressRegion": "Gujarat",
-          "postalCode": "",
-          "addressCountry": "IN"
-        },
-        "alumniOf": [
-          {
-            "@type": "EducationalOrganization",
-            "name": "Global Institute of Technology, Jaipur",
-            "url": "https://www.gitjaipur.com"
-          }
-        ],
-        "worksFor": [
-          {
-            "@type": "Organization",
-            "name": "Aipxperts",
-            "url": "https://aipxperts.com"
-          }
-        ],
-        "hasCredential": [
-          {
-            "@type": "EducationalOccupationalCredential",
-            "name": "Bachelor of Technology in Computer Science"
-          }
-        ],
-        "sameAs": [
-          "https://www.linkedin.com/in/arinjoshi/",
-          "https://github.com/Arin-joshi",
-          "https://www.youtube.com/@ArinJoshi",
-          "https://www.instagram.com/click_by_arin/"
-        ],
-        "knowsLanguage": [
-          "English",
-          "Hindi",
-          "Gujarati"
-        ],
-        "knowsAbout": [
-          "React.js",
-          "TypeScript",
-          "JavaScript",
-          "Node.js",
-          "Express.js",
-          "MongoDB",
-          "MySQL",
-          "Firebase",
-          "Supabase",
-          "Socket.io",
-          "WebSocket",
-          "REST APIs",
-          "MERN Stack",
-          "Game Development",
-          "Frontend Architecture",
-          "Data Structures and Algorithms",
-          "Database Management Systems",
-          "System Design",
-          "CSS",
-          "Tailwind CSS",
-          "Responsive Design",
-          "UI/UX Development",
-          "Agile Scrum"
-        ]
-      },
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "https://arinjoshi.vercel.app/"
-          },
-          {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "About",
-            "item": "https://arinjoshi.vercel.app/#about"
-          },
-          {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "Experience",
-            "item": "https://arinjoshi.vercel.app/#experience"
-          },
-          {
-            "@type": "ListItem",
-            "position": 4,
-            "name": "Projects",
-            "item": "https://arinjoshi.vercel.app/#projects"
-          },
-          {
-            "@type": "ListItem",
-            "position": 5,
-            "name": "Skills",
-            "item": "https://arinjoshi.vercel.app/#skills"
-          },
-          {
-            "@type": "ListItem",
-            "position": 6,
-            "name": "Contact",
-            "item": "https://arinjoshi.vercel.app/#contact"
-          }
-        ]
-      }
-    ]
-  }
-  </script>
+  <!-- Structured Data (injected at build from portfolio content) -->
+  <!-- STRUCTURED_DATA -->
 
-  <!-- Tailwind CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
-          },
-          colors: {
-            primary: '#8b5cf6',
-            secondary: '#10b981',
-            dark: '#0f172a',
-            card: '#1e293b',
-          }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    /* Light default; .dark matches portfolio dark theme (Tailwind dark: variants) */
-    html,
-    body,
-    #root {
-      min-height: 100vh;
-      margin: 0;
-      background-color: #f8fafc;
-      color: #0f172a;
-      font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
-      font-feature-settings: 'kern' 1, 'liga' 1;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      text-rendering: optimizeLegibility;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-      font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
-      letter-spacing: -0.02em;
-    }
-
-    button, input, textarea, select {
-      font-family: inherit;
-    }
-
-    html.dark,
-    html.dark body,
-    html.dark #root {
-      background-color: #0f172a;
-      color: #cbd5e1;
-    }
-
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: #0f172a;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #334155;
-      border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #475569;
-    }
-
-    /* Hide search engine fallback elements from human users before React mounts */
-    #root>header,
-    #root>main {
-      display: none;
-    }
-
-    /* Prevent dark mode text coloring glitches from Tailwind CDN runtime lag */
-    html.dark .text-slate-900 {
-      color: #ffffff !important;
-    }
-    html.dark .text-slate-700 {
-      color: #cbd5e1 !important;
-    }
-    html.dark .text-slate-600,
-    html.dark .text-slate-500 {
-      color: #94a3b8 !important;
-    }
-  </style>
-
-  <script type="importmap">
-  {
-    "imports": {
-      "react/": "https://esm.sh/react@^19.2.3/",
-      "react": "https://esm.sh/react@^19.2.3",
-      "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-      "lucide-react": "https://esm.sh/lucide-react@^0.561.0"
-    }
-  }
-  </script>
 </head>
 
 <body class="font-sans bg-slate-50 text-slate-900 dark:bg-dark dark:text-slate-300 antialiased">
-  <div id="root">
-    <!-- Semantic HTML Fallback for Search Crawlers & SEO Indexability -->
+  <noscript>
+    <!-- Crawler & no-JS fallback (persists outside React mount) -->
     <header>
       <h1>Arin Joshi | Software Engineer &amp; React Developer Portfolio</h1>
       <p>Based in Ahmedabad, Gujarat, India. Email: thakararinjoshi@gmail.com | Phone: +91 8290279001</p>
@@ -374,8 +114,8 @@
     <main>
       <section id="about">
         <h2>About Arin Joshi</h2>
-        <img src="/profile.PNG" alt="Arin Joshi - Software Engineer &amp; React Developer"
-          style="max-width: 256px; border-radius: 50%;" />
+        <img src="/profile.webp" alt="Arin Joshi - Software Engineer &amp; React Developer"
+          style="max-width: 256px; border-radius: 50%;" loading="lazy" decoding="async" />
         <p>Software Engineer with 3+ years of experience building scalable web applications using React.js, TypeScript,
           JavaScript, and the MERN stack. Skilled in real-time systems, high-performance frontend architecture, REST
           APIs, and accessible UI development. Strong in DSA, System Design, and modern Agile workflows, with a focus on
@@ -510,8 +250,17 @@
           <li>Advanced Computational and Technical Skills - Tishitu Research Center</li>
         </ul>
       </section>
+
+      <section id="contact">
+        <h2>Contact Arin Joshi</h2>
+        <p>Email: <a href="mailto:thakararinjoshi@gmail.com">thakararinjoshi@gmail.com</a></p>
+        <p>Phone: <a href="tel:+918290279001">+91 8290279001</a></p>
+        <p>Location: Ahmedabad, Gujarat, India</p>
+      </section>
     </main>
-  </div>
+  </noscript>
+
+  <div id="root"></div>
   <script type="module" src="/index.tsx"></script>
 </body>
 

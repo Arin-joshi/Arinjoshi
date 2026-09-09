@@ -36,7 +36,7 @@ const KNOWLEDGE_BASE = {
   }
 };
 
-const AIAssistant: React.FC = () => {
+const AIAssistant: React.FC = React.memo(() => {
   const { isMuted } = useAudio();
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -416,6 +416,8 @@ const AIAssistant: React.FC = () => {
       )}
     </>
   );
-};
+});
+
+AIAssistant.displayName = 'AIAssistant';
 
 export default AIAssistant;

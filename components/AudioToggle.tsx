@@ -26,8 +26,8 @@ const AudioToggle: React.FC<AudioToggleProps> = React.memo(({ variant = "default
       type="button"
       onClick={toggleMute}
       className={`relative flex shrink-0 items-center justify-center transition-all ${base}`}
-      aria-label={isMuted ? "Unmute video audio" : "Mute video audio"}
-      title={isMuted ? "Unmute sound" : "Mute sound"}
+      aria-label={isMuted ? "Unmute sound effects" : "Mute sound effects"}
+      title={isMuted ? "Unmute sound effects" : "Mute sound effects"}
     >
       {isMuted ? (
         <VolumeX size={variant === "ghost" ? 17 : 20} aria-hidden />

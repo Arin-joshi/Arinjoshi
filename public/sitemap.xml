@@ -1,15 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-   <url>
-      <loc>https://arinjoshi.vercel.app/</loc>
-      <lastmod>2026-07-19</lastmod>
-      <changefreq>monthly</changefreq>
-      <priority>1.0</priority>
-      <image:image>
-         <image:loc>https://arinjoshi.vercel.app/profile.PNG</image:loc>
-         <image:title>Arin Joshi - Software Engineer Profile</image:title>
-         <image:caption>Arin Joshi - Software Engineer &amp; React Developer Portfolio</image:caption>
-      </image:image>
-   </url>
+  <url>
+    <loc>https://arinjoshi.vercel.app/</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://arinjoshi.vercel.app/ArinJoshiBackgroundImg.webp</image:loc>
+      <image:title>Arin Joshi - Software Engineer Portfolio Hero</image:title>
+      <image:caption>Arin Joshi - Software Engineer and React Developer based in Ahmedabad, India</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://arinjoshi.vercel.app/profile.webp</image:loc>
+      <image:title>Arin Joshi Profile Photo</image:title>
+      <image:caption>Arin Kumar Joshi - Software Engineer</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://arinjoshi.vercel.app/#about</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://arinjoshi.vercel.app/#experience</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://arinjoshi.vercel.app/#projects</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://arinjoshi.vercel.app/#skills</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://arinjoshi.vercel.app/#education</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://arinjoshi.vercel.app/#contact</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>

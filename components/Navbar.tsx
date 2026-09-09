@@ -121,21 +121,22 @@ const Navbar: React.FC = React.memo(() => {
 
   return (
     <>
-      <nav className="fixed w-full z-50 px-3 sm:px-5 lg:px-8 pt-2.5 md:pt-3.5 transition-all duration-500">
+      <nav aria-label="Primary navigation" className="fixed w-full z-50 px-3 sm:px-5 lg:px-8 pt-2.5 md:pt-3.5 transition-all duration-500">
         <div
           className={`max-w-7xl mx-auto ${glassShell} ${scrolled ? "py-2 px-3 sm:px-4" : "py-2.5 px-3 sm:px-4 md:py-3"}`}
         >
           <div className="flex items-center justify-between gap-3">
             {/* Logo */}
             <a
-              href="#"
+              href="#about"
               onClick={(e) => handleNavClick(e, "#about")}
+              aria-label="Arin Joshi - Go to about section"
               className="flex items-center gap-2.5 min-w-0 group shrink-0"
             >
               <div className="relative shrink-0">
                 <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden ring-1 ring-white/30 dark:ring-white/20 bg-slate-800/80 backdrop-blur-sm">
                   <img
-                    src="/favicon.png"
+                    src="/favicon.webp"
                     alt="Arin Joshi"
                     className="w-full h-full object-cover"
                     onError={(e) => {

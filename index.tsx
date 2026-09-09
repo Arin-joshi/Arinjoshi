@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './index.css';
 import App from './App';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { AudioProvider } from './contexts/AudioContext';
 import { DataProvider } from './contexts/DataContext';
+import { CursorProvider } from './contexts/CursorContext';
 
 // Clean up Google search text fragments from URL
 if (typeof window !== 'undefined') {
@@ -27,7 +29,9 @@ root.render(
     <ThemeProvider>
       <AudioProvider>
         <DataProvider>
-          <App />
+          <CursorProvider>
+            <App />
+          </CursorProvider>
         </DataProvider>
       </AudioProvider>
     </ThemeProvider>
