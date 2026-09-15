@@ -37,7 +37,6 @@ const ProjectImage: React.FC<{ src: string; alt: string }> = React.memo(({ src, 
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    setLoaded(false);
     const img = imgRef.current;
     if (img?.complete && img.naturalWidth > 0) {
       setLoaded(true);
@@ -56,14 +55,14 @@ const ProjectImage: React.FC<{ src: string; alt: string }> = React.memo(({ src, 
         ref={imgRef}
         src={src}
         alt={alt}
-        loading="lazy"
+        loading="eager"
         decoding="async"
         onLoad={() => setLoaded(true)}
         onError={(e) => {
           e.currentTarget.src = FALLBACK_PROJECT_IMAGE;
           setLoaded(true);
         }}
-        className={`w-full h-full object-cover object-center transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
+        className={`w-full h-full object-cover object-center transition-all duration-300 group-hover/img:scale-105 ${loaded ? 'opacity-100' : 'opacity-90'}`}
       />
     </>
   );
@@ -254,22 +253,19 @@ const Projects: React.FC = React.memo(() => {
                           playAudioCue('click');
                           if (project.liveUrl) window.open(project.liveUrl, '_blank', 'noopener,noreferrer');
                         }}
-                        className="block relative w-full aspect-video overflow-hidden shrink-0 group/img"
+                        className="block relative w-full aspect-video overflow-hidden shrink-0 group/img bg-slate-900"
                       >
                         <ProjectImage src={project.imageUrl} alt={project.title} />
                         
-                        {/* Dim overlay — desktop/laptop only; mobile & tablet stay clear */}
-                        <div className="absolute inset-0 opacity-0 lg:opacity-100 lg:bg-black/80 transition-opacity duration-300 ease-out lg:group-hover/img:opacity-0 pointer-events-none z-[1]" />
-                        
                         {/* High-end micro tag badges overlay */}
                         <div className="absolute top-1.5 left-1.5 sm:top-3 sm:left-3 flex gap-2 z-[2]">
-                          <span className="px-1.5 py-0.5 sm:px-2 rounded text-[8px] sm:text-[9px] font-medium backdrop-blur-md border border-white/20 text-white bg-black/35">
+                          <span className="px-1.5 py-0.5 sm:px-2 rounded text-[8px] sm:text-[9px] font-medium backdrop-blur-md border border-white/20 text-white bg-black/50 shadow-sm">
                             {project.category}
                           </span>
                         </div>
 
-                        <div className="absolute bottom-1.5 left-1.5 right-1.5 sm:bottom-3 sm:left-3 sm:right-3 hidden sm:flex items-center justify-between z-[2]">
-                          <span className="text-[10px] font-medium text-white/80 truncate max-w-[70%]">
+                        <div className="absolute bottom-1.5 left-1.5 right-1.5 sm:bottom-3 sm:left-3 sm:right-3 flex items-center justify-between z-[2]">
+                          <span className="text-[10px] font-medium text-white/90 drop-shadow-md truncate max-w-[70%]">
                             {meta.subCategory}
                           </span>
                         </div>

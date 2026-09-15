@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 
 export function useRafTilt() {
   const [hoverCoords, setHoverCoords] = useState<Record<string, { x: number; y: number }>>({});

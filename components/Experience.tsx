@@ -27,13 +27,13 @@ const companyMetaMap: Record<string, CompanyMeta> = {
     icon: <Globe size={16} className="text-violet-500 dark:text-violet-400" />,
     tech: ['React.js', 'PHP', 'Laravel', 'MySQL', 'AI Integration'],
     metrics: [
+      { label: 'Schools Supported', value: '3,500+', desc: 'Engineered observation workflows for Education Walkthrough platform.' },
       { label: 'Database Optimization', value: '+40%', desc: 'Optimized complex SQL queries and API response times.' },
       { label: 'Frontend Migration', value: '100%', desc: 'Ported legacy monolith pages into modular React components.' },
-      { label: 'AI Search Matcher', value: '98%', desc: 'Engineered search matches for freelance digital marketer tools.' },
       { label: 'API Integrations', value: '12+', desc: 'Shipped third-party API integrations as production-grade solutions.' }
     ],
     status: 'Current',
-    category: 'Marketplace Engineering'
+    category: 'SaaS & Marketplace Engineering'
   },
   'exp-2': {
     color: 'from-red-500 to-rose-600',

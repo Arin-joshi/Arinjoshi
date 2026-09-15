@@ -139,11 +139,11 @@ const SplashCursor: React.FC<SplashCursorProps> = ({
         antialias: false,
         preserveDrawingBuffer: false
       };
-      let gl = canvasElement.getContext('webgl2', params) as WebGL2RenderingContext | null;
+      let gl: any = canvasElement.getContext('webgl2', params);
       const isWebGL2 = !!gl;
       if (!isWebGL2) {
-        gl = (canvasElement.getContext('webgl', params) ||
-          canvasElement.getContext('experimental-webgl', params)) as WebGLRenderingContext | null;
+        gl = canvasElement.getContext('webgl', params) ||
+          canvasElement.getContext('experimental-webgl', params);
       }
       if (!gl) {
         throw new Error('WebGL not supported');

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useData } from "../contexts/DataContext";
+import { useAudio } from "../contexts/AudioContext";
 import {
   ArrowRight,
   Download,
@@ -20,14 +21,41 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = true }) => {
   const { personalInfo } = useData();
+  const { isMuted } = useAudio();
   const [typedText, setTypedText] = useState("");
   const [cursorVisible, setCursorVisible] = useState(true);
   const [nameColorIndex, setNameColorIndex] = useState(0);
   const [summaryExpanded, setSummaryExpanded] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout>();
+  const videoRef = useRef<HTMLVideoElement>(null);
   const heroBackground =
     personalInfo.heroBackgroundImage || "/ArinJoshiBackgroundImg.webp";
+  const heroVideo =
+    personalInfo.heroVideo || "/Video.MP4";
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = isMuted;
+    if (!document.hidden) {
+      video.play().catch(() => {});
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        video.pause();
+      } else {
+        video.play().catch(() => {});
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [isMuted]);
 
   // Color gradients that work well in both light and dark themes
   const nameColorGradients = [
@@ -157,16 +185,19 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = true }) => 
           75%       { transform: rotate(-10deg); }
       `}</style>
 
-      {/* Desktop full-screen background image */}
-      <img
-        src={heroBackground}
-        alt=""
-        aria-hidden="true"
-        decoding="async"
-        fetchPriority="high"
-        className={`hidden lg:block absolute inset-0 w-full h-full object-cover z-0 select-none pointer-events-none transition-opacity duration-500 ${ready ? "opacity-100" : "opacity-0"}`}
-      />
-      <div className="hidden lg:block absolute inset-0 bg-black/70 z-10 pointer-events-none" />
+      {/* Hero background video — single video element for smooth infinite loop & zero audio conflict */}
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted={isMuted}
+        playsInline
+        poster={heroBackground}
+        className={`absolute inset-0 w-full h-full object-cover z-0 select-none pointer-events-none transition-opacity duration-500 ${ready ? "opacity-100" : "opacity-0"}`}
+      >
+        <source src={heroVideo} type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-white/5 dark:bg-black/5 z-10 pointer-events-none transition-colors duration-300" />
 
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-0 z-20">
         <div className="flex flex-col">
@@ -294,14 +325,13 @@ const Hero: React.FC<HeroProps> = React.memo(({ visitorName, ready = true }) => 
             </div>
           </div>
 
-          {/* Mobile / tablet full-width hero image */}
+          {/* Mobile / tablet hero media card */}
           <div className="relative order-1 lg:hidden -mx-4 sm:-mx-6 mb-4 sm:mb-5">
-            <div className="relative w-full min-h-[52vw] sm:min-h-[340px] max-h-[420px]">
+            <div className="relative w-full min-h-[52vw] sm:min-h-[340px] max-h-[420px] overflow-hidden rounded-b-2xl">
               <img
                 src={heroBackground}
                 alt={personalInfo.name}
                 loading="eager"
-                fetchPriority="high"
                 decoding="async"
                 className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-300 ${ready ? "opacity-100" : "opacity-0"}`}
               />

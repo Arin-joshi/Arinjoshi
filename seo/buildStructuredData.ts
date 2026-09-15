@@ -115,7 +115,7 @@ export function buildStructuredData() {
             name: project.title,
             applicationCategory: project.category,
             description: project.description.join(' '),
-            image: `${SITE_URL}${decodeURIComponent(project.imageUrl)}`,
+            image: `${SITE_URL}${encodeURI(project.imageUrl)}`,
             url: project.liveUrl || `${SITE_URL}/#projects`,
           },
         })),

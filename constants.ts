@@ -8,6 +8,7 @@ export const PERSONAL_INFO = {
   location: "Ahmedabad, Gujarat",
   summary: "Software Engineer with 3+ years of experience building scalable web applications using React.js, TypeScript, JavaScript, and the MERN stack. Skilled in real-time systems, high-performance frontend architecture, REST APIs, and accessible UI development. Strong in DSA, System Design, and modern Agile workflows, with a focus on delivering fast, production-grade applications for startups and MNCs.",
   heroBackgroundImage: "/ArinJoshiBackgroundImg.webp",
+  heroVideo: "/Video.MP4",
 };
 
 export const EXPERIENCE: Experience[] = [
@@ -18,9 +19,10 @@ export const EXPERIENCE: Experience[] = [
     period: "Feb 2026 - Present",
     location: "Ahmedabad, Gujarat",
     description: [
-      "Building and enhancing a U.S.-based freelance marketplace and business growth platform (Legiit) serving digital marketers, entrepreneurs, and agencies using PHP, Laravel, React.js, and MySQL to develop scalable, production-ready features.",
-      "Led modernization of legacy PHP applications by migrating pages to React.js, creating highly responsive and user-friendly interfaces with improved UX/UI design that increased user engagement and overall platform efficiency.",
-      "Implemented AI-powered platform features, handled complex business logic, optimized MySQL database queries, and delivered third-party API integrations as maintainable production-grade solutions, reducing technical debt across the codebase."
+      "Building and enhancing scalable production platforms including Legiit (U.S. freelance marketplace) and Education Walkthrough (classroom observation & teacher coaching software used in 3,500+ schools) using React.js, PHP, Laravel, and MySQL.",
+      "Engineered core features for Education Walkthrough (https://educationwalkthrough.com/), including real-time classroom observation dashboards, rubric scoring workflows, automated PDF reports, and teacher coaching analytics.",
+      "Led modernization of legacy PHP applications by migrating pages to modular React.js components, creating highly responsive UI layouts with improved UX design that increased user engagement and platform performance.",
+      "Implemented AI-powered platform features, optimized MySQL database queries (achieving +40% query performance gains), and delivered 12+ third-party API integrations as maintainable production-ready solutions."
     ]
   },
   {
@@ -53,7 +55,7 @@ export const PROJECTS: Project[] = [
     id: "proj-1",
     title: "CoinFlip Game",
     category: "Game",
-    imageUrl: "/Project%20Image/CoinFlip.webp",
+    imageUrl: "/Project Image/CoinFlip.webp",
     description: [
       "Real-time multiplayer coin betting game built with React.js and WebSockets.",
       "Two play modes: Multiply Mode & Instant Mode.",
@@ -64,7 +66,7 @@ export const PROJECTS: Project[] = [
     id: "proj-2",
     title: "More or Less Game",
     category: "Game",
-    imageUrl: "/Project%20Image/More%20or%20Less.webp",
+    imageUrl: "/Project Image/More or Less.webp",
     description: [
       "Interactive number prediction game with multiple difficulty levels.",
       "Real-time result calculation with instant UI updates.",
@@ -75,7 +77,7 @@ export const PROJECTS: Project[] = [
     id: "proj-3",
     title: "Triple Game",
     category: "Game",
-    imageUrl: "/Project%20Image/Triple%20Game.webp",
+    imageUrl: "/Project Image/Triple Game.webp",
     description: [
       "Fast-paced tile matching game with real-time scoring logic.",
       "Multiplier-based reward system for higher engagement.",
@@ -86,7 +88,7 @@ export const PROJECTS: Project[] = [
     id: "proj-4",
     title: "Company Website",
     category: "Web",
-    imageUrl: "/Project%20Image/Company%20Website.webp",
+    imageUrl: "/Project Image/Company Website.webp",
     liveUrl: "https://kotiboxglobaltech.com/",
     description: [
       "Fully responsive corporate website built using the MERN stack.",
@@ -98,7 +100,7 @@ export const PROJECTS: Project[] = [
     id: "proj-5",
     title: "QR Generator App",
     category: "Web",
-    imageUrl: "/Project%20Image/QR%20Generator.webp",
+    imageUrl: "/Project Image/QR Generator.webp",
     liveUrl: "https://arin-qr.netlify.app/",
     description: [
       "Web-based QR code generator built with React.js.",
@@ -110,7 +112,7 @@ export const PROJECTS: Project[] = [
     id: "proj-6",
     title: "Astrology App",
     category: "Web",
-    imageUrl: "/Project%20Image/Astrology%20App.webp",
+    imageUrl: "/Project Image/Astrology App.webp",
     liveUrl: "https://nkjoshi.netlify.app/",
     description: [
       "Modern astrology web application with dynamic horoscope features.",
@@ -122,7 +124,7 @@ export const PROJECTS: Project[] = [
     id: "proj-7",
     title: "Resume Maker",
     category: "Web",
-    imageUrl: "/Project%20Image/Resume%20Maker.webp",
+    imageUrl: "/Project Image/Resume Maker.webp",
     liveUrl: "https://arinresumemaker.netlify.app/",
     description: [
       "Interactive resume builder with customizable templates.",
@@ -134,7 +136,7 @@ export const PROJECTS: Project[] = [
     id: "proj-8",
     title: "JSX & TSX Converter",
     category: "Web",
-    imageUrl: "/Project%20Image/JSX%20to%20TSX.webp",
+    imageUrl: "/Project Image/JSX to TSX.webp",
     liveUrl: "https://arinjsxconverter.netlify.app/",
     description: [
       "Developer utility tool to convert JSX code to TSX format.",
@@ -146,7 +148,7 @@ export const PROJECTS: Project[] = [
     id: "proj-9",
     title: "Spine Animation Viewer",
     category: "Web",
-    imageUrl: "/Project%20Image/Spine%20Viewer.webp",
+    imageUrl: "/Project Image/Spine Viewer.webp",
     liveUrl: "https://spine-viewer-arin.netlify.app/",
     description: [
       "Web-based Spine animation preview tool.",
@@ -158,12 +160,24 @@ export const PROJECTS: Project[] = [
     id: "proj-10",
     title: "Legiit Course Service Provider App",
     category: "App",
-    imageUrl: "/Project%20Image/Legiit.webp",
+    imageUrl: "/Project Image/Legiit.webp",
     liveUrl: "https://legiit.com/sign-in",
     description: [
       "Authentication and account flows for the Legiit marketplace platform.",
       "Course and service discovery with a focus on seller–buyer engagement.",
       "Responsive UI patterns for dashboards, listings, and secure sign-in experiences."
+    ]
+  },
+  {
+    id: "proj-11",
+    title: "Education Walkthrough",
+    category: "Web",
+    imageUrl: "/Project Image/Education Walkthrough.webp",
+    liveUrl: "https://educationwalkthrough.com/",
+    description: [
+      "Classroom walkthrough software that streamlines the observation process and creates actionable feedback with personalized coaching.",
+      "Instant feedback sharing and real-time professional growth observation tools for educators.",
+      "Comprehensive observation dashboard trusted by instructional leaders in over 3,500 schools."
     ]
   }
 ];

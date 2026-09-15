@@ -4,7 +4,8 @@ import { useAudio } from '../contexts/AudioContext';
 import { 
   Award, GraduationCap, Code2, 
   Zap, Cpu, Brain, Trophy,
-  ExternalLink, Calendar, MapPin, Star
+  ExternalLink, Calendar, MapPin, Star,
+  Rocket, Crown, Globe
 } from 'lucide-react';
 import LookAtCursor from './LookAtCursor';
 import { useRafTilt } from '../hooks/useRafTilt';
@@ -376,6 +377,92 @@ const Skills: React.FC = React.memo(() => {
                 </div>
               ))}
             </div>
+
+            {/* Featured Founder Startup Card — Fills empty space below Education */}
+            <div className="mt-5 sm:mt-6">
+              <div className="flex items-center gap-2.5 sm:gap-3 mb-3 sm:mb-4">
+                <div className="p-2 sm:p-2.5 bg-cyan-500/10 dark:bg-cyan-500/10 rounded-lg sm:rounded-xl border border-cyan-500/20 shrink-0">
+                  <Rocket size={16} className="sm:w-[18px] sm:h-[18px] text-cyan-500 dark:text-cyan-400" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="text-base sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">Own Venture & Startup</h3>
+                  <p className="text-[10px] sm:text-xs text-slate-500 font-medium">Founder & Owner Leadership</p>
+                </div>
+              </div>
+
+              <div className="group relative transition-all duration-200 rounded-xl sm:rounded-2xl">
+                <div 
+                  className="relative p-[1px] rounded-xl sm:rounded-2xl bg-slate-200 dark:bg-slate-800 transition-all duration-300"
+                >
+                  <div className="bg-white/95 dark:bg-slate-950 p-4 sm:p-5 rounded-[11px] sm:rounded-[15px] relative overflow-hidden">
+                    
+                    {/* Top Row: Logo + Title + Founder Badge */}
+                    <div className="flex items-center justify-between gap-3 mb-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-900 p-1.5 shrink-0 border border-slate-700/50 shadow-md flex items-center justify-center">
+                          <img 
+                            src="/Project Image/Arin's Technology.png" 
+                            alt="Arins Technology Logo" 
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        <div className="min-w-0">
+                          <h4 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
+                            Arins Technology
+                          </h4>
+                          <p className="text-[10px] sm:text-xs font-semibold text-cyan-600 dark:text-cyan-400">
+                            Founder & Owner
+                          </p>
+                        </div>
+                      </div>
+
+                      <span className="shrink-0 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center gap-1">
+                        <Crown size={10} className="text-amber-400 fill-amber-400/40" />
+                        Founder
+                      </span>
+                    </div>
+
+                    {/* Thumbnail Image Banner */}
+                    <div className="relative w-full aspect-[16/9] rounded-lg sm:rounded-xl overflow-hidden mb-3 border border-slate-200 dark:border-slate-800 group/banner">
+                      <img 
+                        src="/Project Image/Arin'sTechnology.webp" 
+                        alt="Arins Technology Website" 
+                        className="w-full h-full object-cover object-center transition-transform duration-300 group-hover/banner:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent pointer-events-none" />
+                      <div className="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-white text-[10px] font-medium pointer-events-none">
+                        <span className="flex items-center gap-1 backdrop-blur-md bg-black/40 px-2 py-0.5 rounded border border-white/10">
+                          <Globe size={10} className="text-cyan-400" />
+                          arinstechnology.in
+                        </span>
+                        <span className="backdrop-blur-md bg-cyan-500/30 text-cyan-200 px-2 py-0.5 rounded border border-cyan-400/30 font-semibold text-[9px]">
+                          Self Startup
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 mb-3.5 leading-relaxed">
+                      Founded Arins Technology as a self-started technology venture delivering web development, custom software engineering, and digital transformation solutions.
+                    </p>
+
+                    {/* Visit Button */}
+                    <a
+                      href="https://www.arinstechnology.in/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => playAudioCue('click')}
+                      className="w-full py-2 rounded-lg sm:rounded-xl bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white text-[10px] sm:text-xs font-semibold tracking-wide uppercase text-center flex items-center justify-center gap-1.5 transition-all hover:shadow-[0_0_20px_rgba(6,182,212,0.25)] hover:scale-[1.01] group/btn"
+                    >
+                      <span>Visit Arins Technology</span>
+                      <ExternalLink size={12} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+                    </a>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
 
         </div>
