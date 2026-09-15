@@ -110,9 +110,9 @@ const Navbar: React.FC = React.memo(() => {
 
   const glassShell =
     "rounded-2xl border backdrop-blur-2xl backdrop-saturate-150 transition-all duration-500 ease-out " +
-    "bg-white/55 dark:bg-slate-950/45 border-white/40 dark:border-white/10 " +
-    "shadow-[0_8px_32px_rgba(15,23,42,0.06),inset_0_1px_0_rgba(255,255,255,0.55)] " +
-    "dark:shadow-[0_8px_40px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.08)]";
+    "bg-white/90 dark:bg-slate-950/85 border-white/60 dark:border-white/20 " +
+    "shadow-[0_8px_32px_rgba(15,23,42,0.12),inset_0_1px_0_rgba(255,255,255,0.9)] " +
+    "dark:shadow-[0_8px_40px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.12)]";
 
   const glassTrack =
     "relative flex items-center gap-0.5 p-1 rounded-xl border backdrop-blur-xl " +
@@ -148,11 +148,11 @@ const Navbar: React.FC = React.memo(() => {
               </div>
 
               <div className="min-w-0 leading-tight">
-                <span className="block text-sm sm:text-base font-bold tracking-tight truncate text-slate-900 dark:text-white">
+                <span className="block text-sm sm:text-base font-extrabold tracking-tight truncate text-slate-950 dark:text-white">
                   Arin
-                  <span className="text-red-500 dark:text-red-400">Joshi</span>
+                  <span className="text-red-600 dark:text-red-500 ml-0.5">Joshi</span>
                 </span>
-                <span className="hidden sm:block text-[10px] text-slate-500 dark:text-slate-400">
+                <span className="block text-[10px] sm:text-[11px] font-semibold text-slate-600 dark:text-slate-300 tracking-wide">
                   Software Engineer
                 </span>
               </div>

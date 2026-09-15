@@ -19,10 +19,10 @@ export const EXPERIENCE: Experience[] = [
     period: "Feb 2026 - Present",
     location: "Ahmedabad, Gujarat",
     description: [
-      "Building and enhancing scalable production platforms including Legiit (U.S. freelance marketplace) and Education Walkthrough (classroom observation & teacher coaching software used in 3,500+ schools) using React.js, PHP, Laravel, and MySQL.",
-      "Engineered core features for Education Walkthrough (https://educationwalkthrough.com/), including real-time classroom observation dashboards, rubric scoring workflows, automated PDF reports, and teacher coaching analytics.",
-      "Led modernization of legacy PHP applications by migrating pages to modular React.js components, creating highly responsive UI layouts with improved UX design that increased user engagement and platform performance.",
-      "Implemented AI-powered platform features, optimized MySQL database queries (achieving +40% query performance gains), and delivered 12+ third-party API integrations as maintainable production-ready solutions."
+      "Software Engineer at Aipxperts engineered and scaled core production applications for two main client platforms: Education Walkthrough and Legiit.",
+      "Engineered core modules for Education Walkthrough (https://educationwalkthrough.com/) — classroom walkthrough software that streamlines the observation process and creates actionable feedback with personalized coaching for educators across 3,500+ schools.",
+      "Maintained and enhanced key features for Legiit (https://legiit.com/), a U.S. freelance service marketplace platform, migrating legacy monolithic pages into modular React.js components with enhanced responsive UX.",
+      "Implemented AI-powered platform features, optimized complex MySQL queries (+40% query performance gains), and integrated 12+ third-party APIs into maintainable production solutions."
     ]
   },
   {
@@ -163,9 +163,9 @@ export const PROJECTS: Project[] = [
     imageUrl: "/Project Image/Legiit.webp",
     liveUrl: "https://legiit.com/sign-in",
     description: [
-      "Authentication and account flows for the Legiit marketplace platform.",
-      "Course and service discovery with a focus on seller–buyer engagement.",
-      "Responsive UI patterns for dashboards, listings, and secure sign-in experiences."
+      "U.S. freelance marketplace platform developed at Aipxperts as Software Engineer.",
+      "Authentication, seller–buyer engagement, and account management workflows.",
+      "Migrated legacy monolithic pages into modular React.js UI components."
     ]
   },
   {
@@ -176,8 +176,8 @@ export const PROJECTS: Project[] = [
     liveUrl: "https://educationwalkthrough.com/",
     description: [
       "Classroom walkthrough software that streamlines the observation process and creates actionable feedback with personalized coaching.",
-      "Instant feedback sharing and real-time professional growth observation tools for educators.",
-      "Comprehensive observation dashboard trusted by instructional leaders in over 3,500 schools."
+      "Developed at Aipxperts as Software Engineer, empowering educators with instant feedback sharing and real-time professional growth tools.",
+      "Comprehensive observation dashboard with custom rubrics and automated reporting, trusted by instructional leaders in 3,500+ schools."
     ]
   }
 ];

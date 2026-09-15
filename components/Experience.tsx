@@ -23,14 +23,14 @@ const companyMetaMap: Record<string, CompanyMeta> = {
   'exp-3': {
     color: 'from-violet-500 to-indigo-600',
     accentColor: '#8b5cf6',
-    subtitle: 'Platform Operations & Full Stack Engineering',
+    subtitle: 'Software Engineer • Education Walkthrough & Legiit',
     icon: <Globe size={16} className="text-violet-500 dark:text-violet-400" />,
     tech: ['React.js', 'PHP', 'Laravel', 'MySQL', 'AI Integration'],
     metrics: [
       { label: 'Schools Supported', value: '3,500+', desc: 'Engineered observation workflows for Education Walkthrough platform.' },
-      { label: 'Database Optimization', value: '+40%', desc: 'Optimized complex SQL queries and API response times.' },
-      { label: 'Frontend Migration', value: '100%', desc: 'Ported legacy monolith pages into modular React components.' },
-      { label: 'API Integrations', value: '12+', desc: 'Shipped third-party API integrations as production-grade solutions.' }
+      { label: 'Core Projects', value: '2 Apps', desc: 'Engineered Education Walkthrough & Legiit platforms at Aipxperts.' },
+      { label: 'Database Speed', value: '+40%', desc: 'Optimized complex SQL queries and API response times.' },
+      { label: 'Frontend Migration', value: '100%', desc: 'Ported legacy monolith pages into modular React components.' }
     ],
     status: 'Current',
     category: 'SaaS & Marketplace Engineering'

@@ -191,11 +191,11 @@ const AIAssistant: React.FC = React.memo(() => {
       };
     }
 
-    const isAipxperts = words.some(w => isKeywordMatch(w, 'aipxperts') || isKeywordMatch(w, 'legiit'));
+    const isAipxperts = words.some(w => isKeywordMatch(w, 'aipxperts') || isKeywordMatch(w, 'legiit') || isKeywordMatch(w, 'education') || isKeywordMatch(w, 'walkthrough'));
     if (isAipxperts) {
       return {
         sender: 'ai',
-        text: "At Aipxperts, Arin works on Legiit (U.S. freelance portal) and has fun: 💻\n\n• Migrating legacy monolithic pages to modular React.js structures.\n• Creating AI-powered tools and backend logic in PHP/Laravel.\n• Optimizing complex SQL query response times."
+        text: "At Aipxperts, Arin works as a Software Engineer on two major production platforms: 💻\n\n• 🏫 Education Walkthrough (https://educationwalkthrough.com/): Classroom walkthrough software that streamlines the observation process and creates actionable feedback with personalized coaching for educators in 3,500+ schools.\n• 🛍️ Legiit (https://legiit.com/): U.S. freelance service marketplace — migrating legacy pages to modular React.js components, AI features & MySQL optimization."
       };
     }
 
