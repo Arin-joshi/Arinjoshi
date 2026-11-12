@@ -7,18 +7,28 @@ import {
   MapPin,
   Send,
   Check,
+  CheckCircle2,
+  AlertCircle,
   Copy,
   Code2,
   Github,
   Linkedin,
+  Loader2,
   MessageCircle,
   PhoneCall,
   ChevronDown,
 } from "lucide-react";
 
+const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+const PUBLIC_WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ?? "";
+
 export default function ContactSection() {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [countdown, setCountdown] = useState(5);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [botcheck, setBotcheck] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState({
@@ -46,20 +56,120 @@ export default function ContactSection() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (status !== "success") return;
+    setCountdown(5);
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setStatus("idle");
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [status]);
+
   const copyEmail = () => {
     navigator.clipboard.writeText(PERSONAL_INFO.email);
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 2000);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const mailtoUrl = `mailto:${PERSONAL_INFO.email}?subject=${encodeURIComponent(
-      formData.subject + " - from " + formData.name
-    )}&body=${encodeURIComponent(
-      `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-    )}`;
-    window.location.href = mailtoUrl;
+    if (botcheck) return;
+
+    const trimmedName = formData.name.trim();
+    const trimmedEmail = formData.email.trim();
+    const trimmedMessage = formData.message.trim();
+
+    setStatus("submitting");
+    setErrorMessage("");
+
+    try {
+      // Resolve Web3Forms key (supports both NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY and server WEB3FORMS_ACCESS_KEY)
+      let web3Key = PUBLIC_WEB3FORMS_KEY;
+      if (!web3Key) {
+        const cfgRes = await fetch("/api/contact", { cache: "no-store" });
+        if (cfgRes.ok) {
+          const cfg = await cfgRes.json().catch(() => ({}));
+          web3Key = typeof cfg.web3formsKey === "string" ? cfg.web3formsKey.trim() : "";
+        }
+      }
+
+      let web3Ok = false;
+      let web3Error = "";
+
+      // Submit Web3Forms directly from the browser using FormData (matches Web3Forms official React flow)
+      if (web3Key) {
+        const fd = new FormData();
+        fd.append("access_key", web3Key);
+        fd.append("name", trimmedName);
+        fd.append("email", trimmedEmail);
+        fd.append("subject", `[From Arin's Portfolio] ${formData.subject} — ${trimmedName}`);
+        fd.append("from_name", "Arin's Portfolio");
+        fd.append("message", trimmedMessage);
+
+        const web3Res = await fetch(WEB3FORMS_ENDPOINT, {
+          method: "POST",
+          body: fd,
+        });
+        const web3Data = await web3Res.json().catch(() => ({}));
+        web3Ok = Boolean(web3Res.ok && web3Data.success);
+        if (!web3Ok) {
+          web3Error = web3Data.message || "Web3Forms email delivery failed.";
+        }
+      }
+
+      // Send Telegram notification securely via server route
+      const apiRes = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: trimmedName,
+          email: trimmedEmail,
+          subject: formData.subject,
+          message: trimmedMessage,
+          botcheck,
+          skipWeb3Forms: Boolean(web3Key),
+        }),
+      });
+
+      const apiData = await apiRes.json().catch(() => ({}));
+      const telegramOk = Boolean(apiRes.ok && apiData.success);
+
+      if (web3Key && !web3Ok) {
+        setStatus("error");
+        setErrorMessage(web3Error);
+        return;
+      }
+
+      if (web3Ok || telegramOk) {
+        setStatus("success");
+        setFormData({
+          name: "",
+          email: "",
+          subject: "Full-Time SDE Opportunity",
+          message: "",
+        });
+      } else {
+        setStatus("error");
+        setErrorMessage(
+          web3Error || apiData.message || "Could not send message. Please try again."
+        );
+      }
+    } catch {
+      setStatus("error");
+      setErrorMessage("Network error while sending. Please try again or email directly.");
+    }
   };
 
   return (
@@ -205,16 +315,86 @@ export default function ContactSection() {
           <div className="lg:col-span-7 w-full min-w-0">
             <div className="rounded-2xl sm:rounded-3xl bg-white dark:bg-[#111115] border border-zinc-200/90 dark:border-zinc-800/90 p-5 sm:p-8 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
 
-              <div className="mb-6 space-y-1">
-                <h3 className="text-lg sm:text-xl font-bold text-zinc-950 dark:text-white tracking-tight">
-                  Send Direct Message
-                </h3>
-                <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
-                  Fill this out to generate an email directly to Arin Joshi.
-                </p>
+              <div className="mb-6 flex items-start justify-between gap-4">
+                <div className="space-y-1">
+                  <h3 className="text-lg sm:text-xl font-bold text-zinc-950 dark:text-white tracking-tight">
+                    Send Direct Message
+                  </h3>
+                  <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+                    Send a message directly — no external email app required.
+                  </p>
+                </div>
+
+                {status === "success" && (
+                  <div
+                    className="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800/90 border border-zinc-200/80 dark:border-zinc-700/70 shrink-0"
+                    title={`Resetting form in ${countdown}s`}
+                    aria-live="polite"
+                  >
+                    <svg className="w-4 h-4 -rotate-90" viewBox="0 0 20 20">
+                      <circle
+                        cx="10"
+                        cy="10"
+                        r="8"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        className="text-zinc-200 dark:text-zinc-700"
+                      />
+                      <circle
+                        cx="10"
+                        cy="10"
+                        r="8"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeDasharray={50.26}
+                        strokeDashoffset={50.26 * (1 - countdown / 5)}
+                        className="text-emerald-500 transition-all duration-1000 ease-linear"
+                      />
+                    </svg>
+                    <span className="font-mono-code text-xs font-semibold text-zinc-700 dark:text-zinc-200 tabular-nums">
+                      {countdown}s
+                    </span>
+                  </div>
+                )}
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-5 text-left">
+              {status === "success" ? (
+                <div className="py-10 px-4 text-center space-y-4 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/25 border border-emerald-200/80 dark:border-emerald-800/50">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/25 flex items-center justify-center mx-auto">
+                    <CheckCircle2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                  </div>
+                  <div className="space-y-1 max-w-sm mx-auto">
+                    <h4 className="text-base font-bold text-zinc-950 dark:text-white">
+                      Message sent successfully
+                    </h4>
+                    <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300">
+                      Thanks for reaching out. Arin will reply to your email shortly.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setStatus("idle")}
+                    className="inline-flex items-center justify-center px-4 py-2 rounded-xl bg-zinc-950 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-950 text-xs font-semibold transition-colors cursor-pointer"
+                  >
+                    Send another message
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-5 text-left">
+                  {/* Web3Forms Honeypot Anti-Spam */}
+                  <input
+                    type="checkbox"
+                    name="botcheck"
+                    checked={botcheck}
+                    onChange={(e) => setBotcheck(e.target.checked)}
+                    className="hidden"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                  />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
                   {/* Name Input */}
@@ -334,15 +514,41 @@ export default function ContactSection() {
                   />
                 </div>
 
-                {/* Apple Signature High-Tactile Submit Button */}
-                <button
-                  type="submit"
-                  className="group relative w-full py-4 px-6 rounded-2xl bg-gradient-to-b from-zinc-900 via-zinc-950 to-black hover:from-zinc-800 hover:to-zinc-900 text-white dark:from-white dark:via-zinc-100 dark:to-zinc-200 dark:hover:from-zinc-100 dark:hover:to-zinc-300 dark:text-black font-semibold text-sm shadow-[0_2px_10px_rgba(0,0,0,0.14),0_1px_2px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2)] dark:shadow-[0_4px_20px_rgba(255,255,255,0.15),0_1px_2px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.9)] active:scale-[0.985] transition-all duration-200 flex items-center justify-center gap-2.5 cursor-pointer"
-                >
-                  <Send className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                  <span>Send Message via Email</span>
-                </button>
-              </form>
+                  {status === "error" && errorMessage && (
+                    <div className="p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200/80 dark:border-rose-800/50 flex items-start gap-2.5 text-xs text-rose-700 dark:text-rose-300">
+                      <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                      <div className="space-y-1">
+                        <p>{errorMessage}</p>
+                        <a
+                          href={PERSONAL_INFO.socials.email}
+                          className="inline-block font-semibold underline"
+                        >
+                          Send via email app instead
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={status === "submitting"}
+                    className="group relative w-full py-3.5 sm:py-4 px-6 rounded-2xl bg-gradient-to-b from-zinc-900 via-zinc-950 to-black hover:from-zinc-800 hover:to-zinc-900 disabled:opacity-60 disabled:cursor-not-allowed text-white dark:from-white dark:via-zinc-100 dark:to-zinc-200 dark:hover:from-zinc-100 dark:hover:to-zinc-300 dark:text-black font-semibold text-sm shadow-[0_2px_10px_rgba(0,0,0,0.14),0_1px_2px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2)] dark:shadow-[0_4px_20px_rgba(255,255,255,0.15),0_1px_2px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.9)] active:scale-[0.985] transition-all duration-200 flex items-center justify-center gap-2.5 cursor-pointer"
+                  >
+                    {status === "submitting" ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Sending Message...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                        <span>Send Message</span>
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
             </div>
           </div>
 

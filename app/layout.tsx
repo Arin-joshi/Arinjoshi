@@ -9,7 +9,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://arinjoshi.dev"),
-  title: "Arin Joshi — Software Development Engineer | Systems & Frontend",
+  title: "Arin Joshi — Software Engineer",
   description:
     "Software Development Engineer with 3+ years of production experience building high-scale web platforms (Education Walkthrough: 3,500+ schools, Legiit freelance marketplace, real-time gaming engines with <100ms latency).",
   keywords: [
