@@ -12,12 +12,14 @@ import Footer from "@/components/Footer";
 import ProjectDetailModal from "@/components/ProjectDetailModal";
 import CommandPalette from "@/components/CommandPalette";
 import MobileAppDock from "@/components/MobileAppDock";
+import ResumeModal from "@/components/ResumeModal";
 import { Project } from "@/types";
 import { PROJECTS } from "@/constants";
 
 export default function HomePage() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isCommandOpen, setIsCommandOpen] = useState(false);
+  const [isResumeOpen, setIsResumeOpen] = useState(false);
 
   const handleOpenShowcaseProject = (projectId: string) => {
     const found = PROJECTS.find((p) => p.id === projectId);
@@ -27,13 +29,17 @@ export default function HomePage() {
   return (
     <div className="relative min-h-screen bg-white dark:bg-[#09090b] text-zinc-950 dark:text-zinc-100 selection:bg-black selection:text-white dark:selection:bg-white dark:selection:text-black">
       {/* Top Floating Header */}
-      <Navbar onOpenCommand={() => setIsCommandOpen(true)} />
+      <Navbar
+        onOpenCommand={() => setIsCommandOpen(true)}
+        onOpenResume={() => setIsResumeOpen(true)}
+      />
 
       {/* Main Page Content */}
-      <main className="relative pb-24 md:pb-0">
+      <main className="relative">
         <div id="hero">
           <Hero
             onOpenProjectCaseStudy={handleOpenShowcaseProject}
+            onOpenResume={() => setIsResumeOpen(true)}
           />
         </div>
         <ExperienceSection />
@@ -49,7 +55,7 @@ export default function HomePage() {
       <Footer />
 
       {/* Mobile Application Navigation Dock */}
-      <MobileAppDock />
+      <MobileAppDock onOpenResume={() => setIsResumeOpen(true)} />
 
       {/* Project Case Study Drawer / Modal */}
       <ProjectDetailModal
@@ -57,11 +63,18 @@ export default function HomePage() {
         onClose={() => setSelectedProject(null)}
       />
 
+      {/* Resume Download Confirmation Modal */}
+      <ResumeModal
+        isOpen={isResumeOpen}
+        onClose={() => setIsResumeOpen(false)}
+      />
+
       {/* Keyboard Command Palette (⌘K) */}
       <CommandPalette
         isOpen={isCommandOpen}
         onClose={() => setIsCommandOpen(false)}
         onSelectProject={(project) => setSelectedProject(project)}
+        onOpenResume={() => setIsResumeOpen(true)}
       />
     </div>
   );

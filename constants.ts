@@ -28,6 +28,7 @@ export const PERSONAL_INFO = {
   socials: {
     github: "https://github.com/ArinJoshi07",
     linkedin: "https://www.linkedin.com/in/arin-joshi-7a1367200/",
+    leetcode: "https://leetcode.com/u/arinjoshi/",
     email: "mailto:thakararinjoshi@gmail.com",
     whatsapp: "https://wa.me/918290279001?text=Hi%20Arin,%20I%20reviewed%20your%20portfolio%20and%20products",
     phone: "tel:+918290279001",
@@ -350,7 +351,7 @@ export const SKILL_GROUPS: SkillGroup[] = [
   },
   {
     category: "AI Engineering, LLMs & Tooling",
-    description: "Leveraging agentic AI workflows, optimized token budgeting, and disciplined production engineering — not vibe coding.",
+    description: "Leveraging agentic AI workflows, optimized token budgeting, and disciplined production engineering.",
     skills: [
       { name: "Claude (Anthropic)", level: "Production Specialist", context: "Prompt Architecture, Sub-Token Budgeting & Context Windows" },
       { name: "Cursor IDE", level: "Production Specialist", context: "Agentic Multi-File Workflows & System Rules (.cursorrules)" },

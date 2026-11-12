@@ -6,17 +6,17 @@ import { GraduationCap, Award, CheckCircle2, Calendar, MapPin } from "lucide-rea
 
 export default function EducationAndCerts() {
   return (
-    <section id="education" className="py-20 sm:py-28 border-t border-zinc-200/80 dark:border-zinc-800/80 relative">
+    <section id="education" className="py-11 sm:py-20 border-t border-zinc-200/80 dark:border-zinc-800/80 relative">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         
         {/* Section Header */}
-        <div className="max-w-2xl space-y-2 mb-12 sm:mb-16">
+        <div className="max-w-2xl space-y-2 mb-7 sm:mb-12">
           <div className="inline-flex items-center gap-1.5 text-xs font-mono-code font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
             <GraduationCap className="w-3.5 h-3.5" />
-            <span>Academic Rigor & Certifications</span>
+            <span>Education</span>
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-zinc-950 dark:text-white tracking-tight">
-            Education & Validated Credentials
+            Education &amp; Certifications
           </h2>
           <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400">
             Foundational computer science degree complemented by verified credentials in enterprise frontend systems, databases, and algorithms.

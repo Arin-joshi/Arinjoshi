@@ -12,9 +12,10 @@ import {
 
 interface NavbarProps {
   onOpenCommand: () => void;
+  onOpenResume?: () => void;
 }
 
-export default function Navbar({ onOpenCommand }: NavbarProps) {
+export default function Navbar({ onOpenCommand, onOpenResume }: NavbarProps) {
   const [mounted, setMounted] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const [timeString, setTimeString] = useState("IST");
@@ -162,15 +163,14 @@ export default function Navbar({ onOpenCommand }: NavbarProps) {
           </button>
 
           {/* Resume CTA (Desktop Only - on mobile, thumb-friendly MobileAppDock handles Resume with zero clipping!) */}
-          <a
-            href={PERSONAL_INFO.socials.resume}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={() => onOpenResume?.()}
             className="hidden sm:inline-flex items-center gap-2 h-10.5 px-4.5 rounded-full bg-gradient-to-b from-zinc-900 via-zinc-950 to-black hover:from-zinc-800 hover:to-zinc-900 text-white dark:from-white dark:via-zinc-100 dark:to-zinc-200 dark:hover:from-zinc-100 dark:hover:to-zinc-300 dark:text-black font-semibold text-xs sm:text-sm shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.2)] dark:shadow-[0_2px_12px_rgba(255,255,255,0.15),inset_0_1px_0_rgba(255,255,255,0.9)] active:scale-95 transition-all cursor-pointer"
           >
             <FileDown className="w-4 h-4" />
             <span>Resume</span>
-          </a>
+          </button>
         </div>
       </div>
     </header>

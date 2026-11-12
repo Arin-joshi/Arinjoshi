@@ -11,7 +11,11 @@ import {
 } from "lucide-react";
 import { PERSONAL_INFO } from "@/constants";
 
-export default function MobileAppDock() {
+interface MobileAppDockProps {
+  onOpenResume?: () => void;
+}
+
+export default function MobileAppDock({ onOpenResume }: MobileAppDockProps) {
   const [activeSection, setActiveSection] = useState("hero");
 
   useEffect(() => {
@@ -60,10 +64,10 @@ export default function MobileAppDock() {
 
   return (
     <nav
-      className="md:hidden fixed bottom-3 left-3 right-3 z-40 max-w-sm mx-auto mb-[env(safe-area-inset-bottom)]"
+      className="md:hidden fixed bottom-3 left-4 right-4 z-40 max-w-[300px] mx-auto mb-[env(safe-area-inset-bottom)]"
       aria-label="Mobile navigation dock"
     >
-      <div className="flex items-center justify-between gap-1 p-1.5 rounded-3xl bg-white/95 dark:bg-[#111116]/95 backdrop-blur-2xl border border-black/[0.08] dark:border-white/[0.1] shadow-[0_8px_32px_rgba(0,0,0,0.14),inset_0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.7),inset_0_1px_0_rgba(255,255,255,0.08)]">
+      <div className="flex items-center justify-between gap-1 p-1.5 rounded-full bg-white/95 dark:bg-[#111116]/95 backdrop-blur-2xl border border-black/[0.08] dark:border-white/[0.1] shadow-[0_8px_32px_rgba(0,0,0,0.14),inset_0_1px_0_rgba(255,255,255,0.9)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.7),inset_0_1px_0_rgba(255,255,255,0.08)]">
         {dockItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeSection === item.id;
@@ -73,40 +77,36 @@ export default function MobileAppDock() {
               key={item.id}
               href={`#${item.targetId}`}
               onClick={(e) => handleDockClick(e, item.targetId)}
-              className={`relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-2xl transition-colors duration-200 active:scale-95 z-10 ${
+              aria-label={item.label}
+              title={item.label}
+              className={`relative flex-1 flex items-center justify-center h-11 rounded-full transition-colors duration-200 active:scale-95 z-10 ${
                 isActive
-                  ? "text-white dark:text-zinc-950 font-semibold"
+                  ? "text-white dark:text-zinc-950"
                   : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white"
               }`}
             >
               {isActive && (
                 <motion.div
                   layoutId="activeDockIndicator"
-                  className="absolute inset-0 rounded-2xl bg-zinc-950 dark:bg-white shadow-[0_2px_10px_rgba(0,0,0,0.18)] dark:shadow-[0_2px_12px_rgba(255,255,255,0.25)] -z-10"
+                  className="absolute inset-0 rounded-full bg-zinc-950 dark:bg-white shadow-[0_2px_10px_rgba(0,0,0,0.18)] dark:shadow-[0_2px_12px_rgba(255,255,255,0.25)] -z-10"
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
-              <Icon className="w-4.5 h-4.5 shrink-0" />
-              <span className="text-[10px] font-mono-code font-medium mt-1 tracking-tight">
-                {item.label}
-              </span>
+              <Icon className="w-5 h-5 shrink-0" />
             </a>
           );
         })}
 
-        {/* Clean, Uniform Resume Tab (Matching other tabs without heavy blob button) */}
-        <a
-          href={PERSONAL_INFO.socials.resume}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="relative flex-1 flex flex-col items-center justify-center py-2 px-1 rounded-2xl text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors duration-150 active:scale-95 z-10"
+        {/* Clean, Uniform Resume Icon */}
+        <button
+          type="button"
+          onClick={() => onOpenResume?.()}
+          aria-label="Download Resume (PDF)"
           title="Download Resume (PDF)"
+          className="relative flex-1 flex items-center justify-center h-11 rounded-full text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors duration-150 active:scale-95 z-10 cursor-pointer"
         >
-          <FileDown className="w-4.5 h-4.5 shrink-0" />
-          <span className="text-[10px] font-mono-code font-medium mt-1 tracking-tight">
-            Resume
-          </span>
-        </a>
+          <FileDown className="w-5 h-5 shrink-0" />
+        </button>
       </div>
     </nav>
   );

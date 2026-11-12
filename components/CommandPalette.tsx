@@ -6,6 +6,7 @@ import { Project } from "@/types";
 import {
   Search,
   Command,
+  Code2,
   FileDown,
   Mail,
   Copy,
@@ -26,12 +27,14 @@ interface CommandPaletteProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectProject: (project: Project) => void;
+  onOpenResume?: () => void;
 }
 
 export default function CommandPalette({
   isOpen,
   onClose,
   onSelectProject,
+  onOpenResume,
 }: CommandPaletteProps) {
   const [query, setQuery] = useState("");
   const [copied, setCopied] = useState(false);
@@ -172,16 +175,17 @@ export default function CommandPalette({
               Actions
             </div>
 
-            <a
-              href={PERSONAL_INFO.socials.resume}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={onClose}
-              className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-colors"
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                onOpenResume?.();
+              }}
+              className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-colors cursor-pointer"
             >
               <FileDown className="w-4 h-4 text-indigo-500" />
               <span>Download Resume (PDF)</span>
-            </a>
+            </button>
 
             <button
               onClick={handleCopyEmail}
@@ -200,6 +204,17 @@ export default function CommandPalette({
             >
               <MessageSquare className="w-4 h-4 text-emerald-500" />
               <span>Chat on WhatsApp</span>
+            </a>
+
+            <a
+              href={PERSONAL_INFO.socials.leetcode}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={onClose}
+              className="flex items-center gap-3 px-3 py-2 rounded-xl text-xs text-zinc-800 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-colors"
+            >
+              <Code2 className="w-4 h-4 text-amber-500" />
+              <span>Open LeetCode Profile</span>
             </a>
 
             <button
