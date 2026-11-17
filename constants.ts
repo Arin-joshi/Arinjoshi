@@ -52,7 +52,8 @@ export const EXPERIENCE: Experience[] = [
       "Integrated 12+ third-party APIs (payment gateways, authentication providers, and AI endpoints) into resilient, fault-tolerant backend workflows."
     ],
     skills: ["React.js", "Next.js", "TypeScript", "Node.js", "MySQL", "REST APIs", "Micro-frontends", "Performance Profiling"],
-    metrics: ["3,500+ Schools", "40% Query Speedup", "12+ Enterprise APIs"]
+    metrics: ["3,500+ Schools", "40% Query Speedup", "12+ Enterprise APIs"],
+    website: "https://aipxperts.com/"
   },
   {
     id: "exp-nkb",
@@ -68,7 +69,8 @@ export const EXPERIENCE: Experience[] = [
       "Collaborated in Agile/Scrum sprints via Jira, driving sprint retrospectives, automated testing, and CI/CD deployment automation."
     ],
     skills: ["React.js", "WebSockets", "Socket.io", "TypeScript", "Java", "Node.js", "MongoDB", "Supabase", "State Sync"],
-    metrics: ["8+ Live Games", "<100ms Real-time Latency", "60 FPS Renders"]
+    metrics: ["8+ Live Games", "<100ms Real-time Latency", "60 FPS Renders"],
+    website: "https://nkbplaytech.com/"
   },
   {
     id: "exp-celebal",
@@ -83,7 +85,8 @@ export const EXPERIENCE: Experience[] = [
       "Participated in senior code reviews, Git branching strategies, and CI/CD automated test validation."
     ],
     skills: ["React.js", "JavaScript (ES6+)", "CSS Grid", "Responsive Design", "Git", "Clean Architecture"],
-    metrics: ["10+ Reusable UI Systems", "100% Cross-Browser Parity"]
+    metrics: ["10+ Reusable UI Systems", "100% Cross-Browser Parity"],
+    website: "https://celebaltech.com/"
   }
 ];
 

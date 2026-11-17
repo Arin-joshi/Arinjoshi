@@ -8,6 +8,7 @@ export interface Experience {
   description: string[];
   skills?: string[];
   metrics?: string[];
+  website?: string;
 }
 
 export interface Project {

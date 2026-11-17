@@ -4,41 +4,24 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { PERSONAL_INFO } from "@/constants";
 import {
-  Search,
-  FileDown,
   Moon,
-  Sun
+  Sun,
+  Mail,
 } from "lucide-react";
 
 interface NavbarProps {
-  onOpenCommand: () => void;
+  onOpenCommand?: () => void;
   onOpenResume?: () => void;
 }
 
 export default function Navbar({ onOpenCommand, onOpenResume }: NavbarProps) {
   const [mounted, setMounted] = useState(false);
   const [isDark, setIsDark] = useState(true);
-  const [timeString, setTimeString] = useState("IST");
 
   useEffect(() => {
     setMounted(true);
     const isDarkTheme = document.documentElement.classList.contains("dark");
     setIsDark(isDarkTheme);
-
-    const updateTime = () => {
-      const now = new Date();
-      const formatted = now.toLocaleTimeString("en-US", {
-        timeZone: "Asia/Kolkata",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      });
-      setTimeString(`${formatted} IST`);
-    };
-
-    updateTime();
-    const interval = setInterval(updateTime, 30000);
-    return () => clearInterval(interval);
   }, []);
 
   const toggleTheme = () => {
@@ -58,7 +41,6 @@ export default function Navbar({ onOpenCommand, onOpenResume }: NavbarProps) {
     { label: "Projects", targetId: "projects" },
     { label: "Skills", targetId: "stack" },
     { label: "Education", targetId: "education" },
-    { label: "Contact", targetId: "contact" },
   ];
 
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
@@ -120,35 +102,12 @@ export default function Navbar({ onOpenCommand, onOpenResume }: NavbarProps) {
           ))}
         </nav>
 
-        {/* Right Actions */}
+        {/* Right Actions: Theme Toggle + High-Conversion Contact CTA */}
         <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-          
-          {/* Status & Time Pill (Desktop Only) */}
-          <div className="hidden lg:flex items-center gap-2 h-10.5 px-3.5 rounded-full bg-zinc-100/90 dark:bg-zinc-900/90 border border-black/[0.08] dark:border-white/[0.1] text-xs font-mono-code font-medium text-zinc-700 dark:text-zinc-300 shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span suppressHydrationWarning>{timeString}</span>
-          </div>
-
-          {/* Search Button (⌘K) */}
-          <button
-            onClick={onOpenCommand}
-            className="flex items-center gap-1.5 sm:gap-2 h-9 sm:h-10.5 px-2.5 sm:px-3.5 rounded-full bg-zinc-100/90 dark:bg-zinc-900/90 hover:bg-zinc-200/90 dark:hover:bg-zinc-800/90 border border-black/[0.08] dark:border-white/[0.1] text-xs font-medium text-zinc-700 dark:text-zinc-200 transition-all cursor-pointer group shadow-xs active:scale-95"
-            title="Search projects and actions (⌘K or Ctrl+K)"
-            aria-label="Search and command menu"
-          >
-            <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-zinc-400 group-hover:text-blue-500 transition-colors" />
-            <span className="hidden sm:inline text-zinc-600 dark:text-zinc-400 font-mono-code text-xs">
-              Search
-            </span>
-            <kbd className="hidden sm:inline font-mono-code text-[11px] px-1.5 py-0.5 rounded-md bg-zinc-200/90 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-black/[0.06] dark:border-white/[0.08]">
-              ⌘K
-            </kbd>
-          </button>
-
           {/* Theme Toggle Button (Hydration Safe) */}
           <button
             onClick={toggleTheme}
-            className="w-9 h-9 sm:w-10.5 sm:h-10.5 flex items-center justify-center rounded-full bg-zinc-100/90 dark:bg-zinc-900/90 hover:bg-zinc-200/90 dark:hover:bg-zinc-800/90 border border-black/[0.08] dark:border-white/[0.1] text-zinc-700 dark:text-zinc-200 transition-all cursor-pointer shadow-xs active:scale-95"
+            className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-zinc-100/90 dark:bg-zinc-900/90 hover:bg-zinc-200/90 dark:hover:bg-zinc-800/90 border border-black/[0.08] dark:border-white/[0.1] text-zinc-700 dark:text-zinc-200 transition-all cursor-pointer shadow-xs active:scale-95"
             aria-label="Toggle dark and light theme"
           >
             {mounted ? (
@@ -162,15 +121,15 @@ export default function Navbar({ onOpenCommand, onOpenResume }: NavbarProps) {
             )}
           </button>
 
-          {/* Resume CTA (Desktop Only - on mobile, thumb-friendly MobileAppDock handles Resume with zero clipping!) */}
-          <button
-            type="button"
-            onClick={() => onOpenResume?.()}
-            className="hidden sm:inline-flex items-center gap-2 h-10.5 px-4.5 rounded-full bg-gradient-to-b from-zinc-900 via-zinc-950 to-black hover:from-zinc-800 hover:to-zinc-900 text-white dark:from-white dark:via-zinc-100 dark:to-zinc-200 dark:hover:from-zinc-100 dark:hover:to-zinc-300 dark:text-black font-semibold text-xs sm:text-sm shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.2)] dark:shadow-[0_2px_12px_rgba(255,255,255,0.15),inset_0_1px_0_rgba(255,255,255,0.9)] active:scale-95 transition-all cursor-pointer"
+          {/* Direct Contact CTA (Smooth scrolls to #contact form & direct reach) */}
+          <a
+            href="#contact"
+            onClick={(e) => handleScrollTo(e, "contact")}
+            className="inline-flex items-center gap-1.5 sm:gap-2 h-9 sm:h-10 px-3.5 sm:px-4.5 rounded-full bg-gradient-to-b from-zinc-900 via-zinc-950 to-black hover:from-zinc-800 hover:to-zinc-900 text-white dark:from-white dark:via-zinc-100 dark:to-zinc-200 dark:hover:from-zinc-100 dark:hover:to-zinc-300 dark:text-black font-semibold text-xs sm:text-sm shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.2)] dark:shadow-[0_2px_12px_rgba(255,255,255,0.15),inset_0_1px_0_rgba(255,255,255,0.9)] active:scale-95 transition-all cursor-pointer"
           >
-            <FileDown className="w-4 h-4" />
-            <span>Resume</span>
-          </button>
+            <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <span>Contact</span>
+          </a>
         </div>
       </div>
     </header>

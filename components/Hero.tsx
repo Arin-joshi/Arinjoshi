@@ -4,14 +4,11 @@ import React from "react";
 import { motion } from "framer-motion";
 import { PERSONAL_INFO } from "@/constants";
 import HeroSpatialCanvas from "@/components/HeroSpatialCanvas";
-import HeroSpatialRoom, { ShowcaseItem } from "@/components/HeroSpatialRoom";
 import {
-  ArrowDown,
   Code2,
   FileDown,
   Github,
   Linkedin,
-  Mail,
   MapPin,
   MessageCircle,
   Building2,
@@ -23,85 +20,9 @@ interface HeroProps {
   onOpenResume?: () => void;
 }
 
-const SHOWCASES: ShowcaseItem[] = [
-  {
-    id: "proj-paassly",
-    key: "paassly",
-    tabLabel: "Paassly",
-    title: "Paassly",
-    role: "Creator & Lead Engineer",
-    scale: "Hyperlocal Discovery Engine",
-    highlight:
-      "Real-time geolocation discovery for street vendors & chai stalls across India with zero app installs.",
-    image: "/projects/paassly-v2.png",
-    logo: "/logos/paassly-logo.png",
-    tech: ["Next.js", "React 19", "TypeScript", "Geolocation API"],
-    metric: "<50ms Edge Route",
-    liveUrl: "https://paassly.vercel.app",
-  },
-  {
-    id: "proj-laavo",
-    key: "laavo",
-    tabLabel: "Laavo",
-    title: "Laavo",
-    role: "Creator & Product Architect",
-    scale: "QR Loyalty & Customer Retention",
-    highlight:
-      "Scan-to-join rewards platform converting offline walk-ins into repeat customers — zero app installs.",
-    image: "/projects/laavo-v2.png",
-    logo: "/logos/laavo-logo.png",
-    tech: ["Next.js", "TypeScript", "QR Matrix", "Supabase"],
-    metric: "3x Repeat Visits",
-    liveUrl: "https://laavo.vercel.app",
-  },
-  {
-    id: "proj-gyaniastro",
-    key: "gyaniastro",
-    tabLabel: "GyaniAstro",
-    title: "GyaniAstro",
-    role: "Lead Full-Stack Engineer",
-    scale: "Algorithmic Vedic Astrology",
-    highlight:
-      "High-precision Vedic ephemeris engine: Janam Kundali, 36-guna Milan & multilingual Jyotishi consultations.",
-    image: "/projects/gyaniastro-v2.png",
-    logo: "/logos/gyaniastro-logo.png",
-    tech: ["React.js", "Node.js", "Ephemeris", "REST APIs"],
-    metric: "36-Guna Real-time",
-    liveUrl: "https://gyaniastro.arinstechnology.in",
-  },
-  {
-    id: "proj-education-walkthrough",
-    key: "education",
-    tabLabel: "3,500+ Schools",
-    title: "Education Walkthrough",
-    role: "Software Engineer @ Aipxperts",
-    scale: "3,500+ Schools Worldwide",
-    highlight:
-      "Classroom walkthrough SaaS empowering instructional leaders across 3,500+ schools with instant feedback.",
-    image: "/projects/education-walkthrough.webp",
-    tech: ["React.js", "TypeScript", "MySQL", "Node.js"],
-    metric: "+40% Query Speed",
-    liveUrl: "https://educationwalkthrough.com/",
-  },
-];
-
 export default function Hero({
-  onExploreProjects,
-  onOpenProjectCaseStudy,
   onOpenResume,
 }: HeroProps) {
-  const handleScrollToProjects = (e: React.MouseEvent) => {
-    e.preventDefault();
-    if (onExploreProjects) {
-      onExploreProjects();
-      return;
-    }
-    const el = document.getElementById("projects");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
-      window.history.pushState(null, "", "#projects");
-    }
-  };
 
   return (
     <section className="relative pt-20 pb-10 sm:pt-32 sm:pb-20 overflow-hidden bg-gradient-to-b from-white via-[#fafafa] to-white dark:from-[#09090b] dark:via-[#0b0b10] dark:to-[#09090b]">
@@ -115,14 +36,13 @@ export default function Hero({
       />
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Main Hero Split Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
-          {/* Left Column: Executive Narrative & Positioning */}
+        {/* Main Hero Container */}
+        <div className="max-w-3xl">
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: "easeOut" }}
-            className="lg:col-span-6 w-full min-w-0 space-y-4 sm:space-y-6 text-left"
+            className="w-full min-w-0 space-y-4 sm:space-y-6 text-left"
           >
             {/* Availability Pill */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 dark:bg-emerald-400/10 border border-emerald-500/20 dark:border-emerald-400/20 shadow-xs backdrop-blur-sm">
@@ -159,94 +79,69 @@ export default function Hero({
               </span>
             </div>
 
-            {/* Primary Actions (Clean 1+2 Grid on Mobile, Inline Flex on Desktop) */}
-            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2.5 sm:gap-3 pt-1">
-              <a
-                href="#projects"
-                onClick={handleScrollToProjects}
-                className="col-span-2 sm:col-span-1 inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl bg-gradient-to-b from-zinc-900 to-black hover:from-zinc-800 hover:to-zinc-950 text-white dark:from-white dark:to-zinc-100 dark:hover:from-zinc-100 dark:hover:to-zinc-200 dark:text-black font-semibold text-sm shadow-[0_6px_20px_-4px_rgba(0,0,0,0.25)] active:scale-[0.985] transition-all duration-200 cursor-pointer group"
-              >
-                <span>Explore 11+ Projects</span>
-                <ArrowDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
-              </a>
-
-              <button
-                type="button"
-                onClick={() => onOpenResume?.()}
-                className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-white/95 dark:bg-zinc-900/95 hover:bg-zinc-100 dark:hover:bg-zinc-800 border border-zinc-200/90 dark:border-white/[0.1] text-zinc-900 dark:text-zinc-100 font-semibold text-xs sm:text-sm shadow-xs active:scale-[0.985] transition-all duration-200 cursor-pointer"
-              >
-                <FileDown className="w-4 h-4 text-indigo-500" />
-                <span>Resume PDF</span>
-              </button>
-
-              <a
-                href={PERSONAL_INFO.socials.whatsapp}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-semibold text-xs sm:text-sm shadow-[0_6px_18px_-4px_rgba(16,185,129,0.35)] active:scale-[0.985] transition-all duration-200 cursor-pointer"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>WhatsApp</span>
-              </a>
-            </div>
-
-            {/* Direct Connect Row */}
-            <div className="flex items-center justify-between sm:justify-start gap-3 text-xs text-zinc-500 dark:text-zinc-400 font-mono-code pt-0.5">
-              <span className="text-[11px] text-zinc-400">Direct Channels</span>
-              <div className="flex items-center gap-2">
+            {/* Primary Actions: Direct Social Reach Icons + Full Colorful Resume Button */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              {/* Direct Channels Icon Group */}
+              <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-zinc-100/90 dark:bg-zinc-900/90 border border-zinc-200/80 dark:border-zinc-800 shadow-xs">
+                {/* GitHub */}
                 <a
                   href={PERSONAL_INFO.socials.github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-white/95 dark:bg-zinc-800/80 border border-zinc-200/80 dark:border-zinc-700/80 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 transition-colors"
-                  title="GitHub"
-                  aria-label="GitHub"
+                  className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white dark:bg-[#18181f] border border-zinc-200/70 dark:border-zinc-700/60 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-800 dark:text-zinc-200 flex items-center justify-center transition-all duration-150 shadow-xs hover:scale-105 active:scale-95"
+                  title="GitHub Profile"
+                  aria-label="GitHub Profile"
                 >
-                  <Github className="w-4 h-4" />
+                  <Github className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                 </a>
+
+                {/* LinkedIn */}
                 <a
                   href={PERSONAL_INFO.socials.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-white/95 dark:bg-zinc-800/80 border border-zinc-200/80 dark:border-zinc-700/80 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-indigo-600 dark:text-indigo-400 transition-colors"
-                  title="LinkedIn"
-                  aria-label="LinkedIn"
+                  className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white dark:bg-[#18181f] border border-zinc-200/70 dark:border-zinc-700/60 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-blue-600 dark:text-blue-400 flex items-center justify-center transition-all duration-150 shadow-xs hover:scale-105 active:scale-95"
+                  title="LinkedIn Profile"
+                  aria-label="LinkedIn Profile"
                 >
-                  <Linkedin className="w-4 h-4" />
+                  <Linkedin className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                 </a>
+
+                {/* LeetCode */}
                 <a
                   href={PERSONAL_INFO.socials.leetcode}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-white/95 dark:bg-zinc-800/80 border border-zinc-200/80 dark:border-zinc-700/80 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-amber-600 dark:text-amber-400 transition-colors"
-                  title="LeetCode"
-                  aria-label="LeetCode"
+                  className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white dark:bg-[#18181f] border border-zinc-200/70 dark:border-zinc-700/60 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-amber-600 dark:text-amber-400 flex items-center justify-center transition-all duration-150 shadow-xs hover:scale-105 active:scale-95"
+                  title="LeetCode Profile"
+                  aria-label="LeetCode Profile"
                 >
-                  <Code2 className="w-4 h-4" />
+                  <Code2 className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                 </a>
+
+                {/* WhatsApp */}
                 <a
-                  href={PERSONAL_INFO.socials.email}
-                  className="p-2 rounded-lg bg-white/95 dark:bg-zinc-800/80 border border-zinc-200/80 dark:border-zinc-700/80 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 transition-colors"
-                  title="Email Arin"
-                  aria-label="Email Arin"
+                  href={PERSONAL_INFO.socials.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white dark:bg-[#18181f] border border-zinc-200/70 dark:border-zinc-700/60 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center transition-all duration-150 shadow-xs hover:scale-105 active:scale-95"
+                  title="WhatsApp Chat"
+                  aria-label="Chat on WhatsApp"
                 >
-                  <Mail className="w-4 h-4" />
+                  <MessageCircle className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
                 </a>
               </div>
-            </div>
-          </motion.div>
 
-          {/* Right Column: Interactive 3D/4D Spatial Engineering Room */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: 14 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.08, ease: "easeOut" }}
-            className="lg:col-span-6 w-full min-w-0"
-          >
-            <HeroSpatialRoom
-              showcases={SHOWCASES}
-              onOpenCaseStudy={onOpenProjectCaseStudy}
-            />
+              {/* Full Vibrant Colorful Resume Button */}
+              <button
+                type="button"
+                onClick={() => onOpenResume?.()}
+                className="inline-flex items-center justify-center gap-2.5 h-12 sm:h-[50px] px-6 sm:px-7 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:from-blue-500 hover:via-indigo-500 hover:to-violet-500 text-white font-bold text-sm sm:text-base shadow-[0_8px_24px_-4px_rgba(79,70,229,0.45),inset_0_1px_0_rgba(255,255,255,0.25)] active:scale-[0.98] transition-all duration-200 cursor-pointer group"
+              >
+                <FileDown className="w-4.5 h-4.5 group-hover:-translate-y-0.5 transition-transform" />
+                <span>Resume PDF</span>
+              </button>
+            </div>
           </motion.div>
         </div>
 
