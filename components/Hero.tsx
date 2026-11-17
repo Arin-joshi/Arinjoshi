@@ -32,38 +32,57 @@ export default function Hero({
       {/* Soft Architectural Radial Vignette for Crisp Typography Contrast */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top_left,rgba(255,255,255,0.62)_0%,rgba(255,255,255,0.28)_50%,rgba(255,255,255,0.05)_100%)] dark:bg-[radial-gradient(ellipse_at_top_left,rgba(9,9,11,0.72)_0%,rgba(9,9,11,0.35)_55%,rgba(9,9,11,0.1)_100%)]"
+        className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.75)_0%,rgba(255,255,255,0.35)_55%,rgba(255,255,255,0.05)_100%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(9,9,11,0.85)_0%,rgba(9,9,11,0.45)_55%,rgba(9,9,11,0.1)_100%)]"
       />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Main Hero Container */}
-        <div className="max-w-3xl">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6">
+        {/* Main Hero Centered Container */}
+        <div className="max-w-3xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: "easeOut" }}
-            className="w-full min-w-0 space-y-4 sm:space-y-6 text-left"
+            className="w-full min-w-0 space-y-4 sm:space-y-6 text-center flex flex-col items-center"
           >
             {/* Availability Pill */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 dark:bg-emerald-400/10 border border-emerald-500/20 dark:border-emerald-400/20 shadow-xs backdrop-blur-sm">
-              <span className="h-2 w-2 rounded-full bg-emerald-500 shrink-0" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 dark:bg-emerald-400/10 border border-emerald-500/20 dark:border-emerald-400/20 shadow-xs backdrop-blur-sm">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 shrink-0 animate-pulse" />
               <span className="text-[11px] sm:text-xs font-semibold font-mono-code text-emerald-700 dark:text-emerald-400">
                 Open for SDE Roles • Immediate Joiner
               </span>
             </div>
 
             {/* Authoritative SDE Headline */}
-            <div className="space-y-2.5 sm:space-y-3">
-              <h1 className="text-[28px] sm:text-4xl md:text-5xl font-black tracking-tight text-zinc-950 dark:text-white leading-[1.12]">
+            <div className="space-y-3 sm:space-y-4">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-zinc-950 dark:text-white leading-[1.12]">
                 Engineering high-scale web platforms &amp; real-time systems.
               </h1>
-              <p className="text-[15px] sm:text-lg text-zinc-600 dark:text-zinc-300 font-normal leading-[1.6]">
-                Software Development Engineer with <strong className="text-zinc-900 dark:text-white">3+ years</strong> building distributed systems. Creator of <strong className="text-zinc-900 dark:text-white">Paassly</strong>, <strong className="text-zinc-900 dark:text-white">Laavo</strong> &amp; <strong className="text-zinc-900 dark:text-white">GyaniAstro</strong>. Scaled SaaS to <strong className="text-zinc-900 dark:text-white">3,500+ schools</strong> at Aipxperts and <strong className="text-zinc-900 dark:text-white">&lt;100ms</strong> WebSocket engines at NKB PlayTech.
+              <p className="max-w-2xl mx-auto text-base sm:text-lg text-zinc-600 dark:text-zinc-300 font-normal leading-relaxed">
+                Hey, I&apos;m <strong className="font-semibold text-zinc-900 dark:text-white">Arin Joshi</strong> — a Software Development Engineer with <strong className="font-semibold text-zinc-900 dark:text-white">3+ years</strong> of hands-on experience turning complex architectures into fast, resilient production systems. Creator of <strong className="font-semibold text-zinc-900 dark:text-white">Paassly</strong>, <strong className="font-semibold text-zinc-900 dark:text-white">Laavo</strong> &amp; <strong className="font-semibold text-zinc-900 dark:text-white">GyaniAstro</strong>. Scaled enterprise SaaS to <strong className="font-semibold text-zinc-900 dark:text-white">3,500+ schools</strong> at Aipxperts and built <strong className="font-semibold text-zinc-900 dark:text-white">&lt;100ms</strong> WebSocket state engines at NKB PlayTech.
               </p>
             </div>
 
-            {/* Verified Career Credentials (Clean Micro-Badges, Zero Dangling Separators) */}
-            <div className="flex flex-wrap items-center gap-2 text-[11px] sm:text-xs text-zinc-700 dark:text-zinc-300 font-mono-code">
+            {/* Core Skills & Stack Pill Strip (Directly visible on first view) */}
+            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-mono-code pt-0.5">
+              {[
+                "React.js & Next.js",
+                "TypeScript",
+                "Node.js",
+                "WebSockets",
+                "MySQL & MongoDB",
+                "Distributed Systems",
+              ].map((skill) => (
+                <span
+                  key={skill}
+                  className="px-3 py-1 rounded-full bg-zinc-100/90 dark:bg-zinc-800/80 border border-zinc-200/80 dark:border-zinc-700/80 text-zinc-800 dark:text-zinc-200 font-medium shadow-2xs"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+
+            {/* Verified Career Credentials (Centered) */}
+            <div className="flex flex-wrap items-center justify-center gap-2 text-[11px] sm:text-xs text-zinc-700 dark:text-zinc-300 font-mono-code pt-0.5">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-100/90 dark:bg-zinc-900/80 border border-zinc-200/80 dark:border-zinc-800">
                 <Building2 className="w-3 h-3 text-indigo-500 shrink-0" />
                 <span>Ex-Aipxperts</span>
@@ -75,12 +94,12 @@ export default function Hero({
               </span>
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-100/90 dark:bg-zinc-900/80 border border-zinc-200/80 dark:border-zinc-800">
                 <MapPin className="w-3 h-3 text-rose-500 shrink-0" />
-                <span>Ahmedabad · Remote</span>
+                <span>Ahmedabad · Remote &amp; Relocation</span>
               </span>
             </div>
 
             {/* Primary Actions: Direct Social Reach Icons + Full Colorful Resume Button */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
               {/* Direct Channels Icon Group */}
               <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-zinc-100/90 dark:bg-zinc-900/90 border border-zinc-200/80 dark:border-zinc-800 shadow-xs">
                 {/* GitHub */}
@@ -136,7 +155,7 @@ export default function Hero({
               <button
                 type="button"
                 onClick={() => onOpenResume?.()}
-                className="inline-flex items-center justify-center gap-2.5 h-12 sm:h-[50px] px-6 sm:px-7 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:from-blue-500 hover:via-indigo-500 hover:to-violet-500 text-white font-bold text-sm sm:text-base shadow-[0_8px_24px_-4px_rgba(79,70,229,0.45),inset_0_1px_0_rgba(255,255,255,0.25)] active:scale-[0.98] transition-all duration-200 cursor-pointer group"
+                className="inline-flex items-center justify-center gap-2.5 h-12 sm:h-[50px] px-6 sm:px-8 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:from-blue-500 hover:via-indigo-500 hover:to-violet-500 text-white font-bold text-sm sm:text-base shadow-[0_8px_24px_-4px_rgba(79,70,229,0.45),inset_0_1px_0_rgba(255,255,255,0.25)] active:scale-[0.98] transition-all duration-200 cursor-pointer group"
               >
                 <FileDown className="w-4.5 h-4.5 group-hover:-translate-y-0.5 transition-transform" />
                 <span>Resume PDF</span>
@@ -145,22 +164,22 @@ export default function Hero({
           </motion.div>
         </div>
 
-        {/* 4-Metric Bento Stat Strip */}
+        {/* 4-Metric Bento Stat Strip (Centered Underneath) */}
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.16, ease: "easeOut" }}
-          className="mt-8 sm:mt-14 grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4"
+          className="mt-10 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-4 max-w-4xl mx-auto"
         >
           {PERSONAL_INFO.stats.map((stat) => (
             <div
               key={stat.label}
-              className="relative rounded-xl sm:rounded-2xl p-3.5 sm:p-5 bg-white/95 dark:bg-[#111116]/95 backdrop-blur-xl border border-zinc-200/85 dark:border-white/[0.08] shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:border-indigo-300/70 dark:hover:border-indigo-500/30 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 text-left"
+              className="relative rounded-xl sm:rounded-2xl p-4 sm:p-5 bg-white/95 dark:bg-[#111116]/95 backdrop-blur-xl border border-zinc-200/85 dark:border-white/[0.08] shadow-[0_2px_10px_rgba(0,0,0,0.03)] hover:border-indigo-300/70 dark:hover:border-indigo-500/30 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 text-center"
             >
-              <div className="text-xl sm:text-3xl font-black text-zinc-950 dark:text-white tracking-tight font-mono-code">
+              <div className="text-2xl sm:text-3xl font-black text-zinc-950 dark:text-white tracking-tight font-mono-code">
                 {stat.value}
               </div>
-              <div className="text-[11px] sm:text-xs font-semibold text-zinc-900 dark:text-zinc-100 mt-1">
+              <div className="text-xs sm:text-[13px] font-semibold text-zinc-900 dark:text-zinc-100 mt-1">
                 {stat.label}
               </div>
               <div className="text-[10px] sm:text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 leading-snug">
