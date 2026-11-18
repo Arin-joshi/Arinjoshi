@@ -197,13 +197,9 @@ export default function ContactSection() {
 
               {/* Row 1: Instant Phone Channels (WhatsApp + Direct Call side-by-side) */}
               <div className="p-4 sm:p-5 space-y-3">
-                <div className="flex items-center justify-between">
+                <div>
                   <span className="text-[11px] font-mono-code uppercase tracking-wider text-zinc-400">
                     Instant Reach
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-mono-code font-medium text-emerald-600 dark:text-emerald-400">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    {PERSONAL_INFO.phone}
                   </span>
                 </div>
 

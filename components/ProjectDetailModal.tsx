@@ -9,8 +9,6 @@ import {
   X,
   CheckCircle2,
   Cpu,
-  Layers,
-  TrendingUp,
   AlertCircle,
   Lightbulb
 } from "lucide-react";
@@ -60,9 +58,6 @@ export default function ProjectDetailModal({
         {/* Top Header Row */}
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1.5">
-            <span className="inline-block px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-mono-code text-xs font-semibold border border-blue-200/50 dark:border-blue-800/50">
-              {project.category}
-            </span>
             <div className="flex items-center gap-3">
               {project.logoUrl && (
                 <div className="relative w-10 h-10 rounded-2xl overflow-hidden bg-zinc-100 dark:bg-zinc-800 p-1.5 border border-black/[0.06] dark:border-white/[0.08] shrink-0 shadow-xs flex items-center justify-center">
@@ -105,18 +100,22 @@ export default function ProjectDetailModal({
           />
         </div>
 
-        {/* Key Metrics Strip if available */}
+        {/* Key Metrics Strip: 3 side-by-side equal boxes in one row */}
         {project.metrics && project.metrics.length > 0 && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div
+            className={`grid gap-2.5 sm:gap-3 ${
+              project.metrics.length === 2 ? "grid-cols-2" : "grid-cols-3"
+            }`}
+          >
             {project.metrics.map((metric) => (
               <div
                 key={metric.label}
-                className="p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/60 dark:border-zinc-800/60 font-mono-code"
+                className="p-2.5 sm:p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/60 dark:border-zinc-800/60 font-mono-code flex flex-col justify-between"
               >
-                <div className="text-base sm:text-lg font-bold text-indigo-600 dark:text-indigo-400">
+                <div className="text-xs sm:text-base font-bold text-indigo-600 dark:text-indigo-400 leading-snug break-words">
                   {metric.value}
                 </div>
-                <div className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                <div className="text-[10px] sm:text-[11px] text-zinc-500 dark:text-zinc-400 mt-1 leading-tight">
                   {metric.label}
                 </div>
               </div>

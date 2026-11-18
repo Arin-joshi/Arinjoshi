@@ -36,14 +36,14 @@ export default function EducationAndCerts() {
               {EDUCATION.map((edu) => (
                 <div
                   key={edu.id}
-                  className="rounded-3xl bg-white/80 dark:bg-[#121217]/80 backdrop-blur-xl border border-black/[0.06] dark:border-white/[0.08] p-6 sm:p-7 shadow-[0_2px_12px_rgba(0,0,0,0.03),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] space-y-2.5"
+                  className="rounded-3xl bg-white/80 dark:bg-[#121217]/80 backdrop-blur-xl border border-black/[0.06] dark:border-white/[0.08] p-5 sm:p-6 shadow-[0_2px_12px_rgba(0,0,0,0.03),inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.06)] space-y-2.5"
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                    <h4 className="text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100">
+                  <div className="flex items-center justify-between gap-3">
+                    <h4 className="text-sm sm:text-base lg:text-[15px] xl:text-base font-bold text-zinc-900 dark:text-zinc-100 leading-snug">
                       {edu.degree}
                     </h4>
                     {edu.score && (
-                      <span className="inline-block self-start sm:self-center px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 font-mono-code text-xs font-semibold border border-emerald-200/50 dark:border-emerald-800/50">
+                      <span className="inline-flex items-center shrink-0 whitespace-nowrap px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 font-mono-code text-xs font-semibold border border-emerald-200/50 dark:border-emerald-800/50">
                         {edu.score}
                       </span>
                     )}

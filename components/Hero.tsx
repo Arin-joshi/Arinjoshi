@@ -151,11 +151,11 @@ export default function Hero({
                 </a>
               </div>
 
-              {/* Full Vibrant Colorful Resume Button */}
+              {/* Sleek Black Resume Button (Styled like Contact CTA) */}
               <button
                 type="button"
                 onClick={() => onOpenResume?.()}
-                className="inline-flex items-center justify-center gap-2.5 h-12 sm:h-[50px] px-6 sm:px-8 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 hover:from-blue-500 hover:via-indigo-500 hover:to-violet-500 text-white font-bold text-sm sm:text-base shadow-[0_8px_24px_-4px_rgba(79,70,229,0.45),inset_0_1px_0_rgba(255,255,255,0.25)] active:scale-[0.98] transition-all duration-200 cursor-pointer group"
+                className="inline-flex items-center justify-center gap-2.5 h-12 sm:h-[50px] px-6 sm:px-7 rounded-2xl bg-gradient-to-b from-zinc-900 via-zinc-950 to-black hover:from-zinc-800 hover:to-zinc-900 text-white dark:from-white dark:via-zinc-100 dark:to-zinc-200 dark:hover:from-zinc-100 dark:hover:to-zinc-300 dark:text-black font-semibold text-sm sm:text-base shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)] dark:shadow-[0_4px_16px_rgba(255,255,255,0.15),inset_0_1px_0_rgba(255,255,255,0.9)] active:scale-95 transition-all cursor-pointer group"
               >
                 <FileDown className="w-4.5 h-4.5 group-hover:-translate-y-0.5 transition-transform" />
                 <span>Resume PDF</span>
